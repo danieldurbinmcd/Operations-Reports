@@ -23,10 +23,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
 .header .meta{font-size:11px;color:var(--muted);text-align:right;}
 
 /* Top-level page tabs */
-.page-tabs{display:flex;gap:4px;margin-bottom:24px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:5px;}
-.page-tab{flex:1;text-align:center;padding:9px 10px;font-size:12px;font-weight:500;border-radius:8px;cursor:pointer;color:var(--muted);transition:all .18s;}
+.page-tabs{display:flex;gap:3px;margin-bottom:24px;background:#0f2347;border:1px solid #2a5298;border-radius:12px;padding:5px;box-shadow:0 4px 15px rgba(15,35,71,0.4);}
+.page-tab{flex:1;text-align:center;padding:9px 10px;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;color:#a8c4e8;transition:all .2s;border:none;background:transparent;font-family:inherit;letter-spacing:.02em;}
 .page-tab:hover{color:var(--text);background:var(--surface2);}
-.page-tab.active{background:var(--surface2);color:var(--accent);border:1px solid var(--border);}
+.page-tab.active{background:linear-gradient(135deg,#e8c97a 0%,#c9a227 100%);color:#0f2347;font-weight:700;box-shadow:0 2px 8px rgba(232,201,122,0.4);}
 
 /* Page sections */
 .tab-page{display:none;}
@@ -34,10 +34,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
 
 /* Summary strip */
 .summary-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
-.s-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
-.s-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;}
-.s-val{font-family:'DM Mono',monospace;font-size:20px;font-weight:500;}
-.s-sub{font-size:10px;color:var(--muted);margin-top:2px;}
+.s-card{background:linear-gradient(135deg,#1a3a6b 0%,#0f2347 100%);border:1px solid #2a5298;border-radius:10px;padding:12px 14px;box-shadow:0 4px 15px rgba(26,58,107,0.3);}
+.s-lbl{font-size:12px;color:#e8c97a;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;font-weight:600;}
+.s-val{font-family:'DM Mono',monospace;font-size:26px;font-weight:700;color:#ffffff;line-height:1.2;}
+.s-sub{font-size:12px;color:#a8c4e8;margin-top:4px;}
 
 /* Weights bar */
 .weights-bar{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
@@ -157,9 +157,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
   <div class="tab-page active" id="page-ranking">
 
     <div class="summary-strip">
-      <div class="s-card"><div class="s-lbl">#1 Location</div><div class="s-val" style="font-size:11px;padding-top:4px;">07562- 4th Ave</div><div class="s-sub">score 3.2003</div></div>
-      <div class="s-card"><div class="s-lbl">Top GM</div><div class="s-val" style="font-size:13px;padding-top:5px;">Ashley Ramsey</div><div class="s-sub">07562 4th Ave &nbsp;·&nbsp; 3.2003</div></div>
-      <div class="s-card"><div class="s-lbl">Top Supervisor</div><div class="s-val" style="font-size:13px;padding-top:5px;">BJ</div><div class="s-sub">avg rank 6.0</div></div>
+      <div class="s-card"><div class="s-lbl">#1 Location</div><div class="s-val">07562- 4th Ave</div><div class="s-sub">score 3.2</div></div>
+      <div class="s-card"><div class="s-lbl">Top GM</div><div class="s-val">Ashley Ramsey</div><div class="s-sub">07562 4th Ave &nbsp;·&nbsp; 3.2003</div></div>
+      <div class="s-card"><div class="s-lbl">Top Supervisor</div><div class="s-val">BJ</div><div class="s-sub">avg rank 6.0</div></div>
     </div>
 
     <div class="weights-bar">
