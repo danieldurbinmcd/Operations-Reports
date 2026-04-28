@@ -545,7 +545,7 @@ var KPIS = [
 function fmtKpiVal(kpi, raw){
   if(kpi.label==='McDelivery') return raw;
   if(kpi.label==='Kiosk %') return Math.round(raw*100)+'%';
-  if(kpi.label==='Sales'||kpi.label==='Guest Counts') return (raw>=0?'+':'')+Math.round(raw*100)+'%';
+  if(kpi.label==='Sales'||kpi.label==='Guest Counts') return String(raw);
   return Math.round(raw)+kpi.unit;
 }
 
