@@ -43,7 +43,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
 .weights-bar{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
 .w-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;flex-shrink:0;}
 .w-items{display:flex;gap:5px;flex-wrap:wrap;}
-.w-chip{display:flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:3px 10px;font-size:11px;}
+.w-chip{display:flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:11px;cursor:pointer;font-family:inherit;transition:background .15s,border-color .15s,box-shadow .15s;}
+.w-chip:hover{background:#e8f0fb;border-color:#4a7ac8;box-shadow:0 2px 6px rgba(74,122,200,0.2);}
+.w-chip:hover .wt{color:#1a5fa8;}
+.w-chip:hover .wn{color:#2c2c2a;}
+.w-chip.sort-active{background:var(--navy);border-color:var(--gold2);box-shadow:0 0 0 2px var(--gold2);}
+.w-chip.sort-active .wt,.w-chip.sort-active .wn{color:var(--gold);}
+.w-chip.sort-active:hover{background:var(--navy);border-color:var(--gold2);}
+.w-chip.sort-active:hover .wt,.w-chip.sort-active:hover .wn{color:var(--gold);}
 .w-chip .wt{font-family:'DM Mono',monospace;color:var(--accent);font-weight:500;}
 .w-chip .wn{color:var(--muted);}
 
@@ -165,22 +172,23 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
 
     <div class="weights-bar">
       <div class="w-label">Scoring weights</div>
-      <div class="w-items">
-        <div class="w-chip"><span class="wt">30%</span><span class="wn">Guest Counts</span></div>
-        <div class="w-chip"><span class="wt">20%</span><span class="wn">OEPE</span></div>
-        <div class="w-chip"><span class="wt">20%</span><span class="wn">Sales</span></div>
-        <div class="w-chip"><span class="wt">10%</span><span class="wn">KVS</span></div>
-        <div class="w-chip"><span class="wt">10%</span><span class="wn">Kiosk %</span></div>
-        <div class="w-chip"><span class="wt">10%</span><span class="wn">McDelivery</span></div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-style:italic;">&#128197; Click a KPI below to re-rank all locations by that metric:</div>
+      <div class="w-items" id="sortChips">
+        <button class="w-chip sort-active" onclick="sortRanking('score')" id="chip-score"><span class="wt">&#9776;</span><span class="wn">Full Ranking</span></button>
+        <button class="w-chip" onclick="sortRanking('gc')" id="chip-gc"><span class="wt">30%</span><span class="wn">Guest Counts</span></button>
+        <button class="w-chip" onclick="sortRanking('oepe')" id="chip-oepe"><span class="wt">20%</span><span class="wn">OEPE</span></button>
+        <button class="w-chip" onclick="sortRanking('sales')" id="chip-sales"><span class="wt">20%</span><span class="wn">Sales</span></button>
+        <button class="w-chip" onclick="sortRanking('kvs')" id="chip-kvs"><span class="wt">10%</span><span class="wn">KVS</span></button>
+        <button class="w-chip" onclick="sortRanking('kiosk')" id="chip-kiosk"><span class="wt">10%</span><span class="wn">Kiosk %</span></button>
+        <button class="w-chip" onclick="sortRanking('mcd')" id="chip-mcd"><span class="wt">10%</span><span class="wn">McDelivery</span></button>
       </div>
-      <div style="font-size:10px;color:var(--muted);margin-left:auto;">Lower score = better rank</div>
     </div>
 
     <div class="two-col" style="margin-bottom:0;">
       <div>
         <div class="sec-title">Full Rankings — All 34 Locations</div>
         <div class="card">
-          <table class="rank-table">
+          <table class="rank-table" id="rankTable">
             <thead>
               <tr>
                 <th style="width:34px;">#</th>
@@ -370,10 +378,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
     <div style="background:#2c2c2a;border-radius:12px;padding:22px 26px;color:#f0ede8;margin-bottom:18px;">
       <div style="font-family:'DM Serif Display',serif;font-size:17px;color:#e8c97a;margin-bottom:12px;">The Multiplier Commitment for This Week</div>
       <p style="font-size:13px;line-height:1.8;color:#d3d1c7;margin-bottom:12px;">Jose Sanchez ran +25% Sales and +26% GC this week. Cris Reeves ran -8% on both and dropped 19 spots. That gap is not talent — it is something that happened this week that we do not yet understand. The role of every supervisor is to walk into those conversations with curiosity, not conclusions. Two locations require in-person visits this week: <strong style="color:#e8c97a;">7703 (Cris Reeves, ▼19)</strong> and <strong style="color:#e8c97a;">6853 (Eloina Lopez, MCD 9:07)</strong>. The 9-minute McDelivery time at 6853 is an operational emergency — not something to discuss on a phone call.</p>
-      <div style="border-top:1px solid #5f5e5a;margin-top:14px;padding-top:14px;font-size:12px;color:#888780;font-style:italic;">"Multipliers are leaders who look at the world and see capability everywhere. They access and revitalize the intelligence in the people around them." — Liz Wiseman</div>
-    </div>
-  </div>
-
+      <div style="border-top:1px solid #5f5e5a;margin-top:14px;padding-top:14px;font-size:12px;color:#888780;font-style:italic;">"Multipliers are leaders who look 
 <script>
 // ── Page switcher ────────────────────────────────────────────────────────────
 function showPage(id){
@@ -516,11 +521,77 @@ function fmtPct(v){return(v>=0?'+':'')+Math.round(v*100)+'%';}
 const N = RANKED.length;
 
 // ── PAGE 1: Ranking table ─────────────────────────────────────────────────────
-const tbody = document.getElementById('rankBody');
+var tbody = document.getElementById('rankBody');
+
+// ── KPI Sort ─────────────────────────────────────────────────────────────────
+// RAW_DATA cols: [loc, kvs, kvs_r, oepe, oepe_r, kiosk, kiosk_r, sales, sales_r, gc, gc_r, mcd, mcd_r, mcd_bold]
+// RANKED has: rank, loc, gm, sup, score, oepe, kvs, kiosk, kvs_r, oepe_r, kiosk_r, sales_r, gc_r, mcd_r, mcd
+var RAW_LOOKUP = {};
+RAW_DATA.forEach(r=>{ RAW_LOOKUP[r[0]] = r; });
+
+function sortRanking(kpi) {
+  var isFullRanking = (kpi === 'score');
+  document.querySelectorAll('.w-chip').forEach(function(c){c.classList.remove('sort-active');});
+  var chip = document.getElementById('chip-'+kpi);
+  if(chip) chip.classList.add('sort-active');
+
+  // Hide/show Move header
+  var moveHeader = document.querySelector('#rankTable thead th:last-child');
+  if(moveHeader) moveHeader.style.display = isFullRanking ? '' : 'none';
+
+  var sorted = RANKED.slice().sort(function(a,b){
+    if(kpi==='score')  return a.rank - b.rank;
+    if(kpi==='oepe')   return a.oepe_r - b.oepe_r;
+    if(kpi==='kvs')    return a.kvs_r - b.kvs_r;
+    if(kpi==='kiosk')  return a.kiosk_r - b.kiosk_r;
+    if(kpi==='sales')  return a.sales_r - b.sales_r;
+    if(kpi==='gc')     return a.gc_r - b.gc_r;
+    if(kpi==='mcd')    return a.mcd_r - b.mcd_r;
+    return 0;
+  });
+
+  var kpiLabels = {score:'Score',oepe:'OEPE',kvs:'KVS',kiosk:'Kiosk %',sales:'Sales',gc:'Guest Counts',mcd:'McDelivery'};
+
+  var rankBody = document.getElementById('rankBody');
+  rankBody.innerHTML = '';
+
+  for(var i=0; i<sorted.length; i++){
+    var r = sorted[i];
+    var pos = i+1;
+    var bg = rowBg(isFullRanking ? r.rank : pos);
+    var tc = rowTextCol(isFullRanking ? r.rank : pos);
+    var kpiVal = '';
+    if(kpi==='score')       kpiVal = r.score;
+    else if(kpi==='oepe')   kpiVal = r.oepe+'s';
+    else if(kpi==='kvs')    kpiVal = r.kvs+'s';
+    else if(kpi==='kiosk')  kpiVal = r.kiosk+'%';
+    else if(kpi==='sales')  kpiVal = r.sales||'';
+    else if(kpi==='gc')     kpiVal = r.gc||'';
+    else if(kpi==='mcd')    kpiVal = r.mcd;
+
+    var tr = document.createElement('tr');
+    tr.style.background = bg;
+    tr.innerHTML =
+      '<td><span style="font-family:DM Mono,monospace;font-size:12px;font-weight:600;color:'+tc+';">'+pos+'</span></td>'+
+      '<td>'+
+        '<span style="font-family:DM Mono,monospace;font-weight:600;font-size:13px;color:'+tc+';">'+r.loc+'</span>'+
+        '<div style="font-size:13px;font-weight:600;color:'+tc+';margin-top:2px;">'+r.gm+'</div>'+
+        '<div style="font-size:10px;color:'+tc+';opacity:0.75;margin-top:1px;">'+r.sup+'</div>'+
+      '</td>'+
+      '<td class="r"><span style="font-family:DM Mono,monospace;font-size:13px;font-weight:700;color:'+tc+';">'+kpiVal+'</span></td>'+
+      '<td><div style="font-size:13px;font-weight:600;color:'+tc+';">'+r.gm+'</div></td>'+
+      '<td><div style="font-size:13px;color:'+tc+';opacity:0.85;">'+r.sup+'</div></td>'+
+      (isFullRanking ? '<td class="r">'+getMv(r.loc)+'</td>' : '');
+    rankBody.appendChild(tr);
+  }
+
+  var scoreHeader = document.querySelector('#rankTable thead th:nth-child(3)');
+  if(scoreHeader) scoreHeader.textContent = kpiLabels[kpi] || 'Score';
+}
 RANKED.forEach((r,i)=>{
-  const tr=document.createElement('tr');
-  const bg=rowBg(r.rank);
-  const tc=rowTextCol(r.rank);
+  var tr=document.createElement('tr');
+  var bg=rowBg(r.rank);
+  var tc=rowTextCol(r.rank);
   tr.style.background=bg;
   tr.innerHTML=`
     <td><span style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:${tc};">${r.rank}</span></td>
@@ -535,7 +606,7 @@ RANKED.forEach((r,i)=>{
 // ── PAGE 1: Supervisor rankings ───────────────────────────────────────────────
 const supEl=document.getElementById('supBody');
 SUPS.forEach(s=>{
-  const div=document.createElement('div');
+  var div=document.createElement('div');
   div.className='sup-row';
   const sbg=s.pos<=2?'#d6f0e0':s.pos<=4?'#feffd6':s.pos<=6?'#fef0c8':'#ffd6d8';
   const stc=s.pos<=2?'#0a5c28':s.pos<=4?'#5a5a00':s.pos<=6?'#6b3a00':'#7a0008';
@@ -560,11 +631,11 @@ function fmtKiosk(v){ return v===null?'':Math.round(v*100)+'%'; }
 const dataBody=document.getElementById('dataBody');
 RAW_DATA.forEach(r=>{
   const loc=r[0],kvs=r[1],kvs_r=r[2],oepe=r[3],oepe_r=r[4],kiosk=r[5],kiosk_r=r[6],sales=r[7],sales_r=r[8],gc=r[9],gc_r=r[10],mcd=r[11],mcd_r=r[12],mcd_bold=r[13];
-  const oCol=oepe<115?'var(--green)':oepe<135?'var(--amber)':'var(--red)';
-  const sCol=String(sales).charAt(0)==='-'?'var(--red)':'var(--green)';
-  const gCol=String(gc).charAt(0)==='-'?'var(--red)':'var(--green)';
-  const mcdCell=mcd_bold?'<strong style="color:#2c2c2a;">'+mcd+'</strong>':mcd;
-  const tr=document.createElement('tr');
+  var oCol=oepe<115?'var(--green)':oepe<135?'var(--amber)':'var(--red)';
+  var sCol=String(sales).charAt(0)==='-'?'var(--red)':'var(--green)';
+  var gCol=String(gc).charAt(0)==='-'?'var(--red)':'var(--green)';
+  var mcdCell=mcd_bold?'<strong style="color:#2c2c2a;">'+mcd+'</strong>':mcd;
+  var tr=document.createElement('tr');
   tr.innerHTML=
     '<td class="l"><span style="font-family:DM Mono,monospace;font-weight:500;">'+loc+'</span></td>'+
     '<td>'+Math.round(kvs)+'</td><td class="grp-end">'+rankBadge(kvs_r,34)+' </td>'+
@@ -771,6 +842,12 @@ if (mc) {
 renderPeak('peak7am',PEAKS['7am']);
 renderPeak('peak11am',PEAKS['11am']);
 renderPeak('peak5pm',PEAKS['5pm']);
+
+renderPeak('peak7am',PEAKS['7am']);
+renderPeak('peak11am',PEAKS['11am']);
+renderPeak('peak5pm',PEAKS['5pm']);
+
 </script>
+
 </body>
 </html>
