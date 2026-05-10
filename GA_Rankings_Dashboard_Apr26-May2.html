@@ -23,8 +23,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
 .header .meta{font-size:11px;color:var(--muted);text-align:right;}
 
 /* Top-level page tabs */
-.page-tabs{display:flex;gap:3px;margin-bottom:24px;background:#0f2347;border:1px solid #2a5298;border-radius:12px;padding:5px;box-shadow:0 4px 15px rgba(15,35,71,0.4);}
-.page-tab{flex:1;text-align:center;padding:9px 10px;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;color:#a8c4e8;transition:all .2s;border:none;background:transparent;font-family:inherit;letter-spacing:.02em;}
+.page-tabs{display:flex;gap:3px;margin-bottom:24px;background:#0f2347;border:1px solid #2a5298;border-radius:12px;padding:5px;box-shadow:0 4px 15px rgba(15,35,71,0.4);overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;}
+.page-tab{flex:0 0 auto;text-align:center;padding:9px 12px;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;color:#a8c4e8;transition:all .2s;border:none;background:transparent;font-family:inherit;letter-spacing:.02em;white-space:nowrap;}
 .page-tab:hover{color:var(--text);background:var(--surface2);}
 .page-tab.active{background:linear-gradient(135deg,#e8c97a 0%,#c9a227 100%);color:#0f2347;font-weight:700;box-shadow:0 2px 8px rgba(232,201,122,0.4);}
 
