@@ -149,7 +149,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
   <div class="header">
     <div>
       <h1>Weekly Performance Rankings</h1>
-      <div class="week">WEEK OF APR 19–25, 2026</div>
+      <div class="week">WEEK OF APR 26 – MAY 2, 2026</div>
     </div>
     <div class="meta">
       <div class="state">Georgia</div>
@@ -230,7 +230,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
     <div id="movesContainer"></div>
   </div>
   <div class="tab-page" id="page-data">
-    <div class="sec-title" style="margin-bottom:14px;">Ranking Data — Data Tab C3:O37 &nbsp;·&nbsp; Week of Apr 19–25</div>
+    <div class="sec-title" style="margin-bottom:14px;">Ranking Data — Data Tab C3:O37 &nbsp;·&nbsp; Week of Apr 26 – May 2</div>
     <div class="card" style="overflow-x:auto;">
       <table class="data-table">
         <thead>
@@ -254,7 +254,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
   <!-- PAGE 3 — 80/20 -->
   <!-- ══════════════════════════════════════════════════════════════ -->
   <div class="tab-page" id="page-split">
-    <div class="sec-title" style="margin-bottom:16px;">Best &amp; Worst 5 Locations per KPI — Week of Apr 19–25</div>
+    <div class="sec-title" style="margin-bottom:16px;">Best &amp; Worst 5 Locations per KPI — Week of Apr 26 – May 2</div>
     <div id="kpiSplitContainer"></div>
   </div>
 
@@ -262,7 +262,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
   <!-- PAGE 4 — PEAK PERIODS -->
   <!-- ══════════════════════════════════════════════════════════════ -->
   <div class="tab-page" id="page-peaks">
-    <div class="sec-title" style="margin-bottom:14px;">Daypart OEPE Rankings — Best to Worst &nbsp;·&nbsp; Week of Apr 19–25</div>
+    <div class="sec-title" style="margin-bottom:14px;">Daypart OEPE Rankings — Best to Worst &nbsp;·&nbsp; Week of Apr 26 – May 2</div>
     <div class="peaks-grid">
       <div class="card">
         <div class="peak-header">
@@ -291,7 +291,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
 </div>
 
   <div class="tab-page" id="page-analysis">
-    <div class="sec-title" style="margin-bottom:20px;">Weekly Analysis &amp; Focus Areas — Week of Apr 19–25, 2026</div>
+    <div class="sec-title" style="margin-bottom:20px;">Weekly Analysis &amp; Focus Areas — Week of Apr 26 – May 2, 2026</div>
     <div style="background:#fff;border:1px solid #d3d1c7;border-radius:12px;padding:22px 26px;margin-bottom:18px;">
       <div style="font-family:'DM Serif Display',serif;font-size:18px;margin-bottom:10px;color:#2c2c2a;">The Multiplier Lens</div>
       <p style="font-size:13px;line-height:1.8;color:#444;margin-bottom:10px;">Multipliers believe that the intelligence and capability to win already exists in the people around them. This week's Georgia data tells us exactly where that capability is showing up — and where it is being constrained across all 20 locations.</p>
@@ -784,7 +784,7 @@ var T={kpi:'rank',showAvg:true,showStd:true,loc:'',span:'span'};
   var sel=document.getElementById('trendLocSelect');
   if(!sel) return;
   var opt0=document.createElement('option'); opt0.value=''; opt0.textContent='All Locations'; sel.appendChild(opt0);
-  var locs=Object.keys(HISTORY[HISTORY.length-1].data).sort();
+  var locs=Object.keys(HISTORY[HISTORY.length-1].data).sort(function(a,b){return parseInt(a)-parseInt(b);});
   locs.forEach(function(loc){var opt=document.createElement('option');opt.value=loc;opt.textContent=loc;sel.appendChild(opt);});
 })();
 
