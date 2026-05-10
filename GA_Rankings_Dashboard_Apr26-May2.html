@@ -286,6 +286,22 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
         <div id="peak5pm"></div>
       </div>
     </div>
+
+    <div style="background:#fff;border:1px solid #d3d1c7;border-radius:12px;overflow:hidden;margin-top:20px;">
+      <div style="padding:14px 20px;border-bottom:1px solid #d3d1c7;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#0a5c28,#1a7a4a);">
+        <div>
+          <div style="font-family:'DM Serif Display',serif;font-size:16px;color:#fff;">&#127807; Green Sweep</div>
+          <div style="font-size:11px;color:#a8e8c0;margin-top:3px;">Locations at or under 120s OEPE in every daypart this week</div>
+        </div>
+        <div id="sweepCount" style="font-family:'DM Mono',monospace;font-size:28px;font-weight:700;color:#fff;">—</div>
+      </div>
+      <div id="sweepList" style="padding:4px 0;">
+        <div style="padding:16px 20px;color:#888780;font-size:12px;">Calculating...</div>
+      </div>
+      <div style="padding:12px 20px;border-top:1px solid #d3d1c7;background:#f8f7f4;">
+        <div style="font-size:11px;color:#888780;line-height:1.6;"><strong style="color:#0a5c28;">Green Sweep</strong> means a location achieved OEPE at or under 120 seconds in all three dayparts — Breakfast (7am), Lunch (11am), and Dinner (5pm). This is the highest recognition on the Peak Periods page.</div>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -1122,6 +1138,67 @@ function renderPeak(containerId,data){
 renderPeak('peak7am',PEAKS['7am']);
 renderPeak('peak11am',PEAKS['11am']);
 renderPeak('peak5pm',PEAKS['5pm']);
+// -- Green Sweep --
+function buildGreenSweep(){
+  // Build GM lookup from RANKED
+  var gmMap = {};
+  RANKED.forEach(function(r){ gmMap[r.loc] = r.gm; });
+
+  // Build per-loc daypart oepe
+  var locData = {};
+  ['7am','11am','5pm'].forEach(function(dp){
+    PEAKS[dp].forEach(function(r){
+      if(!locData[r.loc]) locData[r.loc] = {};
+      locData[r.loc][dp] = r.oepe;
+    });
+  });
+
+  // Green Sweep = green (oepe < 121) in all 3 dayparts
+  var sweepData = [];
+  Object.keys(locData).forEach(function(loc){
+    var d = locData[loc];
+    var am7 = d['7am'], am11 = d['11am'], pm5 = d['5pm'];
+    if(am7 !== undefined && am11 !== undefined && pm5 !== undefined &&
+       am7 < 121 && am11 < 121 && pm5 < 121){
+      var avg = Math.round((am7 + am11 + pm5) / 3);
+      sweepData.push({loc:loc, gm:gmMap[loc]||'', avg:avg, am7:am7, am11:am11, pm5:pm5});
+    }
+  });
+  sweepData.sort(function(a,b){return a.avg-b.avg;});
+
+  var countEl = document.getElementById('sweepCount');
+  var listEl  = document.getElementById('sweepList');
+  if(!countEl || !listEl) return;
+
+  countEl.textContent = sweepData.length;
+
+  if(sweepData.length === 0){
+    listEl.innerHTML = '<div style="padding:16px 20px;color:#888780;font-size:12px;">No locations achieved a Green Sweep this week.</div>';
+    return;
+  }
+
+  function chip(label, val){
+    return '<div style="display:inline-flex;flex-direction:column;align-items:center;background:#d6f0e0;border-radius:6px;padding:5px 10px;min-width:56px;">'+
+      '<div style="font-size:9px;font-weight:600;color:#0a5c28;text-transform:uppercase;margin-bottom:2px;">'+label+'</div>'+
+      '<div style="font-size:13px;font-weight:700;color:#0a5c28;font-family:DM Mono,monospace;">'+val+'s</div>'+
+    '</div>';
+  }
+
+  listEl.innerHTML = sweepData.map(function(s,i){
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 20px;border-top:'+(i===0?'none':'1px solid #d3d1c7')+';flex-wrap:wrap;gap:8px;">'+
+      '<div>'+
+        '<div style="font-family:DM Mono,monospace;font-size:13px;font-weight:700;color:#2c2c2a;">'+s.loc+'</div>'+
+        '<div style="font-size:12px;font-weight:600;color:#2c2c2a;margin-top:2px;">'+s.gm+'</div>'+
+        '<div style="font-size:10px;color:#888780;margin-top:2px;">Avg OEPE: '+s.avg+'s across all dayparts</div>'+
+      '</div>'+
+      '<div style="display:flex;gap:6px;align-items:center;">'+
+        chip('7am', s.am7)+chip('11am', s.am11)+chip('5pm', s.pm5)+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+buildGreenSweep();
 </script>
 </body>
 </html>
