@@ -514,25 +514,25 @@ function getMv(loc){
 const MOVEMENT = {"07562- 4th Ave":0, "24343- N. Veterans ":0, "35634 Flat Rock":1, "15069-Bradley Park":-1, "33945 - Lafayette":8, "24344- Ladonia-Hwt":10, "00455- Macon":1, "31329-431 N. Phenix":-3, "11915- Manchester":-2, "25063- Lee&#8217;s Crossing":-1, "19461- East Main":0, "11822- Buena Vista":2, "03895- Valley":-7, "05031- Airport":1, "10521- Stadium":-5, "06080- Victory Drive":-4, "11743- Whitesville":0, "11362- Milgen":0, "02066-Commerce":0};
 
 const RANKED = [
-  {rank:1,loc:"07562- 4th Ave",name:"7562 - 4th Ave",gm:"Ashley Ramsey",sup:"Braulio",score:3.0002,oepe:119,kvs:60,kiosk:83.3,kvs_r:5,oepe_r:1,kiosk_r:4,sales_r:5,gc_r:3,mcd_r:6,mcd:"21:01",mcd_bold:false,sales:"-0.8%",gc:"-2.8%",prev:1,move:0},
-  {rank:2,loc:"24343- N. Veterans ",name:"24343 - North Vet",gm:"Latasha Phillips",sup:"BJ",score:3.9002,oepe:165,kvs:56,kiosk:70.8,kvs_r:2,oepe_r:10,kiosk_r:12,sales_r:1,gc_r:1,mcd_r:9,mcd:"21:28",mcd_bold:false,sales:"5.1%",gc:"4.1%",prev:2,move:0},
-  {rank:3,loc:"35634 Flat Rock",name:"35634 - Flat Rock",gm:"Seadric Williams",sup:"Erika",score:5.0003,oepe:148,kvs:82,kiosk:69.2,kvs_r:13,oepe_r:7,kiosk_r:13,sales_r:2,gc_r:2,mcd_r:16,mcd:"25:37",mcd_bold:false,sales:"4.0%",gc:"2.8%",prev:4,move:1},
-  {rank:4,loc:"15069-Bradley Park",name:"15069 - Bradley Park",gm:"Shareka Dunn-Harris",sup:"BJ",score:6.0002,oepe:141,kvs:61,kiosk:68.0,kvs_r:7,oepe_r:6,kiosk_r:15,sales_r:7,gc_r:4,mcd_r:5,mcd:"20:33",mcd_bold:false,sales:"-2.5%",gc:"-4.0%",prev:3,move:-1},
-  {rank:5,loc:"33945 - Lafayette",name:"33945 - Lafayette",gm:"Hope Spence",sup:"-",score:7.1003,oepe:167,kvs:93,kiosk:71.0,kvs_r:16,oepe_r:12,kiosk_r:10,sales_r:3,gc_r:5,mcd_r:12,mcd:"22:59",mcd_bold:false,sales:"-0.0%",gc:"-4.8%",prev:13,move:8},
-  {rank:6,loc:"24344- Ladonia-Hwt",name:"24344 - Phenix City",gm:"Veronica Dennard",sup:"Alfredo",score:7.3002,oepe:140,kvs:56,kiosk:92.2,kvs_r:2,oepe_r:5,kiosk_r:2,sales_r:13,gc_r:11,mcd_r:3,mcd:"20:23",mcd_bold:false,sales:"-7.5%",gc:"-7.7%",prev:16,move:10},
-  {rank:7,loc:"00455- Macon",name:"455 - Macon Rd",gm:"Maxine Solis",sup:"Braulio",score:7.4002,oepe:149,kvs:65,kiosk:75.5,kvs_r:9,oepe_r:8,kiosk_r:7,sales_r:6,gc_r:10,mcd_r:7,mcd:"21:12",mcd_bold:false,sales:"-1.2%",gc:"-7.1%",prev:8,move:1},
-  {rank:8,loc:"31329-431 N. Phenix",name:"31329 - 431 North",gm:"Galisa Henderson",sup:"Alfredo",score:7.7003,oepe:182,kvs:82,kiosk:79.6,kvs_r:13,oepe_r:18,kiosk_r:5,sales_r:4,gc_r:5,mcd_r:17,mcd:"26:24",mcd_bold:false,sales:"-0.5%",gc:"-4.8%",prev:5,move:-3},
-  {rank:9,loc:"11915- Manchester",name:"11915 - Manchester",gm:"Denys Tolbert",sup:"Jose",score:7.8002,oepe:123,kvs:48,kiosk:85.2,kvs_r:1,oepe_r:2,kiosk_r:3,sales_r:14,gc_r:14,mcd_r:1,mcd:"18:48",mcd_bold:false,sales:"-8.5%",gc:"-10.0%",prev:7,move:-2},
-  {rank:10,loc:"25063- Lee&#8217;s Crossing",name:"25063 - Lee's Crossing",gm:"Craig Ladner",sup:"Jose",score:8.2002,oepe:126,kvs:66,kiosk:57.5,kvs_r:10,oepe_r:3,kiosk_r:17,sales_r:11,gc_r:9,mcd_r:2,mcd:"20:12",mcd_bold:false,sales:"-5.4%",gc:"-6.9%",prev:9,move:-1},
-  {rank:11,loc:"19461- East Main",name:"19461 - Hogansville",gm:"Memie Dawson",sup:"-",score:9.0003,oepe:169,kvs:103,kiosk:76.1,kvs_r:19,oepe_r:14,kiosk_r:6,sales_r:8,gc_r:7,mcd_r:19,mcd:"29:44",mcd_bold:false,sales:"-3.1%",gc:"-5.7%",prev:11,move:0},
-  {rank:12,loc:"11822- Buena Vista",name:"11822 - Buena Vista",gm:"Vashonda Moore",sup:"BJ",score:9.4002,oepe:165,kvs:78,kiosk:57.3,kvs_r:12,oepe_r:10,kiosk_r:18,sales_r:10,gc_r:8,mcd_r:4,mcd:"20:31",mcd_bold:false,sales:"-4.6%",gc:"-6.4%",prev:14,move:2},
-  {rank:13,loc:"03895- Valley",name:"3895 - Valley",gm:"Sylvia Copeland",sup:"Sylvia",score:11.0003,oepe:174,kvs:60,kiosk:55.9,kvs_r:5,oepe_r:16,kiosk_r:19,sales_r:9,gc_r:12,mcd_r:10,mcd:"21:45",mcd_bold:false,sales:"-3.9%",gc:"-9.1%",prev:6,move:-7},
-  {rank:14,loc:"05031- Airport",name:"5031 - Airport",gm:"Biaunca Jones",sup:"Braulio",score:11.2003,oepe:136,kvs:58,kiosk:71.0,kvs_r:4,oepe_r:4,kiosk_r:10,sales_r:18,gc_r:18,mcd_r:14,mcd:"25:12",mcd_bold:false,sales:"-13.4%",gc:"-15.0%",prev:15,move:1},
-  {rank:15,loc:"10521- Stadium",name:"10521 - Stadium",gm:"Brenda Rodeheaver",sup:"Erika",score:11.4003,oepe:152,kvs:99,kiosk:61.4,kvs_r:17,oepe_r:9,kiosk_r:16,sales_r:12,gc_r:13,mcd_r:13,mcd:"24:03",mcd_bold:false,sales:"-6.9%",gc:"-9.4%",prev:10,move:-5},
-  {rank:16,loc:"06080- Victory Drive",name:"6080 - Victory Dr",gm:"Essence Denson",sup:"BJ",score:12.8003,oepe:213,kvs:67,kiosk:93.1,kvs_r:11,oepe_r:19,kiosk_r:1,sales_r:15,gc_r:16,mcd_r:18,mcd:"28:08",mcd_bold:false,sales:"-8.6%",gc:"-12.0%",prev:12,move:-4},
-  {rank:17,loc:"11743- Whitesville",name:"11743 - Whitesville Rd",gm:"Jalene Lovelace",sup:"Sylvia",score:13.2003,oepe:172,kvs:90,kiosk:73.5,kvs_r:15,oepe_r:15,kiosk_r:8,sales_r:17,gc_r:15,mcd_r:15,mcd:"25:29",mcd_bold:false,sales:"-11.7%",gc:"-11.1%",prev:17,move:0},
-  {rank:18,loc:"11362- Milgen",name:"11362 - Milgen Rd",gm:"Bobbie Reddick",sup:"Erika",score:13.8002,oepe:177,kvs:62,kiosk:69.2,kvs_r:8,oepe_r:17,kiosk_r:13,sales_r:16,gc_r:17,mcd_r:8,mcd:"21:24",mcd_bold:false,sales:"-9.9%",gc:"-14.0%",prev:18,move:0},
-  {rank:19,loc:"02066-Commerce",name:"2066 - Commerce",gm:"David Jackson",sup:"Sylvia",score:14.6003,oepe:167,kvs:100,kiosk:72.9,kvs_r:18,oepe_r:12,kiosk_r:9,sales_r:19,gc_r:19,mcd_r:11,mcd:"21:59",mcd_bold:false,sales:"-17.4%",gc:"-21.2%",prev:19,move:0}
+  {rank:1,loc:"07562- 4th Ave",name:"7562 - 4th Ave",gm:"Ashley Ramsey",sup:"Braulio",score:3.0002,oepe:119,kvs:60,kiosk:83.3,kvs_r:5,oepe_r:1,kiosk_r:4,sales_r:5,gc_r:3,mcd_r:5,mcd:"3:15",mcd_bold:false,sales:"-0.8%",gc:"-2.8%",prev:1,move:0},
+  {rank:2,loc:"24343- N. Veterans ",name:"24343 - North Vet",gm:"Latasha Phillips",sup:"BJ",score:3.9002,oepe:165,kvs:56,kiosk:70.8,kvs_r:2,oepe_r:10,kiosk_r:12,sales_r:1,gc_r:1,mcd_r:1,mcd:"2:40",mcd_bold:false,sales:"5.1%",gc:"4.1%",prev:2,move:0},
+  {rank:3,loc:"35634 Flat Rock",name:"35634 - Flat Rock",gm:"Seadric Williams",sup:"Erika",score:5.0003,oepe:148,kvs:82,kiosk:69.2,kvs_r:13,oepe_r:7,kiosk_r:13,sales_r:2,gc_r:2,mcd_r:16,mcd:"4:16",mcd_bold:false,sales:"4.0%",gc:"2.8%",prev:4,move:1},
+  {rank:4,loc:"15069-Bradley Park",name:"15069 - Bradley Park",gm:"Shareka Dunn-Harris",sup:"BJ",score:6.0002,oepe:141,kvs:61,kiosk:68.0,kvs_r:7,oepe_r:6,kiosk_r:15,sales_r:7,gc_r:4,mcd_r:2,mcd:"2:49",mcd_bold:false,sales:"-2.5%",gc:"-4.0%",prev:3,move:-1},
+  {rank:5,loc:"33945 - Lafayette",name:"33945 - Lafayette",gm:"Hope Spence",sup:"-",score:7.1003,oepe:167,kvs:93,kiosk:71.0,kvs_r:16,oepe_r:12,kiosk_r:10,sales_r:3,gc_r:5,mcd_r:12,mcd:"4:01",mcd_bold:false,sales:"-0.0%",gc:"-4.8%",prev:13,move:8},
+  {rank:6,loc:"24344- Ladonia-Hwt",name:"24344 - Phenix City",gm:"Veronica Dennard",sup:"Alfredo",score:7.3002,oepe:140,kvs:56,kiosk:92.2,kvs_r:2,oepe_r:5,kiosk_r:2,sales_r:13,gc_r:11,mcd_r:14,mcd:"4:10",mcd_bold:false,sales:"-7.5%",gc:"-7.7%",prev:16,move:10},
+  {rank:7,loc:"00455- Macon",name:"455 - Macon Rd",gm:"Maxine Solis",sup:"Braulio",score:7.4002,oepe:149,kvs:65,kiosk:75.5,kvs_r:9,oepe_r:8,kiosk_r:7,sales_r:6,gc_r:10,mcd_r:9,mcd:"3:35",mcd_bold:false,sales:"-1.2%",gc:"-7.1%",prev:8,move:1},
+  {rank:8,loc:"31329-431 N. Phenix",name:"31329 - 431 North",gm:"Galisa Henderson",sup:"Alfredo",score:7.7003,oepe:182,kvs:82,kiosk:79.6,kvs_r:13,oepe_r:18,kiosk_r:5,sales_r:4,gc_r:5,mcd_r:10,mcd:"3:40",mcd_bold:false,sales:"-0.5%",gc:"-4.8%",prev:5,move:-3},
+  {rank:9,loc:"11915- Manchester",name:"11915 - Manchester",gm:"Denys Tolbert",sup:"Jose",score:7.8002,oepe:123,kvs:48,kiosk:85.2,kvs_r:1,oepe_r:2,kiosk_r:3,sales_r:14,gc_r:14,mcd_r:8,mcd:"3:18",mcd_bold:false,sales:"-8.5%",gc:"-10.0%",prev:7,move:-2},
+  {rank:10,loc:"25063- Lee&#8217;s Crossing",name:"25063 - Lee's Crossing",gm:"Craig Ladner",sup:"Jose",score:8.2002,oepe:126,kvs:66,kiosk:57.5,kvs_r:10,oepe_r:3,kiosk_r:17,sales_r:11,gc_r:9,mcd_r:6,mcd:"3:16",mcd_bold:false,sales:"-5.4%",gc:"-6.9%",prev:9,move:-1},
+  {rank:11,loc:"19461- East Main",name:"19461 - Hogansville",gm:"Memie Dawson",sup:"-",score:9.0003,oepe:169,kvs:103,kiosk:76.1,kvs_r:19,oepe_r:14,kiosk_r:6,sales_r:8,gc_r:7,mcd_r:18,mcd:"4:59",mcd_bold:false,sales:"-3.1%",gc:"-5.7%",prev:11,move:0},
+  {rank:12,loc:"11822- Buena Vista",name:"11822 - Buena Vista",gm:"Vashonda Moore",sup:"BJ",score:9.4002,oepe:165,kvs:78,kiosk:57.3,kvs_r:12,oepe_r:10,kiosk_r:18,sales_r:10,gc_r:8,mcd_r:4,mcd:"3:10",mcd_bold:false,sales:"-4.6%",gc:"-6.4%",prev:14,move:2},
+  {rank:13,loc:"03895- Valley",name:"3895 - Valley",gm:"Sylvia Copeland",sup:"Sylvia",score:11.0003,oepe:174,kvs:60,kiosk:55.9,kvs_r:5,oepe_r:16,kiosk_r:19,sales_r:9,gc_r:12,mcd_r:3,mcd:"3:06",mcd_bold:false,sales:"-3.9%",gc:"-9.1%",prev:6,move:-7},
+  {rank:14,loc:"05031- Airport",name:"5031 - Airport",gm:"Biaunca Jones",sup:"Braulio",score:11.2003,oepe:136,kvs:58,kiosk:71.0,kvs_r:4,oepe_r:4,kiosk_r:10,sales_r:18,gc_r:18,mcd_r:13,mcd:"4:05",mcd_bold:false,sales:"-13.4%",gc:"-15.0%",prev:15,move:1},
+  {rank:15,loc:"10521- Stadium",name:"10521 - Stadium",gm:"Brenda Rodeheaver",sup:"Erika",score:11.4003,oepe:152,kvs:99,kiosk:61.4,kvs_r:17,oepe_r:9,kiosk_r:16,sales_r:12,gc_r:13,mcd_r:15,mcd:"4:11",mcd_bold:false,sales:"-6.9%",gc:"-9.4%",prev:10,move:-5},
+  {rank:16,loc:"06080- Victory Drive",name:"6080 - Victory Dr",gm:"Essence Denson",sup:"BJ",score:12.8003,oepe:213,kvs:67,kiosk:93.1,kvs_r:11,oepe_r:19,kiosk_r:1,sales_r:15,gc_r:16,mcd_r:11,mcd:"3:56",mcd_bold:false,sales:"-8.6%",gc:"-12.0%",prev:12,move:-4},
+  {rank:17,loc:"11743- Whitesville",name:"11743 - Whitesville Rd",gm:"Jalene Lovelace",sup:"Sylvia",score:13.2003,oepe:172,kvs:90,kiosk:73.5,kvs_r:15,oepe_r:15,kiosk_r:8,sales_r:17,gc_r:15,mcd_r:17,mcd:"4:29",mcd_bold:false,sales:"-11.7%",gc:"-11.1%",prev:17,move:0},
+  {rank:18,loc:"11362- Milgen",name:"11362 - Milgen Rd",gm:"Bobbie Reddick",sup:"Erika",score:13.8002,oepe:177,kvs:62,kiosk:69.2,kvs_r:8,oepe_r:17,kiosk_r:13,sales_r:16,gc_r:17,mcd_r:7,mcd:"3:17",mcd_bold:false,sales:"-9.9%",gc:"-14.0%",prev:18,move:0},
+  {rank:19,loc:"02066-Commerce",name:"2066 - Commerce",gm:"David Jackson",sup:"Sylvia",score:14.6003,oepe:167,kvs:100,kiosk:72.9,kvs_r:18,oepe_r:12,kiosk_r:9,sales_r:19,gc_r:19,mcd_r:19,mcd:"5:01",mcd_bold:false,sales:"-17.4%",gc:"-21.2%",prev:19,move:0}
 ];
 
 const SUPS = [
@@ -552,25 +552,25 @@ const PEAKS = {
 };
 
 const RAW_DATA = [
-  ["10521- Stadium",99,17,152,9,0.614,16,"-6.9%",12,"-9.4%",13,"24:03",13,false],
-  ["11362- Milgen",62,8,177,17,0.692,13,"-9.9%",16,"-14.0%",17,"21:24",8,false],
-  ["11743- Whitesville",90,15,172,15,0.735,8,"-11.7%",17,"-11.1%",15,"25:29",15,false],
-  ["11822- Buena Vista",78,12,165,10,0.573,18,"-4.6%",10,"-6.4%",8,"20:31",4,false],
-  ["11915- Manchester",48,1,123,2,0.852,3,"-8.5%",14,"-10.0%",14,"18:48",1,false],
-  ["15069-Bradley Park",61,7,141,6,0.68,15,"-2.5%",7,"-4.0%",4,"20:33",5,false],
-  ["19461- East Main",103,19,169,14,0.761,6,"-3.1%",8,"-5.7%",7,"29:44",19,false],
-  ["02066-Commerce",100,18,167,12,0.729,9,"-17.4%",19,"-21.2%",19,"21:59",11,false],
-  ["24343- N. Veterans ",56,2,165,10,0.708,12,"+5.1%",1,"+4.1%",1,"21:28",9,false],
-  ["24344- Ladonia-Hwt",56,2,140,5,0.922,2,"-7.5%",13,"-7.7%",11,"20:23",3,false],
-  ["25063- Lee&#8217;s Crossing",66,10,126,3,0.575,17,"-5.4%",11,"-6.9%",9,"20:12",2,false],
-  ["31329-431 N. Phenix",82,13,182,18,0.796,5,"-0.5%",4,"-4.8%",5,"26:24",17,false],
-  ["33945 - Lafayette",93,16,167,12,0.71,10,"+-0.0%",3,"-4.8%",5,"22:59",12,false],
-  ["35634 Flat Rock",82,13,148,7,0.692,13,"+4.0%",2,"+2.8%",2,"25:37",16,false],
-  ["03895- Valley",60,5,174,16,0.559,19,"-3.9%",9,"-9.1%",12,"21:45",10,false],
-  ["00455- Macon",65,9,149,8,0.755,7,"-1.2%",6,"-7.1%",10,"21:12",7,false],
-  ["05031- Airport",58,4,136,4,0.71,10,"-13.4%",18,"-15.0%",18,"25:12",14,false],
-  ["06080- Victory Drive",67,11,213,19,0.931,1,"-8.6%",15,"-12.0%",16,"28:08",18,false],
-  ["07562- 4th Ave",60,5,119,1,0.833,4,"-0.8%",5,"-2.8%",3,"21:01",6,false]
+  ["10521- Stadium",99,17,152,9,0.614,16,"-6.9%",12,"-9.4%",13,"4:11",15,false],
+  ["11362- Milgen",62,8,177,17,0.692,13,"-9.9%",16,"-14.0%",17,"3:17",7,false],
+  ["11743- Whitesville",90,15,172,15,0.735,8,"-11.7%",17,"-11.1%",15,"4:29",17,false],
+  ["11822- Buena Vista",78,12,165,10,0.573,18,"-4.6%",10,"-6.4%",8,"3:10",4,false],
+  ["11915- Manchester",48,1,123,2,0.852,3,"-8.5%",14,"-10.0%",14,"3:18",8,false],
+  ["15069-Bradley Park",61,7,141,6,0.68,15,"-2.5%",7,"-4.0%",4,"2:49",2,false],
+  ["19461- East Main",103,19,169,14,0.761,6,"-3.1%",8,"-5.7%",7,"4:59",18,false],
+  ["02066-Commerce",100,18,167,12,0.729,9,"-17.4%",19,"-21.2%",19,"5:01",19,false],
+  ["24343- N. Veterans ",56,2,165,10,0.708,12,"+5.1%",1,"+4.1%",1,"2:40",1,false],
+  ["24344- Ladonia-Hwt",56,2,140,5,0.922,2,"-7.5%",13,"-7.7%",11,"4:10",14,false],
+  ["25063- Lee&#8217;s Crossing",66,10,126,3,0.575,17,"-5.4%",11,"-6.9%",9,"3:16",6,false],
+  ["31329-431 N. Phenix",82,13,182,18,0.796,5,"-0.5%",4,"-4.8%",5,"3:40",10,false],
+  ["33945 - Lafayette",93,16,167,12,0.71,10,"+-0.0%",3,"-4.8%",5,"4:01",12,false],
+  ["35634 Flat Rock",82,13,148,7,0.692,13,"+4.0%",2,"+2.8%",2,"4:16",16,false],
+  ["03895- Valley",60,5,174,16,0.559,19,"-3.9%",9,"-9.1%",12,"3:06",3,false],
+  ["00455- Macon",65,9,149,8,0.755,7,"-1.2%",6,"-7.1%",10,"3:35",9,false],
+  ["05031- Airport",58,4,136,4,0.71,10,"-13.4%",18,"-15.0%",18,"4:05",13,false],
+  ["06080- Victory Drive",67,11,213,19,0.931,1,"-8.6%",15,"-12.0%",16,"3:56",11,false],
+  ["07562- 4th Ave",60,5,119,1,0.833,4,"-0.8%",5,"-2.8%",3,"3:15",5,false]
 ];
 const RAW_TOTAL = ["Total",72,null,186,null,0.7270,null,"-8.6%",null,"-9.9%",null,"3:52",null];
 
@@ -923,25 +923,25 @@ var HISTORY=[
   }}
 ,
 {week:'Jun 21-27',data:{
-    '07562- 4th Ave': {rank:1, oepe:119,kvs:60, kiosk:83.3,sales:-0.8, gc:-2.8, mcd:210},
-    '24343- N. Veterans ': {rank:2, oepe:165,kvs:56, kiosk:70.8,sales:5.1, gc:4.1, mcd:215},
-    '35634 Flat Rock': {rank:3, oepe:148,kvs:82, kiosk:69.2,sales:4.0, gc:2.8, mcd:256},
-    '15069-Bradley Park': {rank:4, oepe:141,kvs:61, kiosk:68.0,sales:-2.5, gc:-4.0, mcd:206},
-    '33945 - Lafayette': {rank:5, oepe:167,kvs:93, kiosk:71.0,sales:-0.0, gc:-4.8, mcd:230},
-    '24344- Ladonia-Hwt': {rank:6, oepe:140,kvs:56, kiosk:92.2,sales:-7.5, gc:-7.7, mcd:204},
-    '00455- Macon': {rank:7, oepe:149,kvs:65, kiosk:75.5,sales:-1.2, gc:-7.1, mcd:212},
-    '31329-431 N. Phenix': {rank:8, oepe:182,kvs:82, kiosk:79.6,sales:-0.5, gc:-4.8, mcd:264},
-    '11915- Manchester': {rank:9, oepe:123,kvs:48, kiosk:85.2,sales:-8.5, gc:-10.0, mcd:188},
-    '25063- Lee&#8217;s Crossing': {rank:10, oepe:126,kvs:66, kiosk:57.5,sales:-5.4, gc:-6.9, mcd:202},
-    '19461- East Main': {rank:11, oepe:169,kvs:103, kiosk:76.1,sales:-3.1, gc:-5.7, mcd:297},
-    '11822- Buena Vista': {rank:12, oepe:165,kvs:78, kiosk:57.3,sales:-4.6, gc:-6.4, mcd:205},
-    '03895- Valley': {rank:13, oepe:174,kvs:60, kiosk:55.9,sales:-3.9, gc:-9.1, mcd:218},
-    '05031- Airport': {rank:14, oepe:136,kvs:58, kiosk:71.0,sales:-13.4, gc:-15.0, mcd:252},
-    '10521- Stadium': {rank:15, oepe:152,kvs:99, kiosk:61.4,sales:-6.9, gc:-9.4, mcd:240},
-    '06080- Victory Drive': {rank:16, oepe:213,kvs:67, kiosk:93.1,sales:-8.6, gc:-12.0, mcd:281},
-    '11743- Whitesville': {rank:17, oepe:172,kvs:90, kiosk:73.5,sales:-11.7, gc:-11.1, mcd:255},
-    '11362- Milgen': {rank:18, oepe:177,kvs:62, kiosk:69.2,sales:-9.9, gc:-14.0, mcd:214},
-    '02066-Commerce': {rank:19, oepe:167,kvs:100, kiosk:72.9,sales:-17.4, gc:-21.2, mcd:220}
+    '07562- 4th Ave': {rank:1, oepe:119,kvs:60, kiosk:83.3,sales:-0.8, gc:-2.8, mcd:32},
+    '24343- N. Veterans ': {rank:2, oepe:165,kvs:56, kiosk:70.8,sales:5.1, gc:4.1, mcd:27},
+    '35634 Flat Rock': {rank:3, oepe:148,kvs:82, kiosk:69.2,sales:4.0, gc:2.8, mcd:43},
+    '15069-Bradley Park': {rank:4, oepe:141,kvs:61, kiosk:68.0,sales:-2.5, gc:-4.0, mcd:28},
+    '33945 - Lafayette': {rank:5, oepe:167,kvs:93, kiosk:71.0,sales:-0.0, gc:-4.8, mcd:40},
+    '24344- Ladonia-Hwt': {rank:6, oepe:140,kvs:56, kiosk:92.2,sales:-7.5, gc:-7.7, mcd:42},
+    '00455- Macon': {rank:7, oepe:149,kvs:65, kiosk:75.5,sales:-1.2, gc:-7.1, mcd:36},
+    '31329-431 N. Phenix': {rank:8, oepe:182,kvs:82, kiosk:79.6,sales:-0.5, gc:-4.8, mcd:37},
+    '11915- Manchester': {rank:9, oepe:123,kvs:48, kiosk:85.2,sales:-8.5, gc:-10.0, mcd:33},
+    '25063- Lee&#8217;s Crossing': {rank:10, oepe:126,kvs:66, kiosk:57.5,sales:-5.4, gc:-6.9, mcd:33},
+    '19461- East Main': {rank:11, oepe:169,kvs:103, kiosk:76.1,sales:-3.1, gc:-5.7, mcd:50},
+    '11822- Buena Vista': {rank:12, oepe:165,kvs:78, kiosk:57.3,sales:-4.6, gc:-6.4, mcd:32},
+    '03895- Valley': {rank:13, oepe:174,kvs:60, kiosk:55.9,sales:-3.9, gc:-9.1, mcd:31},
+    '05031- Airport': {rank:14, oepe:136,kvs:58, kiosk:71.0,sales:-13.4, gc:-15.0, mcd:41},
+    '10521- Stadium': {rank:15, oepe:152,kvs:99, kiosk:61.4,sales:-6.9, gc:-9.4, mcd:42},
+    '06080- Victory Drive': {rank:16, oepe:213,kvs:67, kiosk:93.1,sales:-8.6, gc:-12.0, mcd:39},
+    '11743- Whitesville': {rank:17, oepe:172,kvs:90, kiosk:73.5,sales:-11.7, gc:-11.1, mcd:45},
+    '11362- Milgen': {rank:18, oepe:177,kvs:62, kiosk:69.2,sales:-9.9, gc:-14.0, mcd:33},
+    '02066-Commerce': {rank:19, oepe:167,kvs:100, kiosk:72.9,sales:-17.4, gc:-21.2, mcd:50}
   }}
 ];
 
@@ -962,7 +962,7 @@ var KPI_META={
   kiosk:{label:'Kiosk %',       fmt:function(v){return v+'%';},                                    lowerBetter:false},
   sales:{label:'Sales vs LY',   fmt:function(v){return (v>=0?'+':'')+v+'%';},                     lowerBetter:false},
   gc:   {label:'Guest Counts',  fmt:function(v){return (v>=0?'+':'')+v+'%';},                     lowerBetter:false},
-  mcd:  {label:'McDelivery',    fmt:function(v){var sec=Math.round(v);var m=Math.floor(sec/60);var s=sec%60;return m+':'+(s<10?'0':'')+s;},lowerBetter:true}
+  mcd:  {label:'McDelivery',    fmt:function(v){var tot=v/10;var m=Math.floor(tot);var s=Math.round((tot-m)*60);return m+':'+(s<10?'0':'')+s;},lowerBetter:true}
 };
 
 var LINE_COLORS=['#1a5fa8','#1a7a4a','#b87a00','#c0392b','#7b3fa8','#0097a7','#e65100','#2e7d32','#ad1457','#4527a0','#00695c','#827717','#37474f','#558b2f','#6a1b9a','#1565c0','#bf360c','#004d40','#880e4f','#1a237e'];
