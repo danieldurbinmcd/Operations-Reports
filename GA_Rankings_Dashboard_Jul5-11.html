@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Georgia Rankings - Week of Jul 5-11, 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#f5f4f0;--surface:#ffffff;--surface2:#f0ede8;--border:#d3d1c7;
+  --text:#2c2c2a;--muted:#888780;--accent:#8a6e1e;--accent2:#1a5fa8;
+  --green:#1a7a4a;--red:#c0392b;--amber:#b05a0a;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.5;min-height:100vh;}
+.page{max-width:1160px;margin:0 auto;padding:24px 20px 60px;}
+
+/* Header */
+.header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+.header h1{font-family:'DM Serif Display',serif;font-size:26px;font-weight:400;}
+.header .week{font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);margin-top:3px;letter-spacing:.08em;}
+.header .state{font-family:'DM Serif Display',serif;font-size:18px;color:var(--accent);}
+.header .meta{font-size:11px;color:var(--muted);text-align:right;}
+
+/* Top-level page tabs */
+.page-tabs{display:flex;gap:3px;margin-bottom:24px;background:#0f2347;border:1px solid #2a5298;border-radius:12px;padding:5px;box-shadow:0 4px 15px rgba(15,35,71,0.4);overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;}
+.page-tab{flex:0 0 auto;text-align:center;padding:9px 12px;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;color:#a8c4e8;transition:all .2s;border:none;background:transparent;font-family:inherit;letter-spacing:.02em;white-space:nowrap;}
+.page-tab:hover{color:var(--text);background:var(--surface2);}
+.page-tab.active{background:linear-gradient(135deg,#e8c97a 0%,#c9a227 100%);color:#0f2347;font-weight:700;box-shadow:0 2px 8px rgba(232,201,122,0.4);}
+
+/* Page sections */
+.tab-page{display:none;}
+.tab-page.active{display:block;}
+
+/* Summary strip */
+.summary-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+.s-card{background:linear-gradient(135deg,#1a3a6b 0%,#0f2347 100%);border:1px solid #2a5298;border-radius:10px;padding:12px 14px;box-shadow:0 4px 15px rgba(26,58,107,0.3);}
+.s-lbl{font-size:12px;color:#e8c97a;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;font-weight:600;}
+.s-val{font-family:'DM Mono',monospace;font-size:26px;font-weight:700;color:#ffffff;line-height:1.2;}
+.s-sub{font-size:12px;color:#a8c4e8;margin-top:4px;}
+
+/* Weights bar */
+.weights-bar{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.w-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;flex-shrink:0;}
+.w-items{display:flex;gap:5px;flex-wrap:wrap;}
+.w-chip{display:flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:11px;cursor:pointer;font-family:inherit;transition:background .15s,border-color .15s,box-shadow .15s;}
+.w-chip:hover{background:#e8f0fb;border-color:#4a7ac8;box-shadow:0 2px 6px rgba(74,122,200,0.2);}
+.w-chip:hover .wt{color:#1a5fa8;}
+.w-chip:hover .wn{color:#2c2c2a;}
+.w-chip.sort-active{background:var(--navy);border-color:var(--gold2);box-shadow:0 0 0 2px var(--gold2);}
+.w-chip.sort-active .wt,.w-chip.sort-active .wn{color:var(--gold);}
+.w-chip.sort-active:hover{background:var(--navy);border-color:var(--gold2);}
+.w-chip.sort-active:hover .wt,.w-chip.sort-active:hover .wn{color:var(--gold);}
+.trend-pill{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;}
+.trend-pill:hover{border-color:var(--navy);color:var(--navy);}
+.trend-pill-active{background:var(--navy);border-color:var(--navy);color:var(--gold);}
+.trend-toggle{padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-size:11px;cursor:pointer;font-family:inherit;transition:all .15s;}
+.trend-toggle-on{background:#e8f4fd;border-color:#4a90d9;color:#1a5fa8;font-weight:600;}
+.trend-cell{padding:9px 12px;text-align:center;border-top:1px solid var(--border);}
+.trend-card-item{display:flex;justify-content:space-between;align-items:center;padding:9px 16px;border-bottom:1px solid var(--border);}
+.trend-card-item:last-child{border-bottom:none;}
+.w-chip .wt{font-family:'DM Mono',monospace;color:var(--accent);font-weight:500;}
+.w-chip .wn{color:var(--muted);}
+
+/* Sec title */
+.sec-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* Cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+
+/* Ranking table */
+.rank-table{width:100%;border-collapse:collapse;}
+.rank-table th{background:var(--surface2);padding:8px 12px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);white-space:nowrap;}
+.rank-table th.r{text-align:right;}
+.rank-table td{padding:8px 12px;border-top:1px solid var(--border);vertical-align:middle;}
+.rank-table td.r{text-align:right;font-family:'DM Mono',monospace;font-size:12px;}
+.rank-table tr:hover td{opacity:0.85;}
+.rank-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);}
+.loc-num{font-family:'DM Mono',monospace;font-weight:500;font-size:13px;}
+.gm-name{font-size:11px;color:var(--muted);margin-top:1px;}
+.score-pill{display:inline-block;font-family:'DM Mono',monospace;font-size:11px;padding:2px 8px;border-radius:6px;font-weight:500;}
+.score-top{background:rgba(109,207,158,.15);color:var(--green);border:1px solid rgba(109,207,158,.25);}
+.score-mid{background:rgba(232,201,122,.1);color:var(--accent);border:1px solid rgba(232,201,122,.2);}
+.score-bot{background:rgba(232,122,122,.12);color:var(--red);border:1px solid rgba(232,122,122,.2);}
+
+/* Supervisor ranking */
+.sup-row{display:grid;grid-template-columns:40px 1fr auto;align-items:center;gap:10px;padding:11px 16px;border-top:1px solid var(--border);}
+.sup-row:first-child{border-top:none;}
+.sup-row:hover{opacity:0.85;}
+.sup-pos{font-family:'DM Serif Display',serif;font-size:20px;color:var(--muted);}
+.sup-pos.p1{color:var(--accent);}
+.sup-pos.p2{color:var(--text);}
+.sup-name{font-size:13px;font-weight:500;}
+.sup-locs{font-size:10px;color:var(--muted);margin-top:1px;}
+.sup-avg{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);}
+
+/* Data page - full KPI table */
+.data-table{width:100%;border-collapse:collapse;font-size:11px;}
+.data-table th{background:var(--surface2);padding:7px 10px;text-align:center;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);white-space:nowrap;border-bottom:1px solid var(--border);}
+.data-table th.l{text-align:left;}
+.data-table td{padding:7px 10px;border-top:1px solid var(--border);text-align:center;font-family:'DM Mono',monospace;font-size:11px;}
+.data-table td.l{text-align:left;font-family:'DM Sans',sans-serif;}
+.data-table tr:hover td{background:var(--surface2);}
+.rank-badge{display:inline-block;font-size:10px;padding:1px 6px;border-radius:4px;font-family:'DM Mono',monospace;}
+.rb-top{background:rgba(109,207,158,.15);color:var(--green);}
+.rb-mid{background:rgba(232,201,122,.1);color:var(--accent);}
+.rb-bot{background:rgba(232,122,122,.12);color:var(--red);}
+
+/* 80/20 */
+.split-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:700px){.split-grid{grid-template-columns:1fr;}}
+.split-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.split-header .title{font-family:'DM Serif Display',serif;font-size:15px;}
+.split-header .badge{font-size:10px;padding:3px 10px;border-radius:20px;font-family:'DM Mono',monospace;}
+.badge-top{background:rgba(109,207,158,.15);color:var(--green);border:1px solid rgba(109,207,158,.25);}
+.badge-bot{background:rgba(232,122,122,.12);color:var(--red);border:1px solid rgba(232,122,122,.2);}
+.split-row{display:grid;grid-template-columns:28px 60px 1fr 1fr auto;align-items:center;gap:10px;padding:9px 16px;border-top:1px solid var(--border);}
+.split-row:first-child{border-top:none;}
+.split-row:hover{background:var(--surface2);}
+.split-rank{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);}
+.split-loc{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;}
+.split-gm{font-size:10px;color:var(--muted);}
+.split-score{font-family:'DM Mono',monospace;font-size:12px;}
+
+/* Peaks */
+.peaks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+@media(max-width:700px){.peaks-grid{grid-template-columns:1fr;}}
+.peak-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.peak-dp{font-family:'DM Serif Display',serif;font-size:15px;}
+.peak-time{font-family:'DM Mono',monospace;font-size:10px;color:var(--accent);}
+.peak-row{display:grid;grid-template-columns:22px 1fr auto auto;align-items:center;gap:8px;padding:7px 14px;border-top:1px solid var(--border);font-size:11px;}
+.peak-row:first-child{border-top:none;}
+.peak-row:hover{opacity:0.85;}
+.peak-pos{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
+.peak-loc{font-family:'DM Mono',monospace;font-weight:500;}
+.peak-oepe{font-family:'DM Mono',monospace;font-size:12px;font-weight:500;}
+.peak-kvs{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
+
+/* Two col layout */
+.two-col{display:grid;grid-template-columns:2fr 1fr;gap:16px;}
+@media(max-width:800px){.two-col{grid-template-columns:1fr;}}
+.data-table th.grp-end,.data-table td.grp-end{border-right:2px solid var(--border);}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div>
+      <h1>Weekly Performance Rankings</h1>
+      <div class="week">WEEK OF JUL 5 – JUL 11, 2026</div>
+    </div>
+    <div class="meta">
+      <div class="state">Georgia</div>
+      <span>19 Locations &nbsp;·&nbsp; 7 Supervisors</span>
+    </div>
+  </div>
+
+  <!-- TOP-LEVEL PAGE TABS -->
+  <div class="page-tabs">
+    <div class="page-tab active" onclick="showPage('ranking')">Ranking</div>
+    <div class="page-tab" onclick="showPage('moves')">Making Moves</div>
+    <div class="page-tab" onclick="showPage('data')">Ranking Data</div>
+    <div class="page-tab" onclick="showPage('split')">80 / 20</div>
+    <div class="page-tab" onclick="showPage('peaks')">Peak Periods</div>
+    <div class="page-tab" onclick="showPage('analysis')">Analysis</div>
+    <div class="page-tab" onclick="showPage('trends')">Trends</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- PAGE 1 — RANKING -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div class="tab-page active" id="page-ranking">
+
+    <div class="summary-strip">
+      <div class="s-card"><div class="s-lbl">#1 Location</div><div class="s-val">15069 - Bradley Park </div><div class="s-sub">Shareka Dunn-Harris &nbsp;&middot;&nbsp; score 4.2</div></div>
+      <div class="s-card"><div class="s-lbl">Top GM</div><div class="s-val">Shareka Dunn-Harris</div><div class="s-sub">15069 - Bradley Park &nbsp;&middot;&nbsp; 4.2001</div></div>
+      <div class="s-card"><div class="s-lbl">Top Supervisor</div><div class="s-val">Jose</div><div class="s-sub">avg rank 4.5</div></div>
+    </div>
+
+    <div class="weights-bar">
+      <div style="font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">&#128197; Click any KPI chip below to re-rank all locations by that metric:</div>
+      <div class="w-items">
+        <button class="w-chip sort-active" id="chip-score" onclick="sortRanking('score')"><span class="wt">&#9776;</span><span class="wn">Full Ranking</span></button>
+        <button class="w-chip" id="chip-gc" onclick="sortRanking('gc')"><span class="wt">30%</span><span class="wn">Guest Counts</span></button>
+        <button class="w-chip" id="chip-oepe" onclick="sortRanking('oepe')"><span class="wt">20%</span><span class="wn">OEPE</span></button>
+        <button class="w-chip" id="chip-sales" onclick="sortRanking('sales')"><span class="wt">20%</span><span class="wn">Sales</span></button>
+        <button class="w-chip" id="chip-kvs" onclick="sortRanking('kvs')"><span class="wt">10%</span><span class="wn">KVS</span></button>
+        <button class="w-chip" id="chip-kiosk" onclick="sortRanking('kiosk')"><span class="wt">10%</span><span class="wn">Kiosk %</span></button>
+        <button class="w-chip" id="chip-mcd" onclick="sortRanking('mcd')"><span class="wt">10%</span><span class="wn">McDelivery</span></button>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-bottom:0;">
+      <div>
+        <div class="sec-title">Full Rankings — All 19 Active Locations</div>
+        <div class="card">
+          <table class="rank-table" id="rankTable">
+            <thead>
+              <tr>
+                <th style="width:34px;">#</th>
+                <th>Location</th>
+                <th class="r">Score</th>
+                <th>GM</th>
+                <th>Supervisor</th>
+                <th class="r">Move</th>
+              </tr>
+            </thead>
+            <tbody id="rankBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="sec-title">Supervisor Rankings</div>
+        <div class="card">
+          <div id="supBody"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- PAGE 2 — RANKING DATA -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  
+  <div class="tab-page" id="page-moves">
+    <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#2c2c2a;margin-bottom:6px;">Making Moves</div>
+    <div style="font-size:13px;color:#888780;margin-bottom:24px;">Locations with positive movement this week &mdash; Jul 5 &ndash; 11, 2026 &nbsp;&middot;&nbsp; 8 locations improved</div>
+    <div id="movesContainer"></div>
+  </div>
+  <div class="tab-page" id="page-data">
+    <div class="sec-title" style="margin-bottom:14px;">Ranking Data — Data Tab C3:O37 &nbsp;·&nbsp; Week of Jul 5 – 11</div>
+    <div class="card" style="overflow-x:auto;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th class="l">Location</th>
+            <th>KVS</th><th class="grp-end">Rank</th>
+            <th>OEPE</th><th class="grp-end">Rank</th>
+            <th>Kiosk %</th><th class="grp-end">Rank</th>
+            <th>Sales</th><th class="grp-end">Rank</th>
+            <th>Guest Counts</th><th class="grp-end">Rank</th>
+            <th>McDelivery Time</th><th>Rank</th>
+          </tr>
+        </thead>
+        <tbody id="dataBody"></tbody>
+        <tfoot id="dataFoot"></tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- PAGE 3 — 80/20 -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div class="tab-page" id="page-split">
+    <div class="sec-title" style="margin-bottom:16px;">Best &amp; Worst 5 Locations per KPI — Week of Jul 5 – 11</div>
+    <div id="kpiSplitContainer"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- PAGE 4 — PEAK PERIODS -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div class="tab-page" id="page-peaks">
+    <div class="sec-title" style="margin-bottom:14px;">Daypart OEPE Rankings — Best to Worst &nbsp;&middot;&nbsp; Week of Jul 5 – 11</div>
+    <div class="peaks-grid">
+      <div class="card">
+        <div class="peak-header">
+          <div class="peak-dp">Breakfast</div>
+          <div class="peak-time">7AM – 9AM</div>
+        </div>
+        <div id="peak7am"></div>
+      </div>
+      <div class="card">
+        <div class="peak-header">
+          <div class="peak-dp">Lunch</div>
+          <div class="peak-time">11AM – 2PM</div>
+        </div>
+        <div id="peak11am"></div>
+      </div>
+      <div class="card">
+        <div class="peak-header">
+          <div class="peak-dp">Dinner</div>
+          <div class="peak-time">5PM – 7PM</div>
+        </div>
+        <div id="peak5pm"></div>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid #d3d1c7;border-radius:12px;overflow:hidden;margin-top:20px;">
+      <div style="padding:14px 20px;border-bottom:1px solid #d3d1c7;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#0a5c28,#1a7a4a);">
+        <div>
+          <div style="font-family:'DM Serif Display',serif;font-size:16px;color:#fff;">&#127807; Green Sweep</div>
+          <div style="font-size:11px;color:#a8e8c0;margin-top:3px;">Locations at or under 120s OEPE in every daypart this week</div>
+        </div>
+        <div id="sweepCount" style="font-family:'DM Mono',monospace;font-size:28px;font-weight:700;color:#fff;">—</div>
+      </div>
+      <div id="sweepList" style="padding:4px 0;">
+        <div style="padding:16px 20px;color:#888780;font-size:12px;">Calculating...</div>
+      </div>
+      <div style="padding:12px 20px;border-top:1px solid #d3d1c7;background:#f8f7f4;">
+        <div style="font-size:11px;color:#888780;line-height:1.6;"><strong style="color:#0a5c28;">Green Sweep</strong> means a location achieved OEPE at or under 120 seconds in all three dayparts — Breakfast (7am), Lunch (11am), and Dinner (5pm). This is the highest recognition on the Peak Periods page.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-page" id="page-analysis">
+    <div class="sec-title" style="margin-bottom:20px;">Weekly Analysis &amp; Focus Areas &mdash; Week of Jul 5&ndash;11, 2026</div>
+
+    <div style="background:#fff8e6;border:1px solid #f0c040;border-radius:12px;padding:14px 20px;margin-bottom:18px;font-size:12px;color:#6b4f00;">
+      <strong>&#9888; 2435 US 280 Bypass excluded this week</strong> &mdash; technology issues. Rankings reflect 19 active locations. Sales and GC rank by year-over-year % change.
+    </div>
+
+    <div style="background:#fff;border:1px solid #d3d1c7;border-radius:12px;padding:22px 26px;margin-bottom:18px;">
+      <div style="font-family:'DM Serif Display',serif;font-size:18px;margin-bottom:10px;color:#2c2c2a;">The Multiplier Lens</div>
+      <p style="font-size:13px;line-height:1.8;color:#444;margin-bottom:10px;">Shareka Dunn-Harris at 15069 holds #1 for a second straight week, the only location in the portfolio with positive Sales (+0.6%) &mdash; GC is still slightly negative (-0.6%) but by far the best in the portfolio. Seadric Williams at 35634 climbs 2 spots to #2. The biggest story this week is Memie Dawson at 19461, jumping 8 spots to #7 despite carrying the worst OEPE (233s) and worst KVS (105s) in the portfolio &mdash; relatively strong Sales (-3.5%) and GC (-5.2%) carried the move. Essence Denson at 6080 climbs 7 spots to #11 on the portfolio's best Kiosk (92.4%). On the other end, Hope Spence at 33945 drops 7 spots to #17, the biggest decline of the week.</p>
+      <p style="font-size:13px;line-height:1.8;color:#444;">This was the most difficult week of the portfolio in recent memory &mdash; every location except 15069 Bradley Park showed negative Sales and GC year-over-year, and even Bradley Park's GC is barely negative (-0.6%). No location posted positive growth on both metrics this week. The focus conversation is diagnosing the portfolio-wide softness in traffic and sales while still recognizing the operational wins &mdash; East Main and Victory Drive's big climbs, and Lee's Crossing holding the fastest McDelivery in the portfolio.</p>
+    </div>
+
+    <div style="background:#fff;border:1px solid #d3d1c7;border-left:4px solid #1a7a4a;border-radius:0 12px 12px 0;padding:20px 24px;margin-bottom:18px;">
+      <div style="font-family:'DM Serif Display',serif;font-size:16px;color:#1a7a4a;margin-bottom:12px;">&#9650; Top 5 This Week</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px;">
+        <div style="background:#d6f0e0;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:10px;color:#0a5c28;font-weight:600;">Rank 1</div><div style="font-size:12px;font-weight:700;color:#0a5c28;margin:4px 0;">Shareka Dunn-Harris</div><div style="font-size:11px;color:#0a5c28;">15069 - Bradley Park &middot; BJ</div><div style="font-size:11px;color:#888;margin-top:2px;">Best Sales +0.6% &amp; GC -0.6%</div></div>
+        <div style="background:#d6f0e0;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:10px;color:#0a5c28;font-weight:600;">Rank 2 &#9650;2</div><div style="font-size:12px;font-weight:700;color:#0a5c28;margin:4px 0;">Seadric Williams</div><div style="font-size:11px;color:#0a5c28;">35634 - Flat Rock &middot; Erika</div><div style="font-size:11px;color:#1a7a4a;margin-top:2px;">+2 spots</div></div>
+        <div style="background:#d6f0e0;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:10px;color:#0a5c28;font-weight:600;">Rank 3 &#9660;1</div><div style="font-size:12px;font-weight:700;color:#0a5c28;margin:4px 0;">Latasha Phillips</div><div style="font-size:11px;color:#0a5c28;">24343 - North Vet &middot; BJ</div><div style="font-size:11px;color:#888;margin-top:2px;">Best KVS 47s</div></div>
+        <div style="background:#d6f0e0;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:10px;color:#0a5c28;font-weight:600;">Rank 4 &#9650;1</div><div style="font-size:12px;font-weight:700;color:#0a5c28;margin:4px 0;">Craig Ladner</div><div style="font-size:11px;color:#0a5c28;">25063 - Lee's Crossing &middot; Jose</div><div style="font-size:11px;color:#888;margin-top:2px;">Best McD 3:07</div></div>
+        <div style="background:#d6f0e0;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:10px;color:#0a5c28;font-weight:600;">Rank 5 &#9660;2</div><div style="font-size:12px;font-weight:700;color:#0a5c28;margin:4px 0;">Denys Tolbert</div><div style="font-size:11px;color:#0a5c28;">11915 - Manchester &middot; Jose</div><div style="font-size:11px;color:#888;margin-top:2px;">Kiosk 89.7%</div></div>
+      </div>
+      <div style="background:#eaf7d6;border-radius:8px;padding:14px 18px;">
+        <div style="font-size:12px;font-weight:600;color:#2d5a0a;margin-bottom:6px;">&#128161; Standout KPIs This Week</div>
+        <p style="font-size:12px;line-height:1.8;color:#2d5a0a;">
+          <strong>Best OEPE:</strong> 7562 Ashley Ramsey &mdash; 119s &nbsp;|&nbsp;
+          <strong>Best KVS:</strong> 24343 Latasha Phillips &mdash; 47s &nbsp;|&nbsp;
+          <strong>Best Kiosk:</strong> 6080 Essence Denson &mdash; 92.4% &nbsp;|&nbsp;
+          <strong>Best Sales %:</strong> 15069 Shareka Dunn-Harris &mdash; +0.6% &nbsp;|&nbsp;
+          <strong>Best GC %:</strong> 15069 Shareka Dunn-Harris &mdash; -0.6% &nbsp;|&nbsp;
+          <strong>Best McDelivery:</strong> 25063 Craig Ladner &mdash; 3:07
+        </p>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid #d3d1c7;border-left:4px solid #1a5fa8;border-radius:0 12px 12px 0;padding:20px 24px;margin-bottom:18px;">
+      <div style="font-family:'DM Serif Display',serif;font-size:16px;color:#1a5fa8;margin-bottom:12px;">&#8593; Biggest Movers</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div style="background:#f0f4ff;border-radius:8px;padding:14px 16px;">
+          <div style="font-size:10px;font-weight:700;color:#1a5fa8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">&#9650; Climbers</div>
+          <div style="font-size:13px;margin-bottom:6px;"><strong>Memie Dawson</strong> &mdash; 19461 - Hogansville &nbsp;<span style="color:#1a7a4a;font-weight:700;">&#9650;8</span> (#15 &rarr; #7)</div>
+          <div style="font-size:12px;color:#555;line-height:1.6;margin-bottom:10px;">Biggest climb of the week despite the worst OEPE (233s) and worst KVS (105s) in the portfolio &mdash; Sales (-3.5%, rank 3) and GC (-5.2%, rank 4) are carrying the location. Speed remains the clear opportunity.</div>
+          <div style="font-size:13px;margin-bottom:6px;"><strong>Essence Denson</strong> &mdash; 6080 - Victory Dr &nbsp;<span style="color:#1a7a4a;font-weight:700;">&#9650;7</span> (#18 &rarr; #11)</div>
+          <div style="font-size:12px;color:#555;line-height:1.6;margin-bottom:10px;">Seven-spot jump to #11 on the portfolio's best Kiosk (92.4%, rank 1), even with OEPE (188s, rank 17) still lagging.</div>
+          <div style="font-size:13px;margin-bottom:6px;"><strong>Sylvia Copeland</strong> &mdash; 3895 - Valley &nbsp;<span style="color:#1a7a4a;font-weight:700;">&#9650;3</span> (#12 &rarr; #9)</div>
+          <div style="font-size:12px;color:#555;line-height:1.6;">Moves back into the top half. Sales (-4.0%, rank 5) and GC (-6.6%, rank 5) are the bright spots, offsetting a slow OEPE (189s, rank 18).</div>
+        </div>
+        <div style="background:#fff4f4;border-radius:8px;padding:14px 16px;">
+          <div style="font-size:10px;font-weight:700;color:#c0392b;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">&#9660; Declines</div>
+          <div style="font-size:13px;margin-bottom:6px;"><strong>Hope Spence</strong> &mdash; 33945 - Lafayette &nbsp;<span style="color:#c0392b;font-weight:700;">&#9660;7</span> (#10 &rarr; #17)</div>
+          <div style="font-size:12px;color:#555;line-height:1.6;margin-bottom:10px;">Biggest decline of the week. Sales down 12.4% and GC down 12.9% (rank 16 on both) with KVS at 82s (rank 16) &mdash; no single metric stands out, a broad-based slide.</div>
+          <div style="font-size:13px;margin-bottom:6px;"><strong>Vashonda Moore</strong> &mdash; 11822 - Buena Vista &nbsp;<span style="color:#c0392b;font-weight:700;">&#9660;5</span> (#13 &rarr; #18)</div>
+          <div style="font-size:12px;color:#555;line-height:1.6;margin-bottom:10px;">Sales down 11.9% and GC down 11.9% (rank 15 on both). OEPE 177s (rank 15) adds to the drag. No bright spot this week.</div>
+          <div style="font-size:13px;margin-bottom:6px;"><strong>Galisa Henderson</strong> &mdash; 31329 - 431 North &nbsp;<span style="color:#c0392b;font-weight:700;">&#9660;4</span> (#6 &rarr; #10)</div>
+          <div style="font-size:12px;color:#555;line-height:1.6;">McDelivery at 4:29 (rank 16) is the anchor despite the second-best Sales in the portfolio (-1.4%, rank 2).</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid #d3d1c7;border-radius:12px;padding:20px 24px;margin-bottom:18px;">
+      <div style="font-family:'DM Serif Display',serif;font-size:16px;margin-bottom:14px;color:#2c2c2a;">Supervisor Patch Rankings</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;"><div style="background:#d6f0e0;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:11px;color:#0a5c28;font-weight:700;">&#9733; Jose</div><div style="font-size:20px;font-weight:700;color:#0a5c28;margin:4px 0;">4.5</div><div style="font-size:10px;color:#555;">2 locations</div></div><div style="background:#f0f8ff;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:11px;color:#1e4fa8;font-weight:700;">BJ</div><div style="font-size:20px;font-weight:700;color:#1e4fa8;margin:4px 0;">8.2</div><div style="font-size:10px;color:#555;">4 locations</div></div><div style="background:#f0f8ff;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:11px;color:#1e4fa8;font-weight:700;">Braulio</div><div style="font-size:20px;font-weight:700;color:#1e4fa8;margin:4px 0;">9.0</div><div style="font-size:10px;color:#555;">3 locations</div></div><div style="background:#f0f8ff;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:11px;color:#1e4fa8;font-weight:700;">Erika</div><div style="font-size:20px;font-weight:700;color:#1e4fa8;margin:4px 0;">11.0</div><div style="font-size:10px;color:#555;">3 locations</div></div><div style="background:#f0f8ff;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:11px;color:#1e4fa8;font-weight:700;">Alfredo</div><div style="font-size:20px;font-weight:700;color:#1e4fa8;margin:4px 0;">11.0</div><div style="font-size:10px;color:#555;">2 locations</div></div><div style="background:#f5f5f5;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:11px;color:#888;font-weight:700;">&mdash;</div><div style="font-size:20px;font-weight:700;color:#888;margin:4px 0;">12.0</div><div style="font-size:10px;color:#555;">2 locations</div><div style="font-size:9px;color:#aaa;margin-top:2px;">Position vacant</div></div><div style="background:#fdeaea;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:11px;color:#c0392b;font-weight:700;">Sylvia</div><div style="font-size:20px;font-weight:700;color:#c0392b;margin:4px 0;">14.0</div><div style="font-size:10px;color:#555;">3 locations</div></div></div>
+    </div>
+
+    <div style="background:#fff;border:1px solid #d3d1c7;border-left:4px solid #c0392b;border-radius:0 12px 12px 0;padding:20px 24px;margin-bottom:18px;">
+      <div style="font-family:'DM Serif Display',serif;font-size:16px;color:#c0392b;margin-bottom:12px;">&#9660; Focus Areas This Week</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div><div style="font-size:12px;font-weight:700;color:#2c2c2a;margin-bottom:6px;">2066 - Commerce &mdash; David Jackson (#19) &middot; Sylvia</div>
+          <p style="font-size:12px;line-height:1.7;color:#555;">Last in the portfolio again. Sales down 26.4% and GC down 25.9% are by far the worst in the portfolio. KVS 95s (rank 18). Multi-week pattern with no improvement. A formal coaching plan is required.</p></div>
+        <div><div style="font-size:12px;font-weight:700;color:#2c2c2a;margin-bottom:6px;">24344 - Phenix City &mdash; Veronica Dennard (#12) &middot; Alfredo</div>
+          <p style="font-size:12px;line-height:1.7;color:#555;">Slowest McDelivery in the portfolio at 5:30 (rank 19), despite the second-best Kiosk (92.1%). Dropped 3 spots from #9 to #12. A delivery process review is needed.</p></div>
+        <div><div style="font-size:12px;font-weight:700;color:#2c2c2a;margin-bottom:6px;">33945 - Lafayette &mdash; Hope Spence (#17) &middot; &mdash;</div>
+          <p style="font-size:12px;line-height:1.7;color:#555;">Biggest decline of the week &mdash; #10 to #17. Sales down 12.4% and GC down 12.9% (rank 16 on both) with no offsetting bright spot. A broad operational review is needed.</p></div>
+        <div><div style="font-size:12px;font-weight:700;color:#2c2c2a;margin-bottom:6px;">19461 - Hogansville &mdash; Memie Dawson (#7) &middot; &mdash;</div>
+          <p style="font-size:12px;line-height:1.7;color:#555;">Worst OEPE (233s) and worst KVS (105s) in the portfolio by a wide margin, even while climbing 8 spots on Sales and GC strength. A staffing and deployment conversation on the front counter is still needed.</p></div>
+      </div>
+    </div>
+
+    <div style="background:#0f2347;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:18px;">
+      <p style="font-size:16px;color:#ffffff;font-weight:500;line-height:1.7;font-style:italic;">&ldquo;When ownership is multiplied, the leader&rsquo;s job shifts from driving results to creating the conditions where others drive results without being asked.&rdquo;</p>
+      <p style="font-size:12px;color:#a8c4e8;margin-top:12px;">&mdash; John Abbate, <em>Multiplying Ownership</em></p>
+    </div>
+
+  </div>
+  <div class="tab-page" id="page-trends">
+    <div style="background:#fff;border:1px solid #d3d1c7;border-radius:12px;padding:18px 20px;margin-bottom:16px;">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);white-space:nowrap;">KPI:</div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;">
+          <button class="trend-pill trend-pill-active" onclick="setTrendKpi('rank',this)">Overall Rank</button>
+          <button class="trend-pill" onclick="setTrendKpi('oepe',this)">OEPE</button>
+          <button class="trend-pill" onclick="setTrendKpi('kvs',this)">KVS</button>
+          <button class="trend-pill" onclick="setTrendKpi('kiosk',this)">Kiosk %</button>
+          <button class="trend-pill" onclick="setTrendKpi('sales',this)">Sales</button>
+          <button class="trend-pill" onclick="setTrendKpi('gc',this)">Guest Counts</button>
+          <button class="trend-pill" onclick="setTrendKpi('mcd',this)">McDelivery</button>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);white-space:nowrap;">Overlays:</div>
+        <button class="trend-toggle trend-toggle-on" id="tog-avg" onclick="toggleTrendOverlay('avg',this)">Portfolio Average</button>
+        <button class="trend-toggle trend-toggle-on" id="tog-std" onclick="toggleTrendOverlay('std',this)">McDonald's Standard</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);white-space:nowrap;">Location:</div>
+        <select id="trendLocSelect" onchange="setTrendLoc(this.value)" style="font-family:inherit;font-size:12px;padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:#f8f7f4;color:var(--text);min-width:220px;"></select>
+        <button onclick="setTrendLoc('')" style="font-size:11px;padding:6px 12px;border:1px solid var(--border);border-radius:8px;background:var(--surface2);color:var(--muted);cursor:pointer;font-family:inherit;">All Locations</button>
+      </div>
+    </div>
+    <div id="trendNoSel" style="background:#fff;border:1px solid #d3d1c7;border-radius:12px;padding:40px 24px;margin-bottom:16px;text-align:center;">
+      <div style="font-size:32px;margin-bottom:12px;">&#128200;</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:18px;color:var(--navy);margin-bottom:8px;">Select a Location to View Its Trend</div>
+      <div style="font-size:13px;color:var(--muted);max-width:400px;margin:0 auto;">Choose a location from the dropdown above to see its week-over-week trend line for the selected KPI, with portfolio average and McDonald's standard overlays.</div>
+    </div>
+    <div id="trendChartWrap" style="background:#fff;border:1px solid #d3d1c7;border-radius:12px;overflow:hidden;margin-bottom:16px;display:none;">
+      <div style="padding:14px 20px;border-bottom:1px solid #d3d1c7;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,var(--navy),#1a3a6b);">
+        <div style="font-family:'DM Serif Display',serif;font-size:16px;color:#fff;" id="trendChartTitle">Select a Location</div>
+        <div style="font-size:11px;color:#a8c4e8;" id="trendChartSub">3 weeks of data</div>
+      </div>
+      <div style="padding:16px 20px 20px;"><canvas id="trendCanvas" height="380" style="width:100%;display:block;"></canvas></div>
+      <div id="trendLegend" style="padding:0 20px 16px;display:flex;flex-wrap:wrap;gap:10px;"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+      <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);">Show change:</span>
+      <button class="trend-toggle trend-toggle-on" id="tog-span" onclick="setTrendSpan('span',this)">First to Latest Week</button>
+      <button class="trend-toggle" id="tog-wow" onclick="setTrendSpan('wow',this)">Week over Week</button>
+      <button class="trend-toggle" id="tog-consec" onclick="setTrendSpan('consec',this)">Consecutive Streak</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+      <div style="background:#fff;border:1px solid #d3d1c7;border-radius:12px;overflow:hidden;">
+        <div style="padding:12px 16px;border-bottom:1px solid #d3d1c7;background:#d6f0e0;display:flex;align-items:center;gap:8px;">
+          <span style="font-size:14px;">&#9650;</span>
+          <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#0a5c28;">Improving (First to Latest)</span><span id="trendUpHdr" style="font-size:10px;font-weight:700;color:#0a5c28;background:rgba(10,92,40,0.12);border-radius:4px;padding:2px 8px;">Overall Rank</span>
+        </div>
+        <div id="trendUpList"></div>
+      </div>
+      <div style="background:#fff;border:1px solid #d3d1c7;border-radius:12px;overflow:hidden;">
+        <div style="padding:12px 16px;border-bottom:1px solid #d3d1c7;background:#fce8e8;display:flex;align-items:center;gap:8px;">
+          <span style="font-size:14px;">&#9660;</span>
+          <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#8b1a1a;">Declining (First to Latest)</span><span id="trendDnHdr" style="font-size:10px;font-weight:700;color:#8b1a1a;background:rgba(139,26,26,0.1);border-radius:4px;padding:2px 8px;">Overall Rank</span>
+        </div>
+        <div id="trendDownList"></div>
+      </div>
+    </div>
+    <div style="background:#f8f7f4;border:1px solid #d3d1c7;border-radius:12px;padding:16px 20px;margin-bottom:20px;">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">How to Read These Cards</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <div style="min-width:10px;height:10px;border-radius:50%;background:var(--navy);margin-top:3px;"></div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:3px;">First to Latest Week</div>
+            <div style="font-size:11px;color:var(--muted);line-height:1.6;">Compares a location&#39;s very first week on record to the most recent week. Shows the overall direction of travel regardless of week-to-week fluctuations. Best for seeing the big picture over time.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <div style="min-width:10px;height:10px;border-radius:50%;background:var(--navy);margin-top:3px;"></div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:3px;">Week over Week</div>
+            <div style="font-size:11px;color:var(--muted);line-height:1.6;">Shows each individual week&#39;s change step by step. Useful for spotting whether momentum is building, slowing, or reversing. A location may improve overall but show a dip in the middle week.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <div style="min-width:10px;height:10px;border-radius:50%;background:var(--navy);margin-top:3px;"></div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:3px;">Consecutive Streak</div>
+            <div style="font-size:11px;color:var(--muted);line-height:1.6;">Only shows locations that improved or declined every single week without exception. The strictest filter &mdash; a true streak with no off weeks. Becomes more meaningful as weeks accumulate. Empty early in the year is normal.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+
+
+
+
+
+
+
+
+
+
+
+
+//    Page switcher                                                             
+function showPage(id){
+  document.querySelectorAll('.tab-page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.page-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+//    Data                                                                      
+function getMv(loc){
+  var mv=MOVEMENT[loc]||0;
+  if(mv===0)return '<span style="color:#888780;">&#8212;</span>';
+  var col=mv>0?'#1a7a4a':'#c0392b';
+  var arrow=mv>0?'&#9650;':'&#9660;';
+  return '<span style="color:'+col+';font-weight:600;">'+Math.abs(mv)+' <span style="font-size:16px;vertical-align:middle;">'+arrow+'</span></span>';
+}
+const MOVEMENT = {"15069-Bradley Park":0, "35634 Flat Rock":2, "24343- N. Veterans ":-1, "25063- Lee&#8217;s Crossing":1, "11915- Manchester":-2, "07562- 4th Ave":1, "19461- East Main":8, "00455- Macon":0, "03895- Valley":3, "31329-431 N. Phenix":-4, "06080- Victory Drive":7, "24344- Ladonia-Hwt":-3, "05031- Airport":-2, "11743- Whitesville":2, "10521- Stadium":2, "11362- Milgen":-2, "33945 - Lafayette":-7, "11822- Buena Vista":-5, "02066-Commerce":0};
+
+const RANKED = [
+  {rank:1,loc:"15069-Bradley Park",name:"15069 - Bradley Park",gm:"Shareka Dunn-Harris",sup:"BJ",score:4.2001,oepe:142,kvs:57,kiosk:65.6,kvs_r:4,oepe_r:6,kiosk_r:17,sales_r:1,gc_r:1,mcd_r:4,mcd:"3:25",mcd_bold:false,sales:"+0.6%",gc:"-0.6%",prev:1,move:0},
+  {rank:2,loc:"35634 Flat Rock",name:"35634 - Flat Rock",gm:"Seadric Williams",sup:"Erika",score:4.9002,oepe:137,kvs:57,kiosk:68.8,kvs_r:5,oepe_r:3,kiosk_r:14,sales_r:4,gc_r:2,mcd_r:10,mcd:"3:45",mcd_bold:false,sales:"-3.8%",gc:"-1.8%",prev:4,move:2},
+  {rank:3,loc:"24343- N. Veterans ",name:"24343 - North Vet",gm:"Latasha Phillips",sup:"BJ",score:5.5003,oepe:155,kvs:47,kiosk:73.4,kvs_r:1,oepe_r:10,kiosk_r:11,sales_r:6,gc_r:3,mcd_r:2,mcd:"3:14",mcd_bold:false,sales:"-5.7%",gc:"-4.0%",prev:2,move:-1},
+  {rank:4,loc:"25063- Lee&#8217;s Crossing",name:"25063 - Lee's Crossing",gm:"Craig Ladner",sup:"Jose",score:6.6004,oepe:125,kvs:63,kiosk:51.1,kvs_r:10,oepe_r:2,kiosk_r:19,sales_r:7,gc_r:6,mcd_r:1,mcd:"3:07",mcd_bold:false,sales:"-8.2%",gc:"-7.9%",prev:5,move:1},
+  {rank:5,loc:"11915- Manchester",name:"11915 - Manchester",gm:"Denys Tolbert",sup:"Jose",score:7.5005,oepe:141,kvs:58,kiosk:89.7,kvs_r:6,oepe_r:5,kiosk_r:3,sales_r:11,gc_r:9,mcd_r:7,mcd:"3:35",mcd_bold:false,sales:"-10.7%",gc:"-9.1%",prev:3,move:-2},
+  {rank:6,loc:"07562- 4th Ave",name:"7562 - 4th Ave",gm:"Ashley Ramsey",sup:"Braulio",score:8.5006,oepe:119,kvs:62,kiosk:79.7,kvs_r:9,oepe_r:1,kiosk_r:4,sales_r:13,gc_r:13,mcd_r:5,mcd:"3:26",mcd_bold:false,sales:"-11.1%",gc:"-10.8%",prev:7,move:1},
+  {rank:7,loc:"19461- East Main",name:"19461 - Hogansville",gm:"Memie Dawson",sup:"-",score:8.5007,oepe:233,kvs:105,kiosk:75.2,kvs_r:19,oepe_r:19,kiosk_r:7,sales_r:3,gc_r:4,mcd_r:3,mcd:"3:20",mcd_bold:false,sales:"-3.5%",gc:"-5.2%",prev:15,move:8},
+  {rank:8,loc:"00455- Macon",name:"455 - Macon Rd",gm:"Maxine Solis",sup:"Braulio",score:9.3008,oepe:149,kvs:64,kiosk:74.1,kvs_r:11,oepe_r:8,kiosk_r:10,sales_r:9,gc_r:8,mcd_r:14,mcd:"4:16",mcd_bold:false,sales:"-8.6%",gc:"-8.9%",prev:8,move:0},
+  {rank:9,loc:"03895- Valley",name:"3895 - Valley",gm:"Sylvia Copeland",sup:"Sylvia",score:9.4009,oepe:189,kvs:60,kiosk:59.5,kvs_r:7,oepe_r:18,kiosk_r:18,sales_r:5,gc_r:5,mcd_r:8,mcd:"3:36",mcd_bold:false,sales:"-4.0%",gc:"-6.6%",prev:12,move:3},
+  {rank:10,loc:"31329-431 N. Phenix",name:"31329 - 431 North",gm:"Galisa Henderson",sup:"Alfredo",score:9.4010,oepe:177,kvs:82,kiosk:75.6,kvs_r:15,oepe_r:16,kiosk_r:6,sales_r:2,gc_r:7,mcd_r:16,mcd:"4:29",mcd_bold:false,sales:"-1.4%",gc:"-8.0%",prev:6,move:-4},
+  {rank:11,loc:"06080- Victory Drive",name:"6080 - Victory Dr",gm:"Essence Denson",sup:"BJ",score:10.7011,oepe:188,kvs:60,kiosk:92.4,kvs_r:8,oepe_r:17,kiosk_r:1,sales_r:8,gc_r:14,mcd_r:6,mcd:"3:27",mcd_bold:false,sales:"-8.5%",gc:"-11.1%",prev:18,move:7},
+  {rank:12,loc:"24344- Ladonia-Hwt",name:"24344 - Phenix City",gm:"Veronica Dennard",sup:"Alfredo",score:11.1012,oepe:147,kvs:75,kiosk:92.1,kvs_r:12,oepe_r:7,kiosk_r:2,sales_r:17,gc_r:10,mcd_r:19,mcd:"5:30",mcd_bold:false,sales:"-12.5%",gc:"-9.3%",prev:9,move:-3},
+  {rank:13,loc:"05031- Airport",name:"5031 - Airport",gm:"Biaunca Jones",sup:"Braulio",score:11.5013,oepe:141,kvs:53,kiosk:77.8,kvs_r:2,oepe_r:4,kiosk_r:5,sales_r:18,gc_r:17,mcd_r:13,mcd:"4:10",mcd_bold:false,sales:"-14.7%",gc:"-15.1%",prev:11,move:-2},
+  {rank:14,loc:"11743- Whitesville",name:"11743 - Whitesville Rd",gm:"Jalene Lovelace",sup:"Sylvia",score:12.1014,oepe:155,kvs:81,kiosk:65.7,kvs_r:14,oepe_r:9,kiosk_r:16,sales_r:10,gc_r:12,mcd_r:17,mcd:"4:45",mcd_bold:false,sales:"-9.1%",gc:"-10.8%",prev:16,move:2},
+  {rank:15,loc:"10521- Stadium",name:"10521 - Stadium",gm:"Brenda Rodeheaver",sup:"Erika",score:12.2015,oepe:166,kvs:90,kiosk:70.8,kvs_r:17,oepe_r:12,kiosk_r:12,sales_r:12,gc_r:11,mcd_r:12,mcd:"4:06",mcd_bold:false,sales:"-10.9%",gc:"-10.5%",prev:17,move:2},
+  {rank:16,loc:"11362- Milgen",name:"11362 - Milgen Rd",gm:"Bobbie Reddick",sup:"Erika",score:13.0016,oepe:176,kvs:54,kiosk:74.7,kvs_r:3,oepe_r:14,kiosk_r:8,sales_r:14,gc_r:18,mcd_r:9,mcd:"3:36",mcd_bold:false,sales:"-11.9%",gc:"-15.1%",prev:14,move:-2},
+  {rank:17,loc:"33945 - Lafayette",name:"33945 - Lafayette",gm:"Hope Spence",sup:"-",score:14.2017,oepe:164,kvs:82,kiosk:74.2,kvs_r:16,oepe_r:11,kiosk_r:9,sales_r:16,gc_r:16,mcd_r:15,mcd:"4:23",mcd_bold:false,sales:"-12.4%",gc:"-12.9%",prev:10,move:-7},
+  {rank:18,loc:"11822- Buena Vista",name:"11822 - Buena Vista",gm:"Vashonda Moore",sup:"BJ",score:14.4018,oepe:177,kvs:78,kiosk:66.0,kvs_r:13,oepe_r:15,kiosk_r:15,sales_r:15,gc_r:15,mcd_r:11,mcd:"3:52",mcd_bold:false,sales:"-11.9%",gc:"-11.9%",prev:13,move:-5},
+  {rank:19,loc:"02066-Commerce",name:"2066 - Commerce",gm:"David Jackson",sup:"Sylvia",score:17.0019,oepe:169,kvs:95,kiosk:69.4,kvs_r:18,oepe_r:13,kiosk_r:13,sales_r:19,gc_r:19,mcd_r:18,mcd:"5:08",mcd_bold:false,sales:"-26.4%",gc:"-25.9%",prev:19,move:0}
+];
+
+const SUPS = [
+  {pos:1,sup:"Jose",avg:4.5,locs:[4,5]},
+  {pos:2,sup:"BJ",avg:8.2,locs:[1,3,11,18]},
+  {pos:3,sup:"Braulio",avg:9.0,locs:[6,8,13]},
+  {pos:4,sup:"Erika",avg:11.0,locs:[2,15,16]},
+  {pos:5,sup:"Alfredo",avg:11.0,locs:[10,12]},
+  {pos:6,sup:"-",avg:12.0,locs:[7,17]},
+  {pos:7,sup:"Sylvia",avg:14.0,locs:[9,14,19]}
+];
+
+const PEAKS = {
+  '7am': [{loc:"24344- Ladonia-Hwt",oepe:82,"kvs":43},{loc:"25063- Lee&#8217;s Crossing",oepe:90,"kvs":34},{loc:"03895- Valley",oepe:97,"kvs":34},{loc:"19461- East Main",oepe:101,"kvs":65},{loc:"05031- Airport",oepe:102,"kvs":45},{loc:"11915- Manchester",oepe:106,"kvs":39},{loc:"15069-Bradley Park",oepe:107,"kvs":49},{loc:"07562- 4th Ave",oepe:108,"kvs":43},{loc:"11362- Milgen",oepe:114,"kvs":37},{loc:"33945 - Lafayette",oepe:119,"kvs":59},{loc:"35634 Flat Rock",oepe:120,"kvs":44},{loc:"11743- Whitesville",oepe:127,"kvs":56},{loc:"31329-431 N. Phenix",oepe:128,"kvs":45},{loc:"06080- Victory Drive",oepe:133,"kvs":41},{loc:"00455- Macon",oepe:138,"kvs":70},{loc:"02066-Commerce",oepe:138,"kvs":85},{loc:"11822- Buena Vista",oepe:138,"kvs":65},{loc:"10521- Stadium",oepe:142,"kvs":59},{loc:"24343- N. Veterans ",oepe:155,"kvs":65}],
+  '11am': [{loc:"07562- 4th Ave",oepe:144,"kvs":68},{loc:"35634 Flat Rock",oepe:155,"kvs":71},{loc:"24344- Ladonia-Hwt",oepe:161,"kvs":79},{loc:"25063- Lee&#8217;s Crossing",oepe:161,"kvs":61},{loc:"05031- Airport",oepe:162,"kvs":50},{loc:"10521- Stadium",oepe:172,"kvs":108},{loc:"00455- Macon",oepe:177,"kvs":51},{loc:"11822- Buena Vista",oepe:177,"kvs":71},{loc:"33945 - Lafayette",oepe:179,"kvs":87},{loc:"15069-Bradley Park",oepe:183,"kvs":52},{loc:"02066-Commerce",oepe:187,"kvs":83},{loc:"06080- Victory Drive",oepe:191,"kvs":67},{loc:"24343- N. Veterans ",oepe:191,"kvs":48},{loc:"11915- Manchester",oepe:196,"kvs":68},{loc:"11743- Whitesville",oepe:200,"kvs":74},{loc:"03895- Valley",oepe:204,"kvs":61},{loc:"11362- Milgen",oepe:210,"kvs":67},{loc:"31329-431 N. Phenix",oepe:214,"kvs":87},{loc:"19461- East Main",oepe:233,"kvs":126}],
+  '5pm': [{loc:"07562- 4th Ave",oepe:114,"kvs":61},{loc:"15069-Bradley Park",oepe:129,"kvs":51},{loc:"05031- Airport",oepe:138,"kvs":35},{loc:"25063- Lee&#8217;s Crossing",oepe:152,"kvs":78},{loc:"35634 Flat Rock",oepe:155,"kvs":52},{loc:"24344- Ladonia-Hwt",oepe:158,"kvs":85},{loc:"24343- N. Veterans ",oepe:159,"kvs":45},{loc:"11362- Milgen",oepe:162,"kvs":54},{loc:"11743- Whitesville",oepe:167,"kvs":121},{loc:"00455- Macon",oepe:172,"kvs":63},{loc:"06080- Victory Drive",oepe:173,"kvs":58},{loc:"02066-Commerce",oepe:177,"kvs":102},{loc:"10521- Stadium",oepe:177,"kvs":114},{loc:"03895- Valley",oepe:189,"kvs":59},{loc:"11822- Buena Vista",oepe:191,"kvs":74},{loc:"11915- Manchester",oepe:211,"kvs":64},{loc:"31329-431 N. Phenix",oepe:212,"kvs":88},{loc:"33945 - Lafayette",oepe:273,"kvs":85},{loc:"19461- East Main",oepe:343,"kvs":99}]
+};
+
+const RAW_DATA = [
+  ["00455- Macon",64,11,149,8,0.7405,10,"-8.6%",9,"-8.9%",8,"4:16",14,false],
+  ["02066-Commerce",95,18,169,13,0.6944,13,"-26.4%",19,"-25.9%",19,"5:08",18,false],
+  ["03895- Valley",60,7,189,18,0.5952,18,"-4.0%",5,"-6.6%",5,"3:36",8,false],
+  ["05031- Airport",53,2,141,4,0.7777,5,"-14.7%",18,"-15.1%",17,"4:10",13,false],
+  ["06080- Victory Drive",60,8,188,17,0.9237,1,"-8.5%",8,"-11.1%",14,"3:27",6,false],
+  ["07562- 4th Ave",62,9,119,1,0.7972,4,"-11.1%",13,"-10.8%",13,"3:26",5,false],
+  ["10521- Stadium",90,17,166,12,0.7076,12,"-10.9%",12,"-10.5%",11,"4:06",12,false],
+  ["11362- Milgen",54,3,176,14,0.7469,8,"-11.9%",14,"-15.1%",18,"3:36",9,false],
+  ["11743- Whitesville",81,14,155,9,0.657,16,"-9.1%",10,"-10.8%",12,"4:45",17,false],
+  ["11822- Buena Vista",78,13,177,15,0.6601,15,"-11.9%",15,"-11.9%",15,"3:52",11,false],
+  ["11915- Manchester",58,6,141,5,0.8974,3,"-10.7%",11,"-9.1%",9,"3:35",7,false],
+  ["15069-Bradley Park",57,4,142,6,0.6559,17,"+0.6%",1,"-0.6%",1,"3:25",4,false],
+  ["19461- East Main",105,19,233,19,0.7523,7,"-3.5%",3,"-5.2%",4,"3:20",3,false],
+  ["24343- N. Veterans ",47,1,155,10,0.7336,11,"-5.7%",6,"-4.0%",3,"3:14",2,false],
+  ["24344- Ladonia-Hwt",75,12,147,7,0.9208,2,"-12.5%",17,"-9.3%",10,"5:30",19,false],
+  ["25063- Lee&#8217;s Crossing",63,10,125,2,0.5106,19,"-8.2%",7,"-7.9%",6,"3:07",1,false],
+  ["31329-431 N. Phenix",82,15,177,16,0.7558,6,"-1.4%",2,"-8.0%",7,"4:29",16,false],
+  ["33945 - Lafayette",82,16,164,11,0.7424,9,"-12.4%",16,"-12.9%",16,"4:23",15,false],
+  ["35634 Flat Rock",57,5,137,3,0.6883,14,"-3.8%",4,"-1.8%",2,"3:45",10,false]
+];
+const RAW_TOTAL = ["Total",68,null,159,null,0.7273,null,"-9.0%",null,"-9.7%",null,"3:55",null];
+
+
+//    Helpers                                                                   
+function oepeCol(v){return v<115?'var(--green)':v<135?'var(--amber)':'var(--red)';}
+function rankBadge(r,n){
+  const cls=r<=Math.ceil(n*.2)?'rb-top':r>=Math.floor(n*.8)?'rb-bot':'rb-mid';
+  return `<span class="rank-badge ${cls}">${r}</span>`;
+}
+function scoreClass(rank,total){
+  const p=rank/total;
+  return p<=.2?'score-top':p<=.8?'score-mid':'score-bot';
+}
+function rowBg(rank){
+  if(rank<=4)  return '#d6f0e0';
+  if(rank<=8)  return '#eaf7d6';
+  if(rank<=12) return '#feffd6';
+  if(rank<=16) return '#fef0c8';
+  return '#ffd6d8';
+}
+function rowTextCol(rank){
+  if(rank<=4)  return '#0a5c28';
+  if(rank<=8)  return '#2d5a0a';
+  if(rank<=12) return '#5a5a00';
+  if(rank<=16) return '#6b3a00';
+  return '#7a0008';
+}
+function fmtMcd(s){const m=Math.floor(s/60);return m>0?`${m}m ${Math.round(s%60)}s`:`${Math.round(s)}s`;}
+function fmtPct(v){return(v>=0?'+':'')+Math.round(v*100)+'%';}
+
+const N = RANKED.length;
+
+//    PAGE 1: Ranking table                                                      
+const tbody = document.getElementById('rankBody');
+
+// -- KPI Sort --
+function sortRanking(kpi){
+  var isFullRanking=(kpi==='score');
+  document.querySelectorAll('.w-chip').forEach(function(c){c.classList.remove('sort-active');});
+  var chip=document.getElementById('chip-'+kpi);
+  if(chip) chip.classList.add('sort-active');
+  var moveHdr=document.querySelector('#rankTable thead th:last-child');
+  if(moveHdr) moveHdr.style.display=isFullRanking?'':'none';
+  var sorted=RANKED.slice().sort(function(a,b){
+    if(kpi==='score')  return a.rank-b.rank;
+    if(kpi==='oepe')   return a.oepe_r-b.oepe_r;
+    if(kpi==='kvs')    return a.kvs_r-b.kvs_r;
+    if(kpi==='kiosk')  return a.kiosk_r-b.kiosk_r;
+    if(kpi==='sales')  return a.sales_r-b.sales_r;
+    if(kpi==='gc')     return a.gc_r-b.gc_r;
+    if(kpi==='mcd')    return a.mcd_r-b.mcd_r;
+    return 0;
+  });
+  var labels={score:'Score',oepe:'OEPE',kvs:'KVS',kiosk:'Kiosk%',sales:'Sales',gc:'Guest Counts',mcd:'McDelivery'};
+  var rb=document.getElementById('rankBody');
+  rb.innerHTML='';
+  for(var i=0;i<sorted.length;i++){
+    var r=sorted[i]; var pos=i+1;
+    var bg=rowBg(isFullRanking?r.rank:pos);
+    var tc=rowTextCol(isFullRanking?r.rank:pos);
+    var kv='';
+    if(kpi==='score') kv=r.score;
+    else if(kpi==='oepe') kv=r.oepe+'s';
+    else if(kpi==='kvs') kv=r.kvs+'s';
+    else if(kpi==='kiosk') kv=r.kiosk+'%';
+    else if(kpi==='sales') kv=r.sales||'';
+    else if(kpi==='gc') kv=r.gc||'';
+    else if(kpi==='mcd') kv=r.mcd;
+    var tr=document.createElement('tr');
+    tr.style.background=bg;
+    tr.innerHTML=
+      '<td><span style="font-family:DM Mono,monospace;font-size:12px;font-weight:600;color:'+tc+';">'+pos+'</span></td>'+
+      '<td><span style="font-family:DM Mono,monospace;font-weight:600;font-size:13px;color:'+tc+';">'+(r.name||r.loc)+'</span></td>'+
+      '<td class="r"><span style="font-family:DM Mono,monospace;font-size:13px;font-weight:700;color:'+tc+';">'+kv+'</span></td>'+
+      '<td><div style="font-size:13px;font-weight:600;color:'+tc+';">'+r.gm+'</div></td>'+
+      '<td><div style="font-size:13px;color:'+tc+';">'+r.sup+'</div></td>'+
+      (isFullRanking?'<td class="r">'+getMv(r.loc)+'</td>':'');
+    rb.appendChild(tr);
+  }
+  var sh=document.querySelector('#rankTable thead th:nth-child(3)');
+  if(sh) sh.textContent=labels[kpi]||'Score';
+}
+
+// -- Making Moves --
+var MOVERS=[
+  {loc:"19461- East Main",gm:"Memie Dawson",sup:"-",rank:7,mv:8,oepe:233,oepe_r:19,kvs:105,kvs_r:19,kiosk:75.2,kiosk_r:7,sales:"-3.5%",sales_r:3,gc:"-5.2%",gc_r:4,mcd:"3:20",mcd_r:3,driver:"Moved up 8 spots from #15 to #7."},
+  {loc:"06080- Victory Drive",gm:"Essence Denson",sup:"BJ",rank:11,mv:7,oepe:188,oepe_r:17,kvs:60,kvs_r:8,kiosk:92.4,kiosk_r:1,sales:"-8.5%",sales_r:8,gc:"-11.1%",gc_r:14,mcd:"3:27",mcd_r:6,driver:"Moved up 7 spots from #18 to #11."},
+  {loc:"03895- Valley",gm:"Sylvia Copeland",sup:"Sylvia",rank:9,mv:3,oepe:189,oepe_r:18,kvs:60,kvs_r:7,kiosk:59.5,kiosk_r:18,sales:"-4.0%",sales_r:5,gc:"-6.6%",gc_r:5,mcd:"3:36",mcd_r:8,driver:"Moved up 3 spots from #12 to #9."},
+  {loc:"35634 Flat Rock",gm:"Seadric Williams",sup:"Erika",rank:2,mv:2,oepe:137,oepe_r:3,kvs:57,kvs_r:5,kiosk:68.8,kiosk_r:14,sales:"-3.8%",sales_r:4,gc:"-1.8%",gc_r:2,mcd:"3:45",mcd_r:10,driver:"Moved up 2 spots from #4 to #2."},
+  {loc:"11743- Whitesville",gm:"Jalene Lovelace",sup:"Sylvia",rank:14,mv:2,oepe:155,oepe_r:9,kvs:81,kvs_r:14,kiosk:65.7,kiosk_r:16,sales:"-9.1%",sales_r:10,gc:"-10.8%",gc_r:12,mcd:"4:45",mcd_r:17,driver:"Moved up 2 spots from #16 to #14."},
+  {loc:"10521- Stadium",gm:"Brenda Rodeheaver",sup:"Erika",rank:15,mv:2,oepe:166,oepe_r:12,kvs:90,kvs_r:17,kiosk:70.8,kiosk_r:12,sales:"-10.9%",sales_r:12,gc:"-10.5%",gc_r:11,mcd:"4:06",mcd_r:12,driver:"Moved up 2 spots from #17 to #15."},
+  {loc:"25063- Lee&#8217;s Crossing",gm:"Craig Ladner",sup:"Jose",rank:4,mv:1,oepe:125,oepe_r:2,kvs:63,kvs_r:10,kiosk:51.1,kiosk_r:19,sales:"-8.2%",sales_r:7,gc:"-7.9%",gc_r:6,mcd:"3:07",mcd_r:1,driver:"Moved up 1 spots from #5 to #4."},
+  {loc:"07562- 4th Ave",gm:"Ashley Ramsey",sup:"Braulio",rank:6,mv:1,oepe:119,oepe_r:1,kvs:62,kvs_r:9,kiosk:79.7,kiosk_r:4,sales:"-11.1%",sales_r:13,gc:"-10.8%",gc_r:13,mcd:"3:26",mcd_r:5,driver:"Moved up 1 spots from #7 to #6."}
+];
+
+function kpiChip(label,val,rank,total){
+  var isTop=rank<=4; var isBot=rank>=total-3;
+  var bg=isTop?'#d6f0e0':isBot?'#fce8e8':'#f0ede8';
+  var tc=isTop?'#0a5c28':isBot?'#8b1a1a':'#5f5e5a';
+  return '<div style="display:inline-flex;flex-direction:column;align-items:center;background:'+bg+';border-radius:8px;padding:8px 10px;min-width:64px;">'+
+    '<div style="font-size:9px;font-weight:600;color:'+tc+';text-transform:uppercase;margin-bottom:3px;">'+label+'</div>'+
+    '<div style="font-size:14px;font-weight:700;color:'+tc+';font-family:DM Mono,monospace;">'+val+'</div>'+
+    '<div style="font-size:9px;color:'+tc+';margin-top:2px;">rank #'+rank+'</div></div>';
+}
+
+var mc=document.getElementById('movesContainer');
+if(mc){
+  MOVERS.forEach(function(m){
+    var salesCol=m.sales.charAt(0)==='+' ? '#1a7a4a' : '#c0392b';
+    var gcCol=m.gc.charAt(0)==='+' ? '#1a7a4a' : '#c0392b';
+    var card=document.createElement('div');
+    card.style.cssText='background:#fff;border:1px solid #d3d1c7;border-left:4px solid #1a7a4a;border-radius:0 12px 12px 0;padding:20px 24px;margin-bottom:16px;';
+    card.innerHTML=
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;flex-wrap:wrap;gap:8px;">'+
+        '<div>'+
+          '<div style="font-family:DM Mono,monospace;font-size:14px;font-weight:700;color:#2c2c2a;">'+m.loc+'</div>'+
+          '<div style="font-size:14px;font-weight:600;color:#2c2c2a;margin-top:2px;">'+m.gm+'</div>'+
+          '<div style="font-size:11px;color:#888780;margin-top:2px;">Supervisor: '+m.sup+'</div>'+
+        '</div>'+
+        '<div style="display:flex;align-items:center;gap:10px;">'+
+          '<div style="text-align:center;background:#0f2347;border-radius:10px;padding:8px 14px;">'+
+            '<div style="font-size:10px;color:#e8c97a;font-weight:600;text-transform:uppercase;">Rank</div>'+
+            '<div style="font-size:22px;font-weight:700;color:#fff;font-family:DM Mono,monospace;">#'+m.rank+'</div>'+
+          '</div>'+
+          (m.mv>0?'<div style="text-align:center;background:#1a7a4a;border-radius:10px;padding:8px 14px;">'+
+            '<div style="font-size:10px;color:#a8e8c0;font-weight:600;text-transform:uppercase;">Move</div>'+
+            '<div style="font-size:22px;font-weight:700;color:#fff;font-family:DM Mono,monospace;">&#9650;'+m.mv+'</div>'+
+          '</div>':'')+
+        '</div>'+
+      '</div>'+
+      '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;">'+
+        kpiChip('OEPE',m.oepe+'s',m.oepe_r,20)+
+        kpiChip('KVS',m.kvs+'s',m.kvs_r,20)+
+        kpiChip('Kiosk',m.kiosk+'%',m.kiosk_r,20)+
+        '<div style="display:inline-flex;flex-direction:column;align-items:center;background:#f0ede8;border-radius:8px;padding:8px 10px;min-width:64px;">'+
+          '<div style="font-size:9px;font-weight:600;color:#5f5e5a;text-transform:uppercase;margin-bottom:3px;">Sales</div>'+
+          '<div style="font-size:14px;font-weight:700;color:'+salesCol+';font-family:DM Mono,monospace;">'+m.sales+'</div>'+
+          '<div style="font-size:9px;color:#5f5e5a;margin-top:2px;">rank #'+m.sales_r+'</div>'+
+        '</div>'+
+        '<div style="display:inline-flex;flex-direction:column;align-items:center;background:#f0ede8;border-radius:8px;padding:8px 10px;min-width:64px;">'+
+          '<div style="font-size:9px;font-weight:600;color:#5f5e5a;text-transform:uppercase;margin-bottom:3px;">GC</div>'+
+          '<div style="font-size:14px;font-weight:700;color:'+gcCol+';font-family:DM Mono,monospace;">'+m.gc+'</div>'+
+          '<div style="font-size:9px;color:#5f5e5a;margin-top:2px;">rank #'+m.gc_r+'</div>'+
+        '</div>'+
+        kpiChip('McDelivery',m.mcd,m.mcd_r,20)+
+      '</div>'+
+      '<div style="background:#f8f7f4;border-radius:8px;padding:12px 16px;font-size:12px;line-height:1.7;color:#444;">'+
+        '<strong style="color:#1a7a4a;">What drove the move:</strong> '+m.driver+
+      '</div>';
+    mc.appendChild(card);
+  });
+}
+
+// -- HISTORY & TRENDS --
+var HISTORY=[
+{week:'Apr 13-19',data:{
+    '07562- 4th Ave':        {rank:1,  oepe:137,kvs:60, kiosk:84,sales:-6, gc:-4, mcd:38},
+    '24343- N. Veterans ':   {rank:2,  oepe:157,kvs:41, kiosk:73,sales:-9, gc:-4, mcd:28},
+    '35634 Flat Rock':       {rank:3,  oepe:154,kvs:69, kiosk:71,sales:-3, gc:-2, mcd:41},
+    '11915- Manchester':     {rank:4,  oepe:115,kvs:44, kiosk:87,sales:-8, gc:-7, mcd:36},
+    '11743- Whitesville':    {rank:5,  oepe:174,kvs:91, kiosk:72,sales:-1, gc:-1, mcd:46},
+    '06080- Victory Drive':  {rank:6,  oepe:163,kvs:64, kiosk:92,sales:-7, gc:-7, mcd:35},
+    '10521- Stadium':        {rank:7,  oepe:154,kvs:77, kiosk:69,sales:-9, gc:-4, mcd:44},
+    '11822- Buena Vista':    {rank:8,  oepe:182,kvs:71, kiosk:65,sales:-6, gc:-6, mcd:32},
+    "25063- Lee's Crossing": {rank:9,  oepe:182,kvs:83, kiosk:50,sales:-4, gc:-5, mcd:40},
+    '15069-Bradley Park':    {rank:10, oepe:143,kvs:72, kiosk:64,sales:-11,gc:-11,mcd:33},
+    '24344- Ladonia-Hwt':    {rank:10, oepe:151,kvs:69, kiosk:91,sales:-10,gc:-12,mcd:44},
+    '03895- Valley':         {rank:12, oepe:223,kvs:58, kiosk:61,sales:-10,gc:-8, mcd:32},
+    '33945 - Lafayette':     {rank:13, oepe:142,kvs:82, kiosk:71,sales:-16,gc:-13,mcd:38},
+    '31329-431 N. Phenix':   {rank:14, oepe:256,kvs:101,kiosk:66,sales:-7, gc:-6, mcd:49},
+    '00455- Macon':          {rank:15, oepe:179,kvs:82, kiosk:75,sales:-13,gc:-13,mcd:52},
+    '19461- East Main':      {rank:16, oepe:212,kvs:116,kiosk:77,sales:-12,gc:-12,mcd:40},
+    '05031- Airport':        {rank:17, oepe:193,kvs:79, kiosk:69,sales:-16,gc:-18,mcd:51},
+    '11362- Milgen':         {rank:18, oepe:170,kvs:86, kiosk:76,sales:-24,gc:-22,mcd:45},
+    '02066-Commerce':        {rank:19, oepe:174,kvs:93, kiosk:69,sales:-24,gc:-23,mcd:46},
+    '02435- US 280 By Pass': {rank:20, oepe:245,kvs:126,kiosk:59,sales:-20,gc:-19,mcd:44}
+  }},
+{week:'Apr 19-25',data:{
+    '07562- 4th Ave':        {rank:1,  oepe:119,kvs:52, kiosk:82,sales:-3, gc:-4, mcd:36},
+    '35634 Flat Rock':       {rank:2,  oepe:139,kvs:71, kiosk:68,sales:0,  gc:0,  mcd:38},
+    '24343- N. Veterans ':   {rank:3,  oepe:148,kvs:36, kiosk:71,sales:-5, gc:-3, mcd:29},
+    "25063- Lee's Crossing": {rank:4,  oepe:141,kvs:65, kiosk:58,sales:-5, gc:-4, mcd:30},
+    '15069-Bradley Park':    {rank:5,  oepe:134,kvs:65, kiosk:68,sales:-5, gc:-8, mcd:33},
+    '10521- Stadium':        {rank:6,  oepe:123,kvs:67, kiosk:67,sales:-8, gc:-7, mcd:44},
+    '11915- Manchester':     {rank:7,  oepe:137,kvs:50, kiosk:85,sales:-8, gc:-9, mcd:41},
+    '31329-431 N. Phenix':   {rank:8,  oepe:249,kvs:107,kiosk:66,sales:7,  gc:2,  mcd:49},
+    '11822- Buena Vista':    {rank:9,  oepe:181,kvs:62, kiosk:59,sales:-4, gc:-6, mcd:34},
+    '19461- East Main':      {rank:10, oepe:168,kvs:96, kiosk:76,sales:-6, gc:-7, mcd:43},
+    '33945 - Lafayette':     {rank:11, oepe:141,kvs:73, kiosk:74,sales:-7, gc:-7, mcd:37},
+    '06080- Victory Drive':  {rank:12, oepe:139,kvs:52, kiosk:95,sales:-9, gc:-10,mcd:35},
+    '03895- Valley':         {rank:13, oepe:186,kvs:48, kiosk:61,sales:-7, gc:-8, mcd:34},
+    '24344- Ladonia-Hwt':    {rank:14, oepe:149,kvs:62, kiosk:93,sales:-9, gc:-12,mcd:43},
+    '11362- Milgen':         {rank:15, oepe:171,kvs:80, kiosk:74,sales:-7, gc:-9, mcd:46},
+    '11743- Whitesville':    {rank:16, oepe:170,kvs:65, kiosk:71,sales:-8, gc:-10,mcd:38},
+    '00455- Macon':          {rank:17, oepe:185,kvs:81, kiosk:75,sales:-14,gc:-13,mcd:44},
+    '02435- US 280 By Pass': {rank:18, oepe:168,kvs:98, kiosk:56,sales:-12,gc:-14,mcd:37},
+    '02066-Commerce':        {rank:19, oepe:179,kvs:76, kiosk:76,sales:-22,gc:-22,mcd:50},
+    '05031- Airport':        {rank:20, oepe:211,kvs:70, kiosk:72,sales:-14,gc:-14,mcd:48}
+  }},
+  {week:'Apr 26-May 2',data:{
+    '07562- 4th Ave':        {rank:1,  oepe:134,kvs:57, kiosk:80,sales:-1, gc:0,  mcd:28},
+    '24343- N. Veterans ':   {rank:2,  oepe:186,kvs:38, kiosk:72,sales:3,  gc:3,  mcd:26},
+    '11915- Manchester':     {rank:3,  oepe:155,kvs:44, kiosk:89,sales:-2, gc:-4, mcd:31},
+    '35634 Flat Rock':       {rank:4,  oepe:152,kvs:89, kiosk:77,sales:1,  gc:-2, mcd:37},
+    "25063- Lee's Crossing": {rank:5,  oepe:173,kvs:67, kiosk:55,sales:0,  gc:-2, mcd:25},
+    '00455- Macon':          {rank:6,  oepe:170,kvs:79, kiosk:77,sales:-3, gc:-3, mcd:42},
+    '06080- Victory Drive':  {rank:7,  oepe:164,kvs:57, kiosk:92,sales:-6, gc:-8, mcd:34},
+    '31329-431 N. Phenix':   {rank:8,  oepe:205,kvs:81, kiosk:63,sales:1,  gc:-2, mcd:42},
+    '15069-Bradley Park':    {rank:9,  oepe:153,kvs:67, kiosk:66,sales:-4, gc:-9, mcd:27},
+    '24344- Ladonia-Hwt':    {rank:10, oepe:138,kvs:74, kiosk:95,sales:-13,gc:-14,mcd:38},
+    '11743- Whitesville':    {rank:11, oepe:195,kvs:87, kiosk:73,sales:-4, gc:-8, mcd:34},
+    '03895- Valley':         {rank:12, oepe:257,kvs:53, kiosk:62,sales:-5, gc:-6, mcd:30},
+    '33945 - Lafayette':     {rank:13, oepe:139,kvs:73, kiosk:67,sales:-13,gc:-13,mcd:32},
+    '11822- Buena Vista':    {rank:14, oepe:217,kvs:79, kiosk:59,sales:-5, gc:-7, mcd:31},
+    '19461- East Main':      {rank:15, oepe:181,kvs:84, kiosk:70,sales:-11,gc:-11,mcd:37},
+    '05031- Airport':        {rank:16, oepe:161,kvs:73, kiosk:72,sales:-15,gc:-15,mcd:35},
+    '02435- US 280 By Pass': {rank:17, oepe:183,kvs:115,kiosk:57,sales:-12,gc:-11,mcd:32},
+    '10521- Stadium':        {rank:18, oepe:181,kvs:88, kiosk:65,sales:-13,gc:-14,mcd:40},
+    '11362- Milgen':         {rank:19, oepe:197,kvs:73, kiosk:76,sales:-14,gc:-17,mcd:40},
+    '02066-Commerce':        {rank:20, oepe:189,kvs:95, kiosk:72,sales:-18,gc:-20,mcd:53}
+  }},
+  {week:'May 3-9',data:{
+    '07562- 4th Ave':        {rank:1,  oepe:151,kvs:61, kiosk:83,sales:-1, gc:-2, mcd:35},
+    '24343- N. Veterans ':   {rank:2,  oepe:186,kvs:41, kiosk:80,sales:0,  gc:-2, mcd:32},
+    '06080- Victory Drive':  {rank:3,  oepe:172,kvs:62, kiosk:96,sales:-3, gc:-6, mcd:33},
+    '35634 Flat Rock':       {rank:4,  oepe:165,kvs:68, kiosk:70,sales:-3, gc:-3, mcd:41},
+    "25063- Lee's Crossing": {rank:5,  oepe:153,kvs:73, kiosk:56,sales:-5, gc:-3, mcd:35},
+    '31329-431 N. Phenix':   {rank:6,  oepe:173,kvs:69, kiosk:73,sales:-5, gc:-6, mcd:43},
+    '11822- Buena Vista':    {rank:7,  oepe:254,kvs:84, kiosk:63,sales:4,  gc:0,  mcd:37},
+    '11915- Manchester':     {rank:8,  oepe:178,kvs:53, kiosk:75,sales:-5, gc:-8, mcd:43},
+    '15069-Bradley Park':    {rank:9,  oepe:153,kvs:70, kiosk:64,sales:-6, gc:-8, mcd:27},
+    '33945 - Lafayette':     {rank:10, oepe:219,kvs:90, kiosk:73,sales:-5, gc:-6, mcd:38},
+    '00455- Macon':          {rank:11, oepe:231,kvs:89, kiosk:77,sales:-5, gc:-8, mcd:46},
+    '24344- Ladonia-Hwt':    {rank:12, oepe:154,kvs:68, kiosk:91,sales:-15,gc:-14,mcd:42},
+    '05031- Airport':        {rank:13, oepe:168,kvs:57, kiosk:75,sales:-13,gc:-13,mcd:38},
+    '11743- Whitesville':    {rank:14, oepe:176,kvs:84, kiosk:71,sales:-9, gc:-9, mcd:34},
+    '19461- East Main':      {rank:15, oepe:178,kvs:95, kiosk:72,sales:-9, gc:-12,mcd:43},
+    '10521- Stadium':        {rank:16, oepe:202,kvs:103,kiosk:66,sales:-9, gc:-9, mcd:49},
+    '11362- Milgen':         {rank:17, oepe:177,kvs:71, kiosk:71,sales:-13,gc:-16,mcd:42},
+    '03895- Valley':         {rank:18, oepe:244,kvs:63, kiosk:57,sales:-9, gc:-9, mcd:36},
+    '02066-Commerce':        {rank:19, oepe:204,kvs:113,kiosk:78,sales:-25,gc:-28,mcd:56}
+  }}
+,
+{week:'May 10-16',data:{
+    '07562- 4th Ave': {rank:1, oepe:135,kvs:63, kiosk:83.6,sales:-1.0, gc:-0.8, mcd:36},
+    '35634 Flat Rock': {rank:2, oepe:139,kvs:54, kiosk:65.8,sales:10.2, gc:8.6, mcd:38},
+    '06080- Victory Drive': {rank:3, oepe:180,kvs:67, kiosk:95.0,sales:0.6, gc:-5.2, mcd:42},
+    '24343- N. Veterans ': {rank:4, oepe:174,kvs:42, kiosk:79.7,sales:2.1, gc:2.4, mcd:30},
+    '11822- Buena Vista': {rank:5, oepe:194,kvs:73, kiosk:65.5,sales:5.2, gc:2.0, mcd:36},
+    '11915- Manchester': {rank:6, oepe:128,kvs:47, kiosk:80.2,sales:-0.8, gc:-3.3, mcd:40},
+    '03895- Valley': {rank:7, oepe:179,kvs:63, kiosk:60.5,sales:0.4, gc:-2.8, mcd:32},
+    '15069-Bradley Park': {rank:8, oepe:157,kvs:69, kiosk:60.8,sales:3.0, gc:0.0, mcd:34},
+    '00455- Macon': {rank:9, oepe:180,kvs:83, kiosk:79.4,sales:3.6, gc:-0.1, mcd:43},
+    '11362- Milgen': {rank:10, oepe:194,kvs:76, kiosk:76.6,sales:-13.8, gc:-14.6, mcd:40},
+    '25063- Lee&#8217;s Crossing': {rank:11, oepe:173,kvs:96, kiosk:55.4,sales:-1.5, gc:-4.4, mcd:34},
+    '33945 - Lafayette': {rank:12, oepe:142,kvs:84, kiosk:64.9,sales:-0.3, gc:-2.9, mcd:36},
+    '24344- Ladonia-Hwt': {rank:13, oepe:146,kvs:63, kiosk:93.4,sales:-1.1, gc:-5.4, mcd:40},
+    '11743- Whitesville': {rank:14, oepe:187,kvs:101, kiosk:74.6,sales:-4.1, gc:-6.9, mcd:47},
+    '05031- Airport': {rank:15, oepe:164,kvs:67, kiosk:75.8,sales:-10.5, gc:-10.0, mcd:47},
+    '19461- East Main': {rank:16, oepe:156,kvs:97, kiosk:75.1,sales:2.3, gc:-2.7, mcd:56},
+    '02066-Commerce': {rank:17, oepe:189,kvs:110, kiosk:81.0,sales:-17.5, gc:-20.1, mcd:53},
+    '31329-431 N. Phenix': {rank:18, oepe:160,kvs:76, kiosk:67.8,sales:-0.5, gc:-2.6, mcd:43},
+    '10521- Stadium': {rank:19, oepe:200,kvs:80, kiosk:68.4,sales:-3.9, gc:-6.4, mcd:46}
+  }}
+,
+{week:'May 17-23',data:{
+    '24343- N. Veterans ':  {rank:1,oepe:181,kvs:43,kiosk:79.7,sales:8.2,gc:7.5,mcd:26},
+    '35634 Flat Rock':  {rank:2,oepe:172,kvs:57,kiosk:68.9,sales:0.9,gc:-0.8,mcd:38},
+    '25063- Lees Crossing':  {rank:3,oepe:172,kvs:84,kiosk:52.8,sales:0.2,gc:-1.3,mcd:31},
+    '00455- Macon':  {rank:4,oepe:183,kvs:71,kiosk:78.5,sales:1.6,gc:-2.7,mcd:42},
+    '03895- Valley':  {rank:5,oepe:189,kvs:53,kiosk:59.0,sales:0.2,gc:-2.8,mcd:34},
+    '07562- 4th Ave':  {rank:6,oepe:141,kvs:63,kiosk:83.9,sales:-7.6,gc:-6.3,mcd:34},
+    '15069-Bradley Park':  {rank:6,oepe:177,kvs:72,kiosk:64.3,sales:-0.6,gc:-3.9,mcd:34},
+    '31329-431 N. Phenix':  {rank:8,oepe:195,kvs:69,kiosk:69.1,sales:2.2,gc:-2.4,mcd:43},
+    '24344- Ladonia-Hwt':  {rank:9,oepe:177,kvs:94,kiosk:92.5,sales:-2.6,gc:-6.5,mcd:47},
+    '11915- Manchester':  {rank:10,oepe:163,kvs:60,kiosk:87.2,sales:-9.2,gc:-10.9,mcd:34},
+    '06080- Victory Drive':  {rank:11,oepe:221,kvs:81,kiosk:93.4,sales:-2.1,gc:-6.9,mcd:48},
+    '33945 - Lafayette':  {rank:12,oepe:194,kvs:112,kiosk:68.1,sales:-2.3,gc:-5.7,mcd:44},
+    '11822- Buena Vista':  {rank:13,oepe:237,kvs:94,kiosk:65.3,sales:-2.6,gc:-5.4,mcd:38},
+    '10521- Stadium':  {rank:14,oepe:191,kvs:97,kiosk:70.5,sales:-7.2,gc:-9.2,mcd:46},
+    '19461- East Main':  {rank:15,oepe:221,kvs:106,kiosk:78.0,sales:-7.0,gc:-7.7,mcd:63},
+    '05031- Airport':  {rank:16,oepe:187,kvs:74,kiosk:71.0,sales:-14.5,gc:-16.8,mcd:50},
+    '11362- Milgen':  {rank:17,oepe:219,kvs:78,kiosk:70.9,sales:-12.3,gc:-15.5,mcd:35},
+    '11743- Whitesville':  {rank:18,oepe:228,kvs:108,kiosk:76.5,sales:-11.0,gc:-13.8,mcd:42},
+    '02066-Commerce':  {rank:19,oepe:196,kvs:103,kiosk:77.8,sales:-15.4,gc:-20.8,mcd:48}
+  }},
+{week:'May 24-30',data:{
+    '24343- N. Veterans ':{rank:1,oepe:165,kvs:40,kiosk:84.3,sales:1.4,gc:1.1,mcd:29},
+    '35634 Flat Rock':{rank:2,oepe:149,kvs:58,kiosk:70.2,sales:-0.5,gc:0.6,mcd:36},
+    '07562- 4th Ave':{rank:3,oepe:124,kvs:65,kiosk:86.0,sales:-5.0,gc:-4.2,mcd:32},
+    '15069-Bradley Park':{rank:4,oepe:159,kvs:64,kiosk:66.1,sales:-2.9,gc:-3.6,mcd:29},
+    '31329-431 N. Phenix':{rank:5,oepe:186,kvs:65,kiosk:65.2,sales:6.3,gc:2.3,mcd:41},
+    '03895- Valley':{rank:6,oepe:180,kvs:49,kiosk:59.3,sales:-0.3,gc:-2.9,mcd:27},
+    '33945 - Lafayette':{rank:7,oepe:168,kvs:81,kiosk:75.8,sales:2.3,gc:-2.2,mcd:36},
+    '00455- Macon':{rank:8,oepe:163,kvs:74,kiosk:78.3,sales:-3.2,gc:-5.0,mcd:40},
+    '25063- Lees Crossing':{rank:9,oepe:133,kvs:70,kiosk:58.9,sales:-9.3,gc:-9.3,mcd:27},
+    '11915- Manchester':{rank:10,oepe:142,kvs:54,kiosk:83.4,sales:-11.0,gc:-12.0,mcd:40},
+    '06080- Victory Drive':{rank:11,oepe:204,kvs:67,kiosk:93.5,sales:-4.9,gc:-9.0,mcd:50},
+    '11822- Buena Vista':{rank:12,oepe:195,kvs:68,kiosk:58.5,sales:-4.8,gc:-6.7,mcd:35},
+    '10521- Stadium':{rank:13,oepe:135,kvs:82,kiosk:63.4,sales:-11.4,gc:-10.6,mcd:37},
+    '05031- Airport':{rank:14,oepe:166,kvs:64,kiosk:71.8,sales:-11.0,gc:-11.6,mcd:47},
+    '11362- Milgen':{rank:15,oepe:171,kvs:70,kiosk:72.1,sales:-9.2,gc:-14.0,mcd:30},
+    '24344- Ladonia-Hwt':{rank:16,oepe:191,kvs:93,kiosk:89.8,sales:-9.2,gc:-11.1,mcd:47},
+    '11743- Whitesville':{rank:17,oepe:163,kvs:79,kiosk:70.0,sales:-15.0,gc:-15.9,mcd:33},
+    '02066-Commerce':{rank:18,oepe:166,kvs:105,kiosk:71.0,sales:-27.9,gc:-30.5,mcd:47},
+    '19461- East Main':{rank:19,oepe:194,kvs:157,kiosk:69.8,sales:-10.8,gc:-12.1,mcd:57}
+  }
+  },
+{week:'May 31-Jun 6',data:{
+    '07562- 4th Ave': {rank:1, oepe:122,kvs:57, kiosk:80.5,sales:-4.4, gc:-4.6, mcd:28},
+    '35634 Flat Rock': {rank:2, oepe:144,kvs:59, kiosk:67.6,sales:4.0, gc:0.1, mcd:38},
+    '24343- N. Veterans ': {rank:3, oepe:145,kvs:47, kiosk:83.6,sales:3.5, gc:2.1, mcd:29},
+    '06080- Victory Drive': {rank:4, oepe:190,kvs:65, kiosk:94.5,sales:0.8, gc:-3.9, mcd:41},
+    '11822- Buena Vista': {rank:5, oepe:161,kvs:66, kiosk:62.0,sales:-2.9, gc:-5.3, mcd:27},
+    '03895- Valley': {rank:6, oepe:174,kvs:58, kiosk:56.0,sales:3.8, gc:-0.7, mcd:36},
+    '15069-Bradley Park': {rank:7, oepe:130,kvs:61, kiosk:58.5,sales:4.9, gc:-0.4, mcd:35},
+    '25063- Lee&#8217;s Crossing': {rank:8, oepe:125,kvs:65, kiosk:59.4,sales:-3.2, gc:-5.6, mcd:31},
+    '11915- Manchester': {rank:9, oepe:143,kvs:59, kiosk:79.0,sales:-8.2, gc:-11.4, mcd:42},
+    '00455- Macon': {rank:10, oepe:167,kvs:67, kiosk:74.0,sales:-5.1, gc:-8.7, mcd:39},
+    '11743- Whitesville': {rank:11, oepe:148,kvs:82, kiosk:69.2,sales:-7.3, gc:-9.5, mcd:29},
+    '05031- Airport': {rank:12, oepe:145,kvs:63, kiosk:63.7,sales:-9.5, gc:-13.0, mcd:39},
+    '11362- Milgen': {rank:13, oepe:174,kvs:74, kiosk:70.6,sales:-9.4, gc:-17.3, mcd:39},
+    '10521- Stadium': {rank:14, oepe:160,kvs:96, kiosk:68.9,sales:-2.9, gc:-7.3, mcd:41},
+    '19461- East Main': {rank:15, oepe:162,kvs:93, kiosk:74.8,sales:0.4, gc:-2.0, mcd:59},
+    '02066-Commerce': {rank:16, oepe:165,kvs:114, kiosk:76.1,sales:-16.9, gc:-22.0, mcd:47},
+    '33945 - Lafayette': {rank:17, oepe:212,kvs:121, kiosk:73.6,sales:-5.6, gc:-9.6, mcd:46},
+    '24344- Ladonia-Hwt': {rank:18, oepe:175,kvs:84, kiosk:95.8,sales:-6.5, gc:-10.7, mcd:48},
+    '31329-431 N. Phenix': {rank:19, oepe:166,kvs:72, kiosk:66.8,sales:14.1, gc:7.4, mcd:42}
+  }}
+,
+{week:'Jun 14-20',data:{
+    '07562- 4th Ave': {rank:1, oepe:114,kvs:58, kiosk:78.7,sales:2.6, gc:1.2, mcd:31},
+    '24343- N. Veterans ': {rank:2, oepe:154,kvs:51, kiosk:79.6,sales:5.0, gc:3.4, mcd:25},
+    '15069-Bradley Park': {rank:3, oepe:131,kvs:65, kiosk:65.4,sales:2.7, gc:-0.8, mcd:26},
+    '35634 Flat Rock': {rank:4, oepe:158,kvs:83, kiosk:70.3,sales:4.9, gc:0.8, mcd:39},
+    '31329-431 N. Phenix': {rank:5, oepe:175,kvs:72, kiosk:67.7,sales:11.9, gc:4.2, mcd:38},
+    '03895- Valley': {rank:6, oepe:164,kvs:50, kiosk:58.5,sales:-0.1, gc:-4.0, mcd:30},
+    '11915- Manchester': {rank:7, oepe:114,kvs:50, kiosk:82.1,sales:-8.4, gc:-9.8, mcd:35},
+    '00455- Macon': {rank:8, oepe:139,kvs:59, kiosk:76.8,sales:-4.4, gc:-8.1, mcd:35},
+    '25063- Lee&#8217;s Crossing': {rank:9, oepe:120,kvs:59, kiosk:57.6,sales:-6.1, gc:-6.9, mcd:32},
+    '10521- Stadium': {rank:10, oepe:145,kvs:89, kiosk:65.7,sales:-4.9, gc:-5.1, mcd:38},
+    '19461- East Main': {rank:11, oepe:165,kvs:97, kiosk:77.3,sales:-5.8, gc:-4.9, mcd:45},
+    '06080- Victory Drive': {rank:12, oepe:172,kvs:57, kiosk:91.3,sales:-4.7, gc:-9.2, mcd:40},
+    '33945 - Lafayette': {rank:13, oepe:167,kvs:88, kiosk:69.6,sales:0.2, gc:-7.3, mcd:42},
+    '11822- Buena Vista': {rank:14, oepe:172,kvs:72, kiosk:61.1,sales:-2.8, gc:-5.9, mcd:34},
+    '05031- Airport': {rank:15, oepe:123,kvs:56, kiosk:73.3,sales:-11.8, gc:-13.0, mcd:39},
+    '24344- Ladonia-Hwt': {rank:16, oepe:160,kvs:70, kiosk:93.2,sales:-11.3, gc:-13.1, mcd:41},
+    '11743- Whitesville': {rank:17, oepe:151,kvs:97, kiosk:69.8,sales:-9.0, gc:-12.0, mcd:34},
+    '11362- Milgen': {rank:18, oepe:173,kvs:63, kiosk:68.2,sales:-11.6, gc:-16.3, mcd:33},
+    '02066-Commerce': {rank:19, oepe:173,kvs:106, kiosk:76.2,sales:-20.4, gc:-25.4, mcd:44}
+  }}
+,
+{week:'Jun 21-27',data:{
+    '07562- 4th Ave': {rank:1, oepe:119,kvs:60, kiosk:83.3,sales:-0.8, gc:-2.8, mcd:32},
+    '24343- N. Veterans ': {rank:2, oepe:165,kvs:56, kiosk:70.8,sales:5.1, gc:4.1, mcd:34},
+    '35634 Flat Rock': {rank:3, oepe:148,kvs:82, kiosk:69.2,sales:4.0, gc:2.8, mcd:43},
+    '15069-Bradley Park': {rank:4, oepe:141,kvs:61, kiosk:68.0,sales:-2.5, gc:-4.0, mcd:33},
+    '33945 - Lafayette': {rank:5, oepe:167,kvs:93, kiosk:71.0,sales:-0.0, gc:-4.8, mcd:42},
+    '24344- Ladonia-Hwt': {rank:6, oepe:140,kvs:56, kiosk:92.2,sales:-7.5, gc:-7.7, mcd:44},
+    '00455- Macon': {rank:7, oepe:149,kvs:65, kiosk:75.5,sales:-1.2, gc:-7.1, mcd:38},
+    '31329-431 N. Phenix': {rank:8, oepe:182,kvs:82, kiosk:79.6,sales:-0.5, gc:-4.8, mcd:40},
+    '11915- Manchester': {rank:9, oepe:123,kvs:48, kiosk:85.2,sales:-8.5, gc:-10.0, mcd:32},
+    '25063- Lee&#8217;s Crossing': {rank:10, oepe:126,kvs:66, kiosk:57.5,sales:-5.4, gc:-6.9, mcd:33},
+    '19461- East Main': {rank:11, oepe:169,kvs:103, kiosk:76.1,sales:-3.1, gc:-5.7, mcd:43},
+    '11822- Buena Vista': {rank:12, oepe:165,kvs:78, kiosk:57.3,sales:-4.6, gc:-6.4, mcd:28},
+    '03895- Valley': {rank:13, oepe:174,kvs:60, kiosk:55.9,sales:-3.9, gc:-9.1, mcd:30},
+    '05031- Airport': {rank:14, oepe:136,kvs:58, kiosk:71.0,sales:-13.4, gc:-15.0, mcd:46},
+    '10521- Stadium': {rank:15, oepe:152,kvs:99, kiosk:61.4,sales:-6.9, gc:-9.4, mcd:36},
+    '06080- Victory Drive': {rank:16, oepe:213,kvs:67, kiosk:93.1,sales:-8.6, gc:-12.0, mcd:46},
+    '11743- Whitesville': {rank:17, oepe:172,kvs:90, kiosk:73.5,sales:-11.7, gc:-11.1, mcd:43},
+    '11362- Milgen': {rank:18, oepe:177,kvs:62, kiosk:69.2,sales:-9.9, gc:-14.0, mcd:36},
+    '02066-Commerce': {rank:19, oepe:167,kvs:100, kiosk:72.9,sales:-17.4, gc:-21.2, mcd:48}
+  }},
+{week:'Jun 28-Jul 4',data:{
+    "15069-Bradley Park": {rank:1, oepe:152,kvs:71, kiosk:67.4,sales:6.8, gc:4.9, mcd:31},
+    "24343- N. Veterans ": {rank:2, oepe:162,kvs:51, kiosk:74.7,sales:6.6, gc:4.6, mcd:36},
+    "11915- Manchester": {rank:3, oepe:130,kvs:58, kiosk:87.2,sales:-2.8, gc:-6.4, mcd:34},
+    "35634 Flat Rock": {rank:4, oepe:142,kvs:65, kiosk:66.6,sales:4.4, gc:3.2, mcd:44},
+    "25063- Lee&#8217;s Crossing": {rank:5, oepe:135,kvs:67, kiosk:54.5,sales:-0.2, gc:-2.8, mcd:32},
+    "31329-431 N. Phenix": {rank:6, oepe:183,kvs:79, kiosk:76.4,sales:8.5, gc:2.3, mcd:43},
+    "07562- 4th Ave": {rank:7, oepe:116,kvs:64, kiosk:82.4,sales:-6.6, gc:-9.4, mcd:33},
+    "00455- Macon": {rank:8, oepe:169,kvs:78, kiosk:72.4,sales:-2.4, gc:-6.5, mcd:46},
+    "24344- Ladonia-Hwt": {rank:9, oepe:154,kvs:74, kiosk:85.9,sales:-8.8, gc:-6.4, mcd:43},
+    "33945 - Lafayette": {rank:10, oepe:187,kvs:102, kiosk:68.4,sales:5.7, gc:2.2, mcd:49},
+    "05031- Airport": {rank:11, oepe:152,kvs:65, kiosk:68.2,sales:-4.5, gc:-9.0, mcd:46},
+    "03895- Valley": {rank:12, oepe:208,kvs:55, kiosk:53.2,sales:-5.4, gc:-8.3, mcd:37},
+    "11822- Buena Vista": {rank:13, oepe:215,kvs:90, kiosk:62.2,sales:-2.7, gc:-7.6, mcd:37},
+    "11362- Milgen": {rank:14, oepe:205,kvs:59, kiosk:68.8,sales:-6.4, gc:-11.4, mcd:36},
+    "19461- East Main": {rank:15, oepe:200,kvs:191, kiosk:76.7,sales:-7.6, gc:-10.1, mcd:35},
+    "11743- Whitesville": {rank:16, oepe:169,kvs:92, kiosk:70.9,sales:-11.3, gc:-10.6, mcd:39},
+    "10521- Stadium": {rank:17, oepe:175,kvs:96, kiosk:62.0,sales:-11.4, gc:-9.9, mcd:38},
+    "06080- Victory Drive": {rank:18, oepe:221,kvs:69, kiosk:87.2,sales:-7.9, gc:-13.0, mcd:51},
+    "02066-Commerce": {rank:19, oepe:198,kvs:121, kiosk:66.7,sales:-26.2, gc:-28.4, mcd:46}
+  }},
+{week:'Jul 5-11',data:{
+    "15069-Bradley Park": {rank:1, oepe:142,kvs:57, kiosk:65.6,sales:0.6, gc:-0.6, mcd:34},
+    "35634 Flat Rock": {rank:2, oepe:137,kvs:57, kiosk:68.8,sales:-3.8, gc:-1.8, mcd:38},
+    "24343- N. Veterans ": {rank:3, oepe:155,kvs:47, kiosk:73.4,sales:-5.7, gc:-4.0, mcd:32},
+    "25063- Lee&#8217;s Crossing": {rank:4, oepe:125,kvs:63, kiosk:51.1,sales:-8.2, gc:-7.9, mcd:31},
+    "11915- Manchester": {rank:5, oepe:141,kvs:58, kiosk:89.7,sales:-10.7, gc:-9.1, mcd:36},
+    "07562- 4th Ave": {rank:6, oepe:119,kvs:62, kiosk:79.7,sales:-11.1, gc:-10.8, mcd:34},
+    "19461- East Main": {rank:7, oepe:233,kvs:105, kiosk:75.2,sales:-3.5, gc:-5.2, mcd:33},
+    "00455- Macon": {rank:8, oepe:149,kvs:64, kiosk:74.1,sales:-8.6, gc:-8.9, mcd:43},
+    "03895- Valley": {rank:9, oepe:189,kvs:60, kiosk:59.5,sales:-4.0, gc:-6.6, mcd:36},
+    "31329-431 N. Phenix": {rank:10, oepe:177,kvs:82, kiosk:75.6,sales:-1.4, gc:-8.0, mcd:45},
+    "06080- Victory Drive": {rank:11, oepe:188,kvs:60, kiosk:92.4,sales:-8.5, gc:-11.1, mcd:34},
+    "24344- Ladonia-Hwt": {rank:12, oepe:147,kvs:75, kiosk:92.1,sales:-12.5, gc:-9.3, mcd:55},
+    "05031- Airport": {rank:13, oepe:141,kvs:53, kiosk:77.8,sales:-14.7, gc:-15.1, mcd:42},
+    "11743- Whitesville": {rank:14, oepe:155,kvs:81, kiosk:65.7,sales:-9.1, gc:-10.8, mcd:48},
+    "10521- Stadium": {rank:15, oepe:166,kvs:90, kiosk:70.8,sales:-10.9, gc:-10.5, mcd:41},
+    "11362- Milgen": {rank:16, oepe:176,kvs:54, kiosk:74.7,sales:-11.9, gc:-15.1, mcd:36},
+    "33945 - Lafayette": {rank:17, oepe:164,kvs:82, kiosk:74.2,sales:-12.4, gc:-12.9, mcd:44},
+    "11822- Buena Vista": {rank:18, oepe:177,kvs:78, kiosk:66.0,sales:-11.9, gc:-11.9, mcd:39},
+    "02066-Commerce": {rank:19, oepe:169,kvs:95, kiosk:69.4,sales:-26.4, gc:-25.9, mcd:51}
+  }}
+];
+
+var MC_STANDARDS={
+  oepe: {target:120,label:'Brand Standard: 120s or less',lowerBetter:true},
+  kvs:  {target:55, label:'Brand Standard: 55s or less', lowerBetter:true},
+  kiosk:{target:85, label:'Brand Standard: 85% or more', lowerBetter:false},
+  mcd:  {target:40,  label:'Brand Standard: 4:00 or less',lowerBetter:true},
+  sales:{target:0,  label:'Target: Positive Variance',   lowerBetter:false},
+  gc:   {target:0,  label:'Target: Positive Variance',   lowerBetter:false},
+  rank: {target:10, label:'Top Half of Portfolio',       lowerBetter:true}
+};
+
+var KPI_META={
+  rank: {label:'Overall Rank',  fmt:function(v){return '#'+v;},                                    lowerBetter:true},
+  oepe: {label:'OEPE',          fmt:function(v){return v+'s';},                                    lowerBetter:true},
+  kvs:  {label:'KVS',           fmt:function(v){return v+'s';},                                    lowerBetter:true},
+  kiosk:{label:'Kiosk %',       fmt:function(v){return v+'%';},                                    lowerBetter:false},
+  sales:{label:'Sales vs LY',   fmt:function(v){return (v>=0?'+':'')+v+'%';},                     lowerBetter:false},
+  gc:   {label:'Guest Counts',  fmt:function(v){return (v>=0?'+':'')+v+'%';},                     lowerBetter:false},
+  mcd:  {label:'McDelivery',    fmt:function(v){var tot=v/10;var m=Math.floor(tot);var s=Math.round((tot-m)*60);return m+':'+(s<10?'0':'')+s;},lowerBetter:true}
+};
+
+var LINE_COLORS=['#1a5fa8','#1a7a4a','#b87a00','#c0392b','#7b3fa8','#0097a7','#e65100','#2e7d32','#ad1457','#4527a0','#00695c','#827717','#37474f','#558b2f','#6a1b9a','#1565c0','#bf360c','#004d40','#880e4f','#1a237e'];
+
+var T={kpi:'rank',showAvg:true,showStd:true,loc:'',span:'span'};
+
+(function initTrendDropdown(){
+  var sel=document.getElementById('trendLocSelect');
+  if(!sel) return;
+  var opt0=document.createElement('option'); opt0.value=''; opt0.textContent='All Locations'; sel.appendChild(opt0);
+  var locs=Object.keys(HISTORY[HISTORY.length-1].data).sort(function(a,b){return parseInt(a)-parseInt(b);});
+  locs.forEach(function(loc){var opt=document.createElement('option');opt.value=loc;opt.textContent=loc;sel.appendChild(opt);});
+})();
+
+function setTrendKpi(kpi,btn){T.kpi=kpi;document.querySelectorAll('.trend-pill').forEach(function(b){b.classList.remove('trend-pill-active');});if(btn)btn.classList.add('trend-pill-active');renderTrend();}
+function toggleTrendOverlay(which,btn){if(which==='avg')T.showAvg=!T.showAvg;if(which==='std')T.showStd=!T.showStd;btn.classList.toggle('trend-toggle-on');renderTrend();}
+function setTrendLoc(loc){T.loc=loc;var sel=document.getElementById('trendLocSelect');if(sel)sel.value=loc;renderTrend();}
+function setTrendSpan(mode,btn){T.span=mode;document.querySelectorAll('#tog-span,#tog-wow,#tog-consec').forEach(function(b){b.classList.remove('trend-toggle-on');});if(btn)btn.classList.add('trend-toggle-on');renderTrendingCards();}
+function trendVal(weekData,loc,kpi){var d=weekData[loc];if(!d)return null;return d[kpi]!==undefined?d[kpi]:null;}
+
+function renderTrend(){
+  var m=KPI_META[T.kpi];
+  var weeks=HISTORY;
+  var allLocs=Object.keys(weeks[weeks.length-1].data);
+  var std=MC_STANDARDS[T.kpi];
+  var chartWrap=document.getElementById('trendChartWrap');
+  var noSelMsg=document.getElementById('trendNoSel');
+  if(!T.loc){
+    if(chartWrap)chartWrap.style.display='none';
+    if(noSelMsg)noSelMsg.style.display='block';
+    renderTrendingCards();
+    return;
+  }
+  if(chartWrap)chartWrap.style.display='block';
+  if(noSelMsg)noSelMsg.style.display='none';
+  var titleEl=document.getElementById('trendChartTitle');
+  var subEl=document.getElementById('trendChartSub');
+  if(titleEl)titleEl.textContent=m.label+' - '+T.loc;
+  if(subEl)subEl.textContent=weeks.length+' weeks of data';
+  var weekAvgs=weeks.map(function(w){var vals=allLocs.map(function(l){return trendVal(w.data,l,T.kpi);}).filter(function(v){return v!==null;});return vals.length?vals.reduce(function(a,b){return a+b;},0)/vals.length:null;});
+  var canvas=document.getElementById('trendCanvas');
+  if(!canvas)return;
+  var dpr=window.devicePixelRatio||1;
+  var cssW=canvas.parentElement.clientWidth-40;
+  var cssH=380;
+  canvas.width=cssW*dpr; canvas.height=cssH*dpr;
+  canvas.style.width=cssW+'px'; canvas.style.height=cssH+'px';
+  var ctx=canvas.getContext('2d'); ctx.scale(dpr,dpr);
+  var W=cssW,H=cssH,padL=64,padR=24,padT=24,padB=48;
+  var chartW=W-padL-padR,chartH=H-padT-padB;
+  var showLocs=[T.loc];
+  var allVals=[];
+  showLocs.forEach(function(loc){weeks.forEach(function(w){var v=trendVal(w.data,loc,T.kpi);if(v!==null)allVals.push(v);});});
+  if(T.showAvg)weekAvgs.forEach(function(v){if(v!==null)allVals.push(v);});
+  if(T.showStd&&std)allVals.push(std.target);
+  if(!allVals.length)return;
+  var minV=Math.min.apply(null,allVals),maxV=Math.max.apply(null,allVals);
+  var pad=(maxV-minV)*0.12||1;
+  if(T.kpi==='sales'||T.kpi==='gc'){minV=minV-pad;}else{minV=Math.max(0,minV-pad);}
+  maxV=maxV+pad;
+  var invertY=(T.kpi==='rank');
+  function yPos(v){return invertY?padT+(v-minV)/(maxV-minV)*chartH:padT+(1-(v-minV)/(maxV-minV))*chartH;}
+  function xPos(wi){return weeks.length===1?padL+chartW/2:padL+wi/(weeks.length-1)*chartW;}
+  ctx.clearRect(0,0,W,H);
+  ctx.strokeStyle='#e8e6e0'; ctx.lineWidth=1;
+  for(var ti=0;ti<=5;ti++){
+    var v=minV+(maxV-minV)*ti/5; var y=yPos(v);
+    ctx.beginPath();ctx.moveTo(padL,y);ctx.lineTo(padL+chartW,y);ctx.stroke();
+    ctx.fillStyle='#888780';ctx.font='10px DM Sans,sans-serif';ctx.textAlign='right';
+    var tickV=(T.kpi==='mcd')?Math.round(v):Math.round(v*10)/10;
+    ctx.fillText(m.fmt(tickV),padL-8,y+3.5);
+  }
+  weeks.forEach(function(w,wi){
+    var x=xPos(wi);
+    ctx.fillStyle='#2c2c2a';ctx.font='bold 11px DM Sans,sans-serif';ctx.textAlign='center';
+    ctx.fillText(w.week,x,H-10);
+    ctx.strokeStyle='#d3d1c7';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,padT+chartH);ctx.lineTo(x,padT+chartH+5);ctx.stroke();
+  });
+  if(T.showStd&&std){
+    var sy=yPos(std.target);ctx.save();ctx.setLineDash([6,4]);ctx.strokeStyle='#ff9800';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(padL,sy);ctx.lineTo(padL+chartW,sy);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#e65100';ctx.font='bold 9px DM Sans,sans-serif';ctx.textAlign='left';
+    ctx.fillText('Brand Standard: '+m.fmt(std.target),padL+4,sy-4);ctx.restore();
+  }
+  if(T.showAvg){
+    ctx.save();ctx.setLineDash([4,3]);ctx.strokeStyle='#1a5fa8';ctx.lineWidth=2;ctx.beginPath();
+    var started=false;
+    weekAvgs.forEach(function(avg,wi){if(avg===null)return;var x=xPos(wi),y=yPos(avg);if(!started){ctx.moveTo(x,y);started=true;}else{ctx.lineTo(x,y);}});
+    ctx.stroke();ctx.setLineDash([]);
+    var lastAvg=null,lastWi=0;weekAvgs.forEach(function(v,wi){if(v!==null){lastAvg=v;lastWi=wi;}});
+    if(lastAvg!==null){var avgDisp=(T.kpi==='mcd')?Math.round(lastAvg):Math.round(lastAvg*10)/10;ctx.fillStyle='#1a5fa8';ctx.font='bold 9px DM Sans,sans-serif';ctx.textAlign='right';ctx.fillText('Avg '+m.fmt(avgDisp),xPos(lastWi)-4,yPos(lastAvg)-5);}
+    ctx.restore();
+  }
+  showLocs.forEach(function(loc,li){
+    var color=LINE_COLORS[li%LINE_COLORS.length];
+    var vals=weeks.map(function(w){return trendVal(w.data,loc,T.kpi);});
+    var points=[];vals.forEach(function(v,wi){if(v!==null)points.push({x:xPos(wi),y:yPos(v),v:v,wi:wi});});
+    if(!points.length)return;
+    ctx.save();ctx.strokeStyle=color;ctx.lineWidth=3;ctx.lineJoin='round';ctx.beginPath();
+    points.forEach(function(p,i){if(i===0)ctx.moveTo(p.x,p.y);else ctx.lineTo(p.x,p.y);});ctx.stroke();
+    points.forEach(function(p){
+      ctx.beginPath();ctx.arc(p.x,p.y,5,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
+      var dotV=(T.kpi==='mcd')?Math.round(p.v):p.v;
+      ctx.fillStyle=color;ctx.font='bold 10px DM Mono,monospace';ctx.textAlign='center';ctx.fillText(m.fmt(dotV),p.x,p.y-10);
+    });
+    ctx.restore();
+  });
+  var legendEl=document.getElementById('trendLegend');
+  if(legendEl){
+    var lh='';
+    if(T.showAvg)lh+='<div style="display:flex;align-items:center;gap:5px;font-size:10px;color:#1a5fa8;"><span style="display:inline-block;width:20px;height:2px;border-top:2px dashed #1a5fa8;"></span>Portfolio Average</div>';
+    if(T.showStd&&std)lh+='<div style="display:flex;align-items:center;gap:5px;font-size:10px;color:#e65100;"><span style="display:inline-block;width:20px;height:2px;border-top:2px dashed #ff9800;"></span>'+std.label+'</div>';
+    showLocs.forEach(function(loc,li){var color=LINE_COLORS[li%LINE_COLORS.length];lh+='<div style="display:flex;align-items:center;gap:5px;font-size:10px;color:'+color+';"><span style="display:inline-block;width:20px;height:3px;background:'+color+';border-radius:2px;"></span>'+loc+'</div>';});
+    legendEl.innerHTML=lh;
+  }
+  renderTrendingCards();
+}
+
+function renderTrendingCards(){
+  var weeks=HISTORY;
+  var allLocs=Object.keys(weeks[weeks.length-1].data);
+  var m=KPI_META[T.kpi];
+  var improving=[],declining=[];
+  allLocs.forEach(function(loc){
+    var vals=weeks.map(function(w){return trendVal(w.data,loc,T.kpi);}).filter(function(v){return v!==null;});
+    if(vals.length<2)return;
+    var first=vals[0],last=vals[vals.length-1];
+    var chg=m.lowerBetter?Math.round((first-last)*10)/10:Math.round((last-first)*10)/10;
+    var wowChanges=[];
+    for(var ri=1;ri<vals.length;ri++){var wc=m.lowerBetter?Math.round((vals[ri-1]-vals[ri])*10)/10:Math.round((vals[ri]-vals[ri-1])*10)/10;wowChanges.push(wc);}
+    var consecUp=true,consecDn=true;
+    for(var ci=1;ci<vals.length;ci++){if(!(m.lowerBetter?vals[ci]<vals[ci-1]:vals[ci]>vals[ci-1]))consecUp=false;if(!(m.lowerBetter?vals[ci]>vals[ci-1]:vals[ci]<vals[ci-1]))consecDn=false;}
+    var netBetter=m.lowerBetter?last<first:last>first;
+    var netWorse=m.lowerBetter?last>first:last<first;
+    var qualUp=T.span==='consec'?consecUp:netBetter;
+    var qualDn=T.span==='consec'?consecDn:netWorse;
+    if(qualUp)improving.push({loc:loc,chg:chg,first:first,last:last,wowChanges:wowChanges,consec:consecUp});
+    if(qualDn)declining.push({loc:loc,chg:chg,first:first,last:last,wowChanges:wowChanges,consec:consecDn});
+  });
+  improving.sort(function(a,b){return b.chg-a.chg;});declining.sort(function(a,b){return b.chg-a.chg;});
+  improving=improving.slice(0,5);declining=declining.slice(0,5);
+  var modeLabel=T.span==='consec'?'Consecutive Streak':T.span==='wow'?'Wk/Wk':'First to Latest';
+  function fmtItem(r,isGood){
+    var color=isGood?'#1a7a4a':'#c0392b';
+    var arrow=isGood?'&#9650;':'&#9660;';
+    var streak=T.span==='consec'?'<span style="font-size:9px;background:'+(isGood?'#d6f0e0':'#fce8e8')+';color:'+(isGood?'#0a5c28':'#8b1a1a')+';border-radius:4px;padding:1px 5px;margin-left:5px;font-weight:700;">'+r.wowChanges.length+'-wk streak</span>':'';
+    var detail='';
+    if(T.span==='span'||T.span==='consec'){
+      var fromStr=m.fmt(T.kpi==='mcd'?Math.round(r.first):r.first);
+      var toStr=m.fmt(T.kpi==='mcd'?Math.round(r.last):r.last);
+      var chgStr=m.fmt(T.kpi==='mcd'?Math.round(r.chg):r.chg);
+      var wk1=HISTORY[0].week; var wkN=HISTORY[HISTORY.length-1].week;
+      detail='<span style="font-size:9px;opacity:0.7;">'+wk1+'</span> '+fromStr+' &#8594; '+toStr+' '+arrow+chgStr+' <span style="font-size:9px;opacity:0.7;">'+wkN+'</span>'+streak;
+    } else {
+      var parts=[];
+      for(var wi=0;wi<r.wowChanges.length;wi++){var wc=r.wowChanges[wi];var wcStr=m.fmt(T.kpi==='mcd'?Math.round(Math.abs(wc)):Math.abs(wc));var wkLbl=HISTORY[wi+1].week.replace('Apr ','').replace('May ','May ');parts.push(wkLbl+': '+arrow+wcStr);}
+      detail=parts.join(' &nbsp;|&nbsp; ')+streak;
+    }
+    return '<div class="trend-card-item"><span style="font-family:DM Mono,monospace;font-size:12px;font-weight:600;">'+(r.name||r.loc)+'</span><span style="color:'+color+';font-weight:700;font-family:DM Mono,monospace;font-size:11px;">'+detail+'</span></div>';
+  }
+  var upEl=document.getElementById('trendUpList');
+  var dnEl=document.getElementById('trendDownList');
+  // Update card headers with current KPI
+  var upHdrDiv=document.getElementById('trendUpHdr');
+  var dnHdrDiv=document.getElementById('trendDnHdr');
+  if(upHdrDiv) upHdrDiv.textContent=m.label;
+  if(dnHdrDiv) dnHdrDiv.textContent=m.label;
+  if(upEl)upEl.innerHTML=improving.length?improving.map(function(r){return fmtItem(r,true);}).join(''):'<div style="padding:16px;color:var(--muted);font-size:12px;">No qualifying locations yet</div>';
+  if(dnEl)dnEl.innerHTML=declining.length?declining.map(function(r){return fmtItem(r,false);}).join(''):'<div style="padding:16px;color:var(--muted);font-size:12px;">No qualifying locations yet</div>';
+}
+
+renderTrend();
+
+RANKED.forEach((r,i)=>{
+  const tr=document.createElement('tr');
+  const bg=rowBg(r.rank);
+  const tc=rowTextCol(r.rank);
+  tr.style.background=bg;
+  tr.innerHTML=`
+    <td><span style="font-family:DM Mono,monospace;font-size:12px;font-weight:600;color:${tc};">${r.rank}</span></td>
+    <td><span style="font-family:DM Mono,monospace;font-weight:600;font-size:13px;color:${tc};">${r.loc}</span></td>
+    <td class="r"><span style="font-family:DM Mono,monospace;font-size:13px;font-weight:600;color:${tc};">${r.score.toFixed(1)}</span></td>
+    <td><div style="font-size:13px;font-weight:600;color:${tc};">${r.gm}</div></td>
+    <td><div style="font-size:13px;color:${tc};">${r.sup}</div></td>
+    <td class="r">${getMv(r.loc)}</td>`;
+  tbody.appendChild(tr);
+});
+
+//    PAGE 1: Supervisor rankings                                                
+const supEl=document.getElementById('supBody');
+SUPS.forEach(s=>{
+  const div=document.createElement('div');
+  div.className='sup-row';
+  const sbg=s.pos<=2?'#d6f0e0':s.pos<=4?'#eaf7d6':s.pos<=5?'#feffd6':s.pos<=6?'#fef0c8':'#ffd6d8';
+  const stc=s.pos<=2?'#0a5c28':s.pos<=4?'#2d5a0a':s.pos<=5?'#5a5a00':s.pos<=6?'#6b3a00':'#7a0008';
+  div.style.background=sbg;
+  div.innerHTML=`
+    <div class="sup-pos" style="color:${stc};">${s.pos}</div>
+    <div>
+      <div class="sup-name" style="color:${stc};font-weight:600;">${s.sup}</div>
+      <div class="sup-locs" style="color:${stc};opacity:0.75;">${s.locs.length} locations   ${s.locs.join(', ')}</div>
+    </div>
+    <div class="sup-avg" style="color:${stc};">avg <strong>${s.avg.toFixed(1)}</strong></div>`;
+  supEl.appendChild(div);
+});
+
+//    PAGE 2: Ranking Data   exact C3:O37 from workbook                         
+
+
+
+function fmtSales(v){ return v===null?'':(v>=0?'+':'')+Math.round(v*100)+'%'; }
+function fmtKiosk(v){ return v===null?'':Math.round(v*100)+'%'; }
+
+const dataBody=document.getElementById('dataBody');
+var RAW_SORTED=RAW_DATA.slice().sort(function(a,b){return parseInt(a[0])-parseInt(b[0]);});
+RAW_SORTED.forEach(r=>{
+  const loc=r[0],kvs=r[1],kvs_r=r[2],oepe=r[3],oepe_r=r[4],kiosk=r[5],kiosk_r=r[6],sales=r[7],sales_r=r[8],gc=r[9],gc_r=r[10],mcd=r[11],mcd_r=r[12],mcd_bold=r[13];
+  const oCol=oepe<115?'var(--green)':oepe<135?'var(--amber)':'var(--red)';
+  const sCol=String(sales).charAt(0)==='-'?'var(--red)':'var(--green)';
+  const gCol=String(gc).charAt(0)==='-'?'var(--red)':'var(--green)';
+  const mcdCell=mcd_bold?'<strong style="color:#2c2c2a;">'+mcd+'</strong>':mcd;
+  const tr=document.createElement('tr');
+  tr.innerHTML=
+    '<td class="l"><span style="font-family:DM Mono,monospace;font-weight:500;">'+loc+'</span></td>'+
+    '<td>'+Math.round(kvs)+'</td><td class="grp-end">'+rankBadge(kvs_r,20)+' </td>'+
+    '<td style="color:'+oCol+';font-weight:500;">'+Math.round(oepe)+'</td><td class="grp-end">'+rankBadge(oepe_r,20)+' </td>'+
+    '<td>'+fmtKiosk(kiosk)+'</td><td class="grp-end">'+rankBadge(kiosk_r,20)+' </td>'+
+    '<td style="color:'+sCol+';">'+sales+'</td><td class="grp-end">'+rankBadge(sales_r,20)+' </td>'+
+    '<td style="color:'+gCol+';">'+gc+'</td><td class="grp-end">'+rankBadge(gc_r,20)+' </td>'+
+    '<td style="color:var(--muted);">'+mcdCell+'</td><td>'+rankBadge(mcd_r,20)+' </td>';
+  dataBody.appendChild(tr);
+});
+
+// Totals row
+const dataFoot=document.getElementById('dataFoot');
+const tloc=RAW_TOTAL[0],tkvs=RAW_TOTAL[1],toepe=RAW_TOTAL[3],tkiosk=RAW_TOTAL[5],tsales=RAW_TOTAL[7],tgc=RAW_TOTAL[9],tmcd=RAW_TOTAL[11];
+const tfr=document.createElement('tr');
+tfr.style.cssText='border-top:2px solid var(--border);background:var(--surface2);font-weight:600;';
+const tsCol=String(tsales).charAt(0)==='-'?'var(--red)':'var(--green)';
+const tgCol=String(tgc).charAt(0)==='-'?'var(--red)':'var(--green)';
+tfr.innerHTML=
+  '<td class="l" style="color:var(--muted);font-size:10px;text-transform:uppercase;">'+tloc+'</td>'+
+  '<td style="color:var(--accent);">'+Math.round(tkvs)+'</td><td class="grp-end"></td>'+
+  '<td style="color:var(--accent);">'+Math.round(toepe)+'</td><td class="grp-end"></td>'+
+  '<td style="color:var(--accent);">'+fmtKiosk(tkiosk)+'</td><td class="grp-end"></td>'+
+  '<td style="color:'+tsCol+';">'+tsales+'</td><td class="grp-end"></td>'+
+  '<td style="color:'+tgCol+';">'+tgc+'</td><td class="grp-end"></td>'+
+  '<td style="color:var(--muted);"><strong>'+tmcd+'</strong></td><td></td>';
+dataFoot.appendChild(tfr);
+
+
+//    PAGE 3: Best & Worst 5 per KPI                                           
+var GM = {};
+for (var gi=0; gi<RANKED.length; gi++) { GM[RANKED[gi].loc]={gm:RANKED[gi].gm,sup:RANKED[gi].sup}; }
+
+var KPIS = [
+  {label:'KVS',unit:'s',valIdx:1,rankIdx:2},
+  {label:'OEPE',unit:'s',valIdx:3,rankIdx:4},
+  {label:'Kiosk %',unit:'%',valIdx:5,rankIdx:6},
+  {label:'Sales',unit:'%',valIdx:7,rankIdx:8},
+  {label:'Guest Counts',unit:'%',valIdx:9,rankIdx:10},
+  {label:'McDelivery',unit:'',valIdx:11,rankIdx:12}
+];
+
+function fmtKpiVal(kpi, raw){
+  if(kpi.label==='McDelivery') return raw;
+  if(kpi.label==='Kiosk %') return Math.round(raw*100)+'%';
+  if(kpi.label==='Sales'||kpi.label==='Guest Counts') return String(raw);
+  return Math.round(raw)+kpi.unit;
+}
+
+var container = document.getElementById('kpiSplitContainer');
+var N_LOCS = RANKED.length;
+
+for (var ki=0; ki<KPIS.length; ki++) {
+  var kpi = KPIS[ki];
+  var sorted = RAW_DATA.slice().sort(function(a,b){ return a[kpi.rankIdx]-b[kpi.rankIdx]; });
+  var best5  = sorted.slice(0,5);
+  var worst5 = sorted.slice(-5).reverse();
+
+  var section = document.createElement('div');
+  section.style.cssText='margin-bottom:20px;';
+  var title = document.createElement('div');
+  title.className='sec-title'; title.style.marginBottom='10px'; title.textContent=kpi.label;
+  section.appendChild(title);
+  var grid = document.createElement('div'); grid.className='split-grid';
+
+  var bestCard = document.createElement('div'); bestCard.className='card';
+  bestCard.innerHTML='<div class="split-header"><div class="title">Top Performers</div></div>';
+  var bestBody = document.createElement('div');
+  for (var bi=0; bi<best5.length; bi++) {
+    var r=best5[bi], val=fmtKpiVal(kpi,r[kpi.valIdx]), info=GM[r[0]]||{gm:'',sup:''};
+    var div=document.createElement('div'); div.className='split-row'; div.style.background='#d6f0e0';
+    div.innerHTML=
+      '<div style="font-size:11px;font-weight:600;color:#0a5c28;">'+(bi+1)+'</div>'+
+      '<div style="font-family:DM Mono,monospace;font-size:13px;font-weight:600;color:#0a5c28;">'+r[0]+'</div>'+
+      '<div style="font-size:12px;font-weight:600;color:#0a5c28;">'+info.gm+'</div>'+
+      '<div style="font-size:11px;color:#0a5c28;opacity:0.8;">'+info.sup+'</div>'+
+      '<div style="text-align:right;"><div style="color:#0a5c28;font-family:DM Mono,monospace;font-weight:600;">'+val+'</div>'+
+      '<div style="font-size:9px;color:#0a5c28;opacity:0.7;">rank '+r[kpi.rankIdx]+'</div></div>';
+    bestBody.appendChild(div);
+  }
+  bestCard.appendChild(bestBody);
+
+  var worstCard = document.createElement('div'); worstCard.className='card';
+  worstCard.innerHTML='<div class="split-header"><div class="title">80/19 Locations</div></div>';
+  var worstBody = document.createElement('div');
+  for (var wi=0; wi<worst5.length; wi++) {
+    var r=worst5[wi], val=fmtKpiVal(kpi,r[kpi.valIdx]), info=GM[r[0]]||{gm:'',sup:''};
+    var div=document.createElement('div'); div.className='split-row'; div.style.background='#ffd6d8';
+    div.innerHTML=
+      '<div style="font-size:11px;font-weight:600;color:#7a0008;">'+(N_LOCS-wi)+'</div>'+
+      '<div style="font-family:DM Mono,monospace;font-size:13px;font-weight:600;color:#7a0008;">'+r[0]+'</div>'+
+      '<div style="font-size:12px;font-weight:600;color:#7a0008;">'+info.gm+'</div>'+
+      '<div style="font-size:11px;color:#7a0008;opacity:0.8;">'+info.sup+'</div>'+
+      '<div style="text-align:right;"><div style="color:#7a0008;font-family:DM Mono,monospace;font-weight:600;">'+val+'</div>'+
+      '<div style="font-size:9px;color:#7a0008;opacity:0.7;">rank '+r[kpi.rankIdx]+'</div></div>';
+    worstBody.appendChild(div);
+  }
+  worstCard.appendChild(worstBody);
+  grid.appendChild(bestCard); grid.appendChild(worstCard);
+  section.appendChild(grid); container.appendChild(section);
+}
+
+//    PAGE 4: Peaks                                                              
+function renderPeak(containerId,data){
+  var el=document.getElementById(containerId);
+  var seen={};
+  var pos=0;
+  for (var pi=0; pi<data.length; pi++) {
+    var r=data[pi];
+    if(seen[r.loc]) continue;
+    seen[r.loc]=true; pos++;
+    var div=document.createElement('div');
+    div.className='peak-row';
+    var pbg=r.oepe<121?'#d6f0e0':r.oepe<=150?'#feffd6':'#ffd6d8';
+    var ptc=r.oepe<121?'#0a5c28':r.oepe<=150?'#5a5a00':'#7a0008';
+    div.style.background=pbg;
+    div.innerHTML=
+      '<div class="peak-pos" style="color:'+ptc+';">'+pos+'</div>'+
+      '<div class="peak-loc" style="color:'+ptc+';">'+(r.name||r.loc)+'</div>'+
+      '<div class="peak-oepe" style="color:'+ptc+';">'+Math.round(r.oepe)+'s</div>'+
+      '<div class="peak-kvs" style="color:'+ptc+';opacity:0.75;">'+Math.round(r.kvs)+'s KVS</div>';
+    el.appendChild(div);
+  }
+}
+renderPeak('peak7am',PEAKS['7am']);
+renderPeak('peak11am',PEAKS['11am']);
+renderPeak('peak5pm',PEAKS['5pm']);
+// -- Green Sweep --
+function buildGreenSweep(){
+  // Build GM lookup from RANKED
+  var gmMap = {};
+  RANKED.forEach(function(r){ gmMap[r.loc] = r.gm; });
+
+  // Build per-loc daypart oepe
+  var locData = {};
+  ['7am','11am','5pm'].forEach(function(dp){
+    PEAKS[dp].forEach(function(r){
+      if(!locData[r.loc]) locData[r.loc] = {};
+      locData[r.loc][dp] = r.oepe;
+    });
+  });
+
+  // Green Sweep = green (oepe < 121) in all 3 dayparts
+  var sweepData = [];
+  Object.keys(locData).forEach(function(loc){
+    var d = locData[loc];
+    var am7 = d['7am'], am11 = d['11am'], pm5 = d['5pm'];
+    if(am7 !== undefined && am11 !== undefined && pm5 !== undefined &&
+       am7 < 121 && am11 < 121 && pm5 < 121){
+      var avg = Math.round((am7 + am11 + pm5) / 3);
+      sweepData.push({loc:loc, gm:gmMap[loc]||'', avg:avg, am7:am7, am11:am11, pm5:pm5});
+    }
+  });
+  sweepData.sort(function(a,b){return a.avg-b.avg;});
+
+  var countEl = document.getElementById('sweepCount');
+  var listEl  = document.getElementById('sweepList');
+  if(!countEl || !listEl) return;
+
+  countEl.textContent = sweepData.length;
+
+  if(sweepData.length === 0){
+    listEl.innerHTML = '<div style="padding:16px 20px;color:#888780;font-size:12px;">No locations achieved a Green Sweep this week.</div>';
+    return;
+  }
+
+  function chip(label, val){
+    return '<div style="display:inline-flex;flex-direction:column;align-items:center;background:#d6f0e0;border-radius:6px;padding:5px 10px;min-width:56px;">'+
+      '<div style="font-size:9px;font-weight:600;color:#0a5c28;text-transform:uppercase;margin-bottom:2px;">'+label+'</div>'+
+      '<div style="font-size:13px;font-weight:700;color:#0a5c28;font-family:DM Mono,monospace;">'+val+'s</div>'+
+    '</div>';
+  }
+
+  listEl.innerHTML = sweepData.map(function(s,i){
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 20px;border-top:'+(i===0?'none':'1px solid #d3d1c7')+';flex-wrap:wrap;gap:8px;">'+
+      '<div>'+
+        '<div style="font-family:DM Mono,monospace;font-size:13px;font-weight:700;color:#2c2c2a;">'+s.loc+'</div>'+
+        '<div style="font-size:12px;font-weight:600;color:#2c2c2a;margin-top:2px;">'+s.gm+'</div>'+
+        '<div style="font-size:10px;color:#888780;margin-top:2px;">Avg OEPE: '+s.avg+'s across all dayparts</div>'+
+      '</div>'+
+      '<div style="display:flex;gap:6px;align-items:center;">'+
+        chip('7am', s.am7)+chip('11am', s.am11)+chip('5pm', s.pm5)+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+buildGreenSweep();
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+</body>
+</html>         
