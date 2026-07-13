@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CA Rankings Dashboard — Jul 5–Jul 11, 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#f5f4f0;--surface:#ffffff;--surface2:#f0ede8;--border:#d3d1c7;
+  --text:#2c2c2a;--muted:#888780;--accent:#8a6e1e;--accent2:#1a5fa8;
+  --green:#1a7a4a;--red:#c0392b;--amber:#b05a0a;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.5;min-height:100vh;}
+.page{max-width:1160px;margin:0 auto;padding:24px 20px 60px;}
+
+/* Header */
+.header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+.header h1{font-family:'DM Serif Display',serif;font-size:26px;font-weight:400;}
+.header .week{font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);margin-top:3px;letter-spacing:.08em;}
+.header .state{font-family:'DM Serif Display',serif;font-size:18px;color:var(--accent);}
+.header .meta{font-size:11px;color:var(--muted);text-align:right;}
+
+/* Top-level page tabs */
+.page-tabs{display:flex;gap:3px;margin-bottom:24px;background:#0f2347;border:1px solid #2a5298;border-radius:12px;padding:5px;box-shadow:0 4px 15px rgba(15,35,71,0.4);overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;}
+.page-tab{flex:0 0 auto;text-align:center;padding:9px 12px;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;color:#a8c4e8;transition:all .2s;border:none;background:transparent;font-family:inherit;letter-spacing:.02em;white-space:nowrap;}
+.page-tab:hover{color:var(--text);background:var(--surface2);}
+.page-tab.active{background:linear-gradient(135deg,#e8c97a 0%,#c9a227 100%);color:#0f2347;font-weight:700;box-shadow:0 2px 8px rgba(232,201,122,0.4);}
+
+/* Page sections */
+.tab-page{display:none;}
+.tab-page.active{display:block;}
+
+/* Summary strip */
+.summary-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+.s-card{background:linear-gradient(135deg,#1a3a6b 0%,#0f2347 100%);border:1px solid #2a5298;border-radius:10px;padding:12px 14px;box-shadow:0 4px 15px rgba(26,58,107,0.3);}
+.s-lbl{font-size:12px;color:#e8c97a;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;font-weight:600;}
+.s-val{font-family:'DM Mono',monospace;font-size:26px;font-weight:700;color:#ffffff;line-height:1.2;}
+.s-sub{font-size:12px;color:#a8c4e8;margin-top:4px;}
+
+/* Weights bar */
+.weights-bar{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.w-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;flex-shrink:0;}
+.w-items{display:flex;gap:5px;flex-wrap:wrap;}
+.w-chip{display:flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:11px;cursor:pointer;font-family:inherit;transition:background .15s,border-color .15s,box-shadow .15s;}
+.w-chip:hover{background:#e8f0fb;border-color:#4a7ac8;box-shadow:0 2px 6px rgba(74,122,200,0.2);}
+.w-chip:hover .wt{color:#1a5fa8;}
+.w-chip:hover .wn{color:#2c2c2a;}
+.w-chip.sort-active{background:var(--navy);border-color:var(--gold2);box-shadow:0 0 0 2px var(--gold2);}
+.w-chip.sort-active .wt,.w-chip.sort-active .wn{color:var(--gold);}
+.w-chip.sort-active:hover{background:var(--navy);border-color:var(--gold2);}
+.w-chip.sort-active:hover .wt,.w-chip.sort-active:hover .wn{color:var(--gold);}
+.w-chip .wt{font-family:'DM Mono',monospace;color:var(--accent);font-weight:500;}
+.w-chip .wn{color:var(--muted);}
+
+/* Sec title */
+.sec-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* Cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+
+/* Ranking table */
+.rank-table{width:100%;border-collapse:collapse;}
+.rank-table th{background:var(--surface2);padding:8px 12px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);white-space:nowrap;}
+.rank-table th.r{text-align:right;}
+.rank-table td{padding:8px 12px;border-top:1px solid var(--border);vertical-align:middle;}
+.rank-table td.r{text-align:right;font-family:'DM Mono',monospace;font-size:12px;}
+.rank-table tr:hover td{opacity:0.85;}
+.rank-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);}
+.loc-num{font-family:'DM Mono',monospace;font-weight:500;font-size:13px;}
+.gm-name{font-size:11px;color:var(--muted);margin-top:1px;}
+.score-pill{display:inline-block;font-family:'DM Mono',monospace;font-size:11px;padding:2px 8px;border-radius:6px;font-weight:500;}
+.score-top{background:rgba(109,207,158,.15);color:var(--green);border:1px solid rgba(109,207,158,.25);}
+.score-mid{background:rgba(232,201,122,.1);color:var(--accent);border:1px solid rgba(232,201,122,.2);}
+.score-bot{background:rgba(232,122,122,.12);color:var(--red);border:1px solid rgba(232,122,122,.2);}
+
+/* Supervisor ranking */
+.sup-row{display:grid;grid-template-columns:40px 1fr auto;align-items:center;gap:10px;padding:11px 16px;border-top:1px solid var(--border);}
+.sup-row:first-child{border-top:none;}
+.sup-row:hover{opacity:0.85;}
+.sup-pos{font-family:'DM Serif Display',serif;font-size:20px;color:var(--muted);}
+.sup-pos.p1{color:var(--accent);}
+.sup-pos.p2{color:var(--text);}
+.sup-name{font-size:13px;font-weight:500;}
+.sup-locs{font-size:10px;color:var(--muted);margin-top:1px;}
+.sup-avg{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);}
+
+/* Data page - full KPI table */
+.data-table{width:100%;border-collapse:collapse;font-size:11px;}
+.data-table th{background:var(--surface2);padding:7px 10px;text-align:center;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);white-space:nowrap;border-bottom:1px solid var(--border);}
+.data-table th.l{text-align:left;}
+.data-table td{padding:7px 10px;border-top:1px solid var(--border);text-align:center;font-family:'DM Mono',monospace;font-size:11px;}
+.data-table td.l{text-align:left;font-family:'DM Sans',sans-serif;}
+.data-table tr:hover td{background:var(--surface2);}
+.rank-badge{display:inline-block;font-size:10px;padding:1px 6px;border-radius:4px;font-family:'DM Mono',monospace;}
+.rb-top{background:rgba(109,207,158,.15);color:var(--green);}
+.rb-mid{background:rgba(232,201,122,.1);color:var(--accent);}
+.rb-bot{background:rgba(232,122,122,.12);color:var(--red);}
+
+/* 80/20 */
+.split-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:700px){.split-grid{grid-template-columns:1fr;}}
+.split-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.split-header .title{font-family:'DM Serif Display',serif;font-size:15px;}
+.split-header .badge{font-size:10px;padding:3px 10px;border-radius:20px;font-family:'DM Mono',monospace;}
+.badge-top{background:rgba(109,207,158,.15);color:var(--green);border:1px solid rgba(109,207,158,.25);}
+.badge-bot{background:rgba(232,122,122,.12);color:var(--red);border:1px solid rgba(232,122,122,.2);}
+.split-row{display:grid;grid-template-columns:28px 60px 1fr 1fr auto;align-items:center;gap:10px;padding:9px 16px;border-top:1px solid var(--border);}
+.split-row:first-child{border-top:none;}
+.split-row:hover{background:var(--surface2);}
+.split-rank{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);}
+.split-loc{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;}
+.split-gm{font-size:10px;color:var(--muted);}
+.split-score{font-family:'DM Mono',monospace;font-size:12px;}
+
+/* Peaks */
+.peaks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+@media(max-width:700px){.peaks-grid{grid-template-columns:1fr;}}
+.peak-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.peak-dp{font-family:'DM Serif Display',serif;font-size:15px;}
+.peak-time{font-family:'DM Mono',monospace;font-size:10px;color:var(--accent);}
+.peak-row{display:grid;grid-template-columns:22px 1fr auto auto;align-items:center;gap:8px;padding:7px 14px;border-top:1px solid var(--border);font-size:11px;}
+.peak-row:first-child{border-top:none;}
+.peak-row:hover{opacity:0.85;}
+.peak-pos{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
+.peak-loc{font-family:'DM Mono',monospace;font-weight:500;}
+.peak-oepe{font-family:'DM Mono',monospace;font-size:12px;font-weight:500;}
+.peak-kvs{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
+
+/* Two col layout */
+.two-col{display:grid;grid-template-columns:2fr 1fr;gap:16px;}
+@media(max-width:800px){.two-col{grid-template-columns:1fr;}}
+.data-table th.grp-end,.data-table td.grp-end{border-right:2px solid var(--border);}
+
+.trend-pill{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;}
+.trend-pill:hover{border-color:var(--navy);color:var(--navy);}
+.trend-pill-active{background:var(--navy);border-color:var(--navy);color:var(--gold);}
+.trend-toggle{padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-size:11px;cursor:pointer;font-family:inherit;transition:all .15s;}
+.trend-toggle-on{background:#e8f4fd;border-color:#4a90d9;color:#1a5fa8;font-weight:600;}
+.trend-card-item{display:flex;justify-content:space-between;align-items:center;padding:9px 16px;border-bottom:1px solid var(--border);}
+.trend-card-item:last-child{border-bottom:none;}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div>
+      <h1>Weekly Performance Rankings</h1>
+      <div class="week">WEEK OF JUL 5 – JUL 11, 2026</div>
+    </div>
+    <div class="meta">
+      <div class="state">California</div>
+      <span>34 Locations &nbsp;·&nbsp; 7 Supervisors</span>
+    </div>
+  </div>
+
+  <!-- TOP-LEVEL PAGE TABS -->
+  <div class="page-tabs">
+    <div class="page-tab active" onclick="showPage('ranking')">Ranking</div>
+    <div class="page-tab" onclick="showPage('moves')">Making Moves</div>
+    <div class="page-tab" onclick="showPage('data')">Ranking Data</div>
+    <div class="page-tab" onclick="showPage('split')">80 / 20</div>
+    <div class="page-tab" onclick="showPage('peaks')">Peak Periods</div>
+    <div class="page-tab" onclick="showPage('analysis')">Analysis</div>
+    <div class="page-tab" onclick="showPage('trends')">Trends</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- PAGE 1 — RANKING -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div class="tab-page active" id="page-ranking">
+
+    <div class="summary-strip">
+      <div class="s-card"><div class="s-lbl">#1 Location</div><div class="s-val">40959</div><div class="s-sub">Jose Sanchez &nbsp;&middot;&nbsp; score 5.0</div></div>
+      <div class="s-card"><div class="s-lbl">Top GM</div><div class="s-val">Jose Sanchez</div><div class="s-sub">Loc 40959 &nbsp;&middot;&nbsp; 5.0</div></div>
+      <div class="s-card"><div class="s-lbl">Top Supervisor</div><div class="s-val">Raymond Gallardo</div><div class="s-sub">avg rank 4.0</div></div>
+    </div>
+
+    <div class="weights-bar">
+      <div style="font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">&#128197; Click any KPI chip below to re-rank all locations by that metric:</div>
+      <div class="w-items">
+        <button class="w-chip sort-active" id="chip-score" onclick="sortRanking('score')"><span class="wt">&#9776;</span><span class="wn">Full Ranking</span></button>
+        <button class="w-chip" id="chip-gc" onclick="sortRanking('gc')"><span class="wt">30%</span><span class="wn">Guest Counts</span></button>
+        <button class="w-chip" id="chip-kiosk" onclick="sortRanking('kiosk')"><span class="wt">20%</span><span class="wn">Kiosk %</span></button>
+        <button class="w-chip" id="chip-sales" onclick="sortRanking('sales')"><span class="wt">20%</span><span class="wn">Sales</span></button>
+        <button class="w-chip" id="chip-oepe" onclick="sortRanking('oepe')"><span class="wt">10%</span><span class="wn">OEPE</span></button>
+        <button class="w-chip" id="chip-kvs" onclick="sortRanking('kvs')"><span class="wt">10%</span><span class="wn">KVS</span></button>
+        <button class="w-chip" id="chip-mcd" onclick="sortRanking('mcd')"><span class="wt">10%</span><span class="wn">McDelivery</span></button>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-bottom:0;">
+      <div>
+        <div class="sec-title">Full Rankings — All 34 Locations</div>
+        <div class="card">
+          <table class="rank-table" id="rankTable">
+            <thead>
+              <tr>
+                <th style="width:34px;">#</th>
+                <th>Location</th>
+                <th class="r">Score</th>
+                <th>GM</th>
+                <th>Supervisor</th>
+                <th class="r">Move</th>
+              </tr>
+            </thead>
+            <tbody id="rankBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="sec-title">Supervisor Rankings</div>
+        <div class="card">
+          <div id="supBody"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- PAGE 2 — RANKING DATA -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  
+  <div class="tab-page" id="page-moves">
+    <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#2c2c2a;margin-bottom:6px;">Making Moves</div>
+    <div style="font-size:13px;color:#888780;margin-bottom:24px;">Locations with positive movement this week &mdash; Jul 5 &ndash; Jul 11, 2026 &nbsp;&middot;&nbsp; 17 locations improved</div>
+    <div id="movesContainer"></div>
+  </div>
+  <div class="tab-page" id="page-data">
+    <div class="sec-title" style="margin-bottom:14px;">Ranking Data — Data Tab C3:O37 &nbsp;·&nbsp; Week of Jul 5 – Jul 11</div>
+    <div class="card" style="overflow-x:auto;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th class="l">Location</th>
+            <th>KVS</th><th class="grp-end">Rank</th>
+            <th>OEPE</th><th class="grp-end">Rank</th>
+            <th>Kiosk %</th><th class="grp-end">Rank</th>
+            <th>Sales</th><th class="grp-end">Rank</th>
+            <th>Guest Counts</th><th class="grp-end">Rank</th>
+            <th>McDelivery Time</th><th>Rank</th>
+          </tr>
+        </thead>
+        <tbody id="dataBody"></tbody>
+        <tfoot id="dataFoot"></tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- PAGE 3 — 80/20 -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div class="tab-page" id="page-split">
+    <div class="sec-title" style="margin-bottom:16px;">Best &amp; Worst 5 Locations per KPI — Week of Jul 5 – Jul 11</div>
+    <div id="kpiSplitContainer"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- PAGE 4 — PEAK PERIODS -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div class="tab-page" id="page-peaks">
+    <div class="sec-title" style="margin-bottom:14px;">Daypart OEPE Rankings — Best to Worst &nbsp;·&nbsp; Week of Jul 5 – Jul 11</div>
+    <div class="peaks-grid">
+      <div class="card">
+        <div class="peak-header">
+          <div class="peak-dp">Breakfast</div>
+          <div class="peak-time">7AM – 9AM</div>
+        </div>
+        <div id="peak7am"></div>
+      </div>
+      <div class="card">
+        <div class="peak-header">
+          <div class="peak-dp">Lunch</div>
+          <div class="peak-time">11AM – 2PM</div>
+        </div>
+        <div id="peak11am"></div>
+      </div>
+      <div class="card">
+        <div class="peak-header">
+          <div class="peak-dp">Dinner</div>
+          <div class="peak-time">5PM – 7PM</div>
+        </div>
+        <div id="peak5pm"></div>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid #d3d1c7;border-radius:12px;overflow:hidden;margin-top:20px;">
+      <div style="padding:14px 20px;border-bottom:1px solid #d3d1c7;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#0a5c28,#1a7a4a);">
+        <div>
+          <div style="font-family:'DM Serif Display',serif;font-size:16px;color:#fff;">&#127807; Green Sweep</div>
+          <div style="font-size:11px;color:#a8e8c0;margin-top:3px;">Locations at or under 120s OEPE in every daypart this week</div>
+        </div>
+        <div id="sweepCount" style="font-family:'DM Mono',monospace;font-size:28px;font-weight:700;color:#fff;">—</div>
+      </div>
+      <div id="sweepList" style="padding:4px 0;">
+        <div style="padding:16px 20px;color:#888780;font-size:12px;">Calculating...</div>
+      </div>
+      <div style="padding:12px 20px;border-top:1px solid #d3d1c7;background:#f8f7f4;">
+        <div style="font-size:11px;color:#888780;line-height:1.6;"><strong style="color:#0a5c28;">Green Sweep</strong> means a location achieved OEPE at or under 120 seconds in all three dayparts — Breakfast (7am), Lunch (11am), and Dinner (5pm). This is the highest recognition on the Peak Periods page.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+          <div class="tab-page" id="page-analysis">
+    <div class="sec-title" style="margin-bottom:20px;">Weekly Analysis &amp; Focus Areas &mdash; Week of Jul 5&ndash;Jul 11, 2026</div>
+
+    <div style="background:#fff;border:1px solid #d3d1c7;border-radius:12px;padding:22px 26px;margin-bottom:18px;">
+      <div style="font-family:'DM Serif Display',serif;font-size:18px;margin-bottom:10px;color:#2c2c2a;">The Multiplier Lens</div>
+      <p style="font-size:13px;line-height:1.8;color:#444;margin-bottom:10px;">Raymond Gallardo's patch posts the best average rank this week at 4.0 across just 2 locations. The story of the week is Jose Sanchez at 40959, climbing one spot to claim #1 on the portfolio's best McDelivery time (1:20, rank 1) and a #2 Sales mark (+11.6%). Angela Cruz at 39954, last week's #1, slides four spots to #5 as GC cooled to -3.8% (rank 9) despite OEPE still sitting at a strong 100s (rank 3).</p>
+      <p style="font-size:13px;line-height:1.8;color:#444;">The bottom of the board is concentrated in one patch. Elton Perez's 6 locations average 28.0, the weakest patch this week, and account for three of the bottom four spots &mdash; 6891 at #34 (GC -14.3%, rank 34) and 7932 / 25117 tied at #32. Ray Marez's smaller 3-location patch averages 23.7, dragged down by 7703 at #31 (Sales -6.2%, rank 32). Both patches warrant a location-level review this week.</p>
+    </div>
+
+    <div style="background:#fff;border:1px solid #d3d1c7;border-left:4px solid #1a7a4a;border-radius:0 12px 12px 0;padding:20px 24px;margin-bottom:18px;">
+      <div style="font-family:'DM Serif Display',serif;font-size:16px;color:#1a7a4a;margin-bottom:12px;">&#9650; Top 5 This Week</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px;">
+        <div style="background:#d6f0e0;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:10px;color:#0a5c28;font-weight:600;">Rank 1 &#9650;1</div><div style="font-size:12px;font-weight:700;color:#0a5c28;margin:4px 0;">Jose Sanchez</div><div style="font-size:11px;color:#0a5c28;">40959 &middot; Raymond</div><div style="font-size:11px;color:#1a7a4a;margin-top:2px;">McDelivery 1:20 &middot; Sales +11.6%</div></div>
+        <div style="background:#d6f0e0;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:10px;color:#0a5c28;font-weight:600;">Rank 2 &#9650;3</div><div style="font-size:12px;font-weight:700;color:#0a5c28;margin:4px 0;">Maria Figueroa</div><div style="font-size:11px;color:#0a5c28;">10865 &middot; Mike</div><div style="font-size:11px;color:#1a7a4a;margin-top:2px;">KVS 25s &middot; OEPE 119s</div></div>
+        <div style="background:#d6f0e0;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:10px;color:#0a5c28;font-weight:600;">Rank 3 &#9650;1</div><div style="font-size:12px;font-weight:700;color:#0a5c28;margin:4px 0;">Monica Garcia</div><div style="font-size:11px;color:#0a5c28;">16753 &middot; Michelle</div><div style="font-size:11px;color:#1a7a4a;margin-top:2px;">Kiosk 98.6% &middot; GC +4.4%</div></div>
+        <div style="background:#d6f0e0;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:10px;color:#0a5c28;font-weight:600;">Rank 4 &#9650;5</div><div style="font-size:12px;font-weight:700;color:#0a5c28;margin:4px 0;">Paola Martinez</div><div style="font-size:11px;color:#0a5c28;">24497 &middot; Mike</div><div style="font-size:11px;color:#1a7a4a;margin-top:2px;">Kiosk 98.6% &middot; OEPE 125s</div></div>
+        <div style="background:#d6f0e0;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:10px;color:#0a5c28;font-weight:600;">Rank 5 &#9660;4</div><div style="font-size:12px;font-weight:700;color:#0a5c28;margin:4px 0;">Angela Cruz</div><div style="font-size:11px;color:#0a5c28;">39954 &middot; Mike</div><div style="font-size:11px;color:#1a7a4a;margin-top:2px;">OEPE 100s &middot; Sales +3.2%</div></div>
+        </div>
+      <div style="background:#eaf7d6;border-radius:8px;padding:14px 18px;">
+        <div style="font-size:12px;font-weight:600;color:#2d5a0a;margin-bottom:6px;">&#128161; Standout KPIs This Week</div>
+        <p style="font-size:12px;line-height:1.8;color:#2d5a0a;">
+          <strong>Best OEPE:</strong> 17470 Tammy Martin &mdash; 96s &nbsp;|&nbsp; <strong>Best KVS:</strong> 22694 Juan Gomez &mdash; 22s &nbsp;|&nbsp; <strong>Best Kiosk:</strong> 37958 Martha Perez &mdash; 99.9% &nbsp;|&nbsp; <strong>Best Sales %:</strong> 22694 Juan Gomez &mdash; +12.2% &nbsp;|&nbsp; <strong>Best GC %:</strong> 16753 Monica Garcia &mdash; +4.4% &nbsp;|&nbsp; <strong>Best McDelivery:</strong> 40959 Jose Sanchez &mdash; 1:20
+        </p>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid #d3d1c7;border-left:4px solid #1a5fa8;border-radius:0 12px 12px 0;padding:20px 24px;margin-bottom:18px;">
+      <div style="font-family:'DM Serif Display',serif;font-size:16px;color:#1a5fa8;margin-bottom:12px;">&#8593; Biggest Movers</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div style="background:#f0f4ff;border-radius:8px;padding:14px 16px;">
+          <div style="font-size:10px;font-weight:700;color:#1a5fa8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">&#9650; Climbers</div>
+          <div style="font-size:13px;margin-bottom:6px;"><strong>Bree Alvidrez</strong> &mdash; 13669 &nbsp;<span style="color:#1a7a4a;font-weight:700;">&#9650;17</span> (#27 &rarr; #10)</div><div style="font-size:12px;color:#555;line-height:1.6;margin-bottom:10px;">KVS improved to 28s (rank 3) from 34s last week, and GC narrowed to -4.3% (rank 12) from -5.7%. Kiosk 79.7% (rank 17) still has room to grow. Recognition conversation with Mike this week.</div><div style="font-size:13px;margin-bottom:6px;"><strong>Itzel Negrete</strong> &mdash; 26499 &nbsp;<span style="color:#1a7a4a;font-weight:700;">&#9650;14</span> (#22 &rarr; #8)</div><div style="font-size:12px;color:#555;line-height:1.6;margin-bottom:10px;">GC swung positive to +0.2% (rank 4) from -5.5% last week, and Sales strengthened to +9.7% (rank 4). No McDelivery data again this week.</div><div style="font-size:13px;margin-bottom:6px;"><strong>Martha Perez</strong> &mdash; 37958 &nbsp;<span style="color:#1a7a4a;font-weight:700;">&#9650;13</span> (#20 &rarr; #7)</div><div style="font-size:12px;color:#555;line-height:1.6;margin-bottom:10px;">Kiosk 99.9% (rank 1) is portfolio-best this week, and GC recovered to -3.4% (rank 7) from -7.3% last week. McDelivery 1:35 (rank 2) remains a strength.</div>
+        </div>
+        <div style="background:#fff4f4;border-radius:8px;padding:14px 16px;">
+          <div style="font-size:10px;font-weight:700;color:#c0392b;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">&#9660; Declines</div>
+          <div style="font-size:13px;margin-bottom:6px;"><strong>Janeth Alvarez</strong> &mdash; 21383 &nbsp;<span style="color:#c0392b;font-weight:700;">&#9660;14</span> (#16 &rarr; #30)</div><div style="font-size:12px;color:#555;line-height:1.6;margin-bottom:10px;">Sales reversed hard to -1.7% (rank 24) from +7.4% last week, and GC weakened further to -10.4% (rank 29). Kiosk 43.1% (rank 34) remains the portfolio's weakest. Elton needs a conversation with Janeth.</div><div style="font-size:13px;margin-bottom:6px;"><strong>Soran Meyers</strong> &mdash; 11529 &nbsp;<span style="color:#c0392b;font-weight:700;">&#9660;9</span> (#14 &rarr; #23)</div><div style="font-size:12px;color:#555;line-height:1.6;margin-bottom:10px;">Sales slowed to -0.5% (rank 16) from +6.8% last week, and GC softened to -9.0% (rank 24) from -2.1%. Sylvia should dig into what changed.</div><div style="font-size:13px;margin-bottom:6px;"><strong>Luis Yepez</strong> &mdash; 7013 &nbsp;<span style="color:#c0392b;font-weight:700;">&#9660;8</span> (#21 &rarr; #29)</div><div style="font-size:12px;color:#555;line-height:1.6;margin-bottom:10px;">Sales fell sharply to -8.0% (rank 33) from +2.6% last week, and GC dropped to -11.7% (rank 32). OEPE 114s (rank 5) remains a bright spot. Ray Marez patch conversation warranted.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid #d3d1c7;border-radius:12px;padding:20px 24px;margin-bottom:18px;">
+      <div style="font-family:'DM Serif Display',serif;font-size:16px;margin-bottom:14px;color:#2c2c2a;">Supervisor Patch Rankings</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+        <div style="background:#d6f0e0;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:11px;color:#0a5c28;font-weight:700;">&#9733; Raymond Gallardo</div><div style="font-size:20px;font-weight:700;color:#0a5c28;margin:4px 0;">4.0</div><div style="font-size:10px;color:#555;">2 locations</div></div>
+        <div style="background:#d6f0e0;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:11px;color:#0a5c28;font-weight:700;">Mike Van Houten</div><div style="font-size:20px;font-weight:700;color:#0a5c28;margin:4px 0;">5.8</div><div style="font-size:10px;color:#555;">5 locations</div></div>
+        <div style="background:#f0f8ff;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:11px;color:#1e4fa8;font-weight:700;">Michelle Uribe</div><div style="font-size:20px;font-weight:700;color:#1e4fa8;margin:4px 0;">12.0</div><div style="font-size:10px;color:#555;">6 locations</div></div>
+        <div style="background:#f0f8ff;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:11px;color:#1e4fa8;font-weight:700;">Mona Aguilar</div><div style="font-size:20px;font-weight:700;color:#1e4fa8;margin:4px 0;">17.8</div><div style="font-size:10px;color:#555;">6 locations</div></div>
+        <div style="background:#fdf4e0;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:11px;color:#b07d1a;font-weight:700;">Sylvia Corona</div><div style="font-size:20px;font-weight:700;color:#b07d1a;margin:4px 0;">23.2</div><div style="font-size:10px;color:#555;">6 locations</div></div>
+        <div style="background:#fdeaea;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:11px;color:#c0392b;font-weight:700;">Ray Marez</div><div style="font-size:20px;font-weight:700;color:#c0392b;margin:4px 0;">23.7</div><div style="font-size:10px;color:#555;">3 locations</div></div>
+        <div style="background:#fdeaea;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:11px;color:#c0392b;font-weight:700;">Elton Perez</div><div style="font-size:20px;font-weight:700;color:#c0392b;margin:4px 0;">28.0</div><div style="font-size:10px;color:#555;">6 locations</div></div>
+        </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid #d3d1c7;border-left:4px solid #c0392b;border-radius:0 12px 12px 0;padding:20px 24px;margin-bottom:18px;">
+      <div style="font-family:'DM Serif Display',serif;font-size:16px;color:#c0392b;margin-bottom:12px;">&#9660; Focus Areas This Week</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div><div style="font-size:12px;font-weight:700;color:#2c2c2a;margin-bottom:6px;">7703 &mdash; Cris Reeves (#31) &middot; Ray Marez</div><p style="font-size:12px;line-height:1.7;color:#555;">Sales -6.2% (rank 32) and GC -9.9% (rank 27) both weak this week. OEPE 155s (rank 31) is also well off standard.</p></div>
+        <div><div style="font-size:12px;font-weight:700;color:#2c2c2a;margin-bottom:6px;">25117 &mdash; Ana Godinez (#32) &middot; Elton Perez</div><p style="font-size:12px;line-height:1.7;color:#555;">GC -11.7% (rank 32) and Sales -5.3% (rank 30) continue to drag. OEPE 110s (rank 4) is a genuine strength worth highlighting.</p></div>
+        <div><div style="font-size:12px;font-weight:700;color:#2c2c2a;margin-bottom:6px;">7932 &mdash; Gloria Huizar (#32) &middot; Elton Perez</div><p style="font-size:12px;line-height:1.7;color:#555;">GC -11.7% (rank 31) and Sales -6.0% (rank 31) both bottom-tier. KVS 32s (rank 5) is a bright spot to build coaching around.</p></div>
+        <div><div style="font-size:12px;font-weight:700;color:#2c2c2a;margin-bottom:6px;">6891 &mdash; Soran Meyers (#34) &middot; Elton Perez</div><p style="font-size:12px;line-height:1.7;color:#555;">GC -14.3% is worst in the portfolio (rank 34), and Sales -9.9% (rank 34) also worst. McDelivery 2:44 (rank 5) is a genuine strength.</p></div>
+        </div>
+    </div>
+
+    <div style="background:#0f2347;border-radius:12px;padding:28px 32px;text-align:center;margin-bottom:18px;">
+      <p style="font-size:16px;color:#ffffff;font-weight:500;line-height:1.7;font-style:italic;">&ldquo;When ownership is multiplied, the leader&rsquo;s job shifts from driving results to creating the conditions where others drive results without being asked.&rdquo;</p>
+      <p style="font-size:12px;color:#a8c4e8;margin-top:12px;">&mdash; John Abbate, <em>Multiplying Ownership</em></p>
+    </div>
+
+  </div>
+  <div class="tab-page" id="page-trends">
+    <div style="background:#fff;border:1px solid #d3d1c7;border-radius:12px;padding:18px 20px;margin-bottom:16px;">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);white-space:nowrap;">KPI:</div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;">
+          <button class="trend-pill trend-pill-active" onclick="setTrendKpi('rank',this)">Overall Rank</button>
+          <button class="trend-pill" onclick="setTrendKpi('oepe',this)">OEPE</button>
+          <button class="trend-pill" onclick="setTrendKpi('kvs',this)">KVS</button>
+          <button class="trend-pill" onclick="setTrendKpi('kiosk',this)">Kiosk %</button>
+          <button class="trend-pill" onclick="setTrendKpi('sales',this)">Sales</button>
+          <button class="trend-pill" onclick="setTrendKpi('gc',this)">Guest Counts</button>
+          <button class="trend-pill" onclick="setTrendKpi('mcd',this)">McDelivery</button>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);white-space:nowrap;">Overlays:</div>
+        <button class="trend-toggle trend-toggle-on" id="tog-avg" onclick="toggleTrendOverlay('avg',this)">Portfolio Average</button>
+        <button class="trend-toggle trend-toggle-on" id="tog-std" onclick="toggleTrendOverlay('std',this)">McDonald's Standard</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);white-space:nowrap;">Location:</div>
+        <select id="trendLocSelect" onchange="setTrendLoc(this.value)" style="font-family:inherit;font-size:12px;padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:#f8f7f4;color:var(--text);min-width:220px;"></select>
+        <button onclick="setTrendLoc('')" style="font-size:11px;padding:6px 12px;border:1px solid var(--border);border-radius:8px;background:var(--surface2);color:var(--muted);cursor:pointer;font-family:inherit;">All Locations</button>
+      </div>
+    </div>
+    <div id="trendNoSel" style="background:#fff;border:1px solid #d3d1c7;border-radius:12px;padding:40px 24px;margin-bottom:16px;text-align:center;">
+      <div style="font-size:32px;margin-bottom:12px;">&#128200;</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:18px;color:var(--navy);margin-bottom:8px;">Select a Location to View Its Trend</div>
+      <div style="font-size:13px;color:var(--muted);max-width:400px;margin:0 auto;">Choose a location from the dropdown above to see its week-over-week trend line for the selected KPI, with portfolio average and McDonald's standard overlays.</div>
+    </div>
+    <div id="trendChartWrap" style="background:#fff;border:1px solid #d3d1c7;border-radius:12px;overflow:hidden;margin-bottom:16px;display:none;">
+      <div style="padding:14px 20px;border-bottom:1px solid #d3d1c7;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,var(--navy),#1a3a6b);">
+        <div style="font-family:'DM Serif Display',serif;font-size:16px;color:#fff;" id="trendChartTitle">Select a Location</div>
+        <div style="font-size:11px;color:#a8c4e8;" id="trendChartSub">2 weeks of data</div>
+      </div>
+      <div style="padding:16px 20px 20px;"><canvas id="trendCanvas" height="380" style="width:100%;display:block;"></canvas></div>
+      <div id="trendLegend" style="padding:0 20px 16px;display:flex;flex-wrap:wrap;gap:10px;"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+      <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);">Show change:</span>
+      <button class="trend-toggle trend-toggle-on" id="tog-span" onclick="setTrendSpan('span',this)">First to Latest Week</button>
+      <button class="trend-toggle" id="tog-wow" onclick="setTrendSpan('wow',this)">Week over Week</button>
+      <button class="trend-toggle" id="tog-consec" onclick="setTrendSpan('consec',this)">Consecutive Streak</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+      <div style="background:#fff;border:1px solid #d3d1c7;border-radius:12px;overflow:hidden;">
+        <div style="padding:12px 16px;border-bottom:1px solid #d3d1c7;background:#d6f0e0;display:flex;align-items:center;justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:14px;">&#9650;</span>
+            <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#0a5c28;">Improving (First to Latest)</span>
+          </div>
+          <span id="trendUpHdr" style="font-size:10px;font-weight:700;color:#0a5c28;background:rgba(10,92,40,0.12);border-radius:4px;padding:2px 8px;">Overall Rank</span>
+        </div>
+        <div id="trendUpList"></div>
+      </div>
+      <div style="background:#fff;border:1px solid #d3d1c7;border-radius:12px;overflow:hidden;">
+        <div style="padding:12px 16px;border-bottom:1px solid #d3d1c7;background:#fce8e8;display:flex;align-items:center;justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:14px;">&#9660;</span>
+            <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#8b1a1a;">Declining (First to Latest)</span>
+          </div>
+          <span id="trendDnHdr" style="font-size:10px;font-weight:700;color:#8b1a1a;background:rgba(139,26,26,0.1);border-radius:4px;padding:2px 8px;">Overall Rank</span>
+        </div>
+        <div id="trendDownList"></div>
+      </div>
+    </div>
+    <div style="background:#f8f7f4;border:1px solid #d3d1c7;border-radius:12px;padding:16px 20px;margin-bottom:20px;">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px;">How to Read These Cards</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <div style="min-width:10px;height:10px;border-radius:50%;background:var(--navy);margin-top:3px;"></div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:3px;">First to Latest Week</div>
+            <div style="font-size:11px;color:var(--muted);line-height:1.6;">Compares a location's very first week on record to the most recent week. Shows the overall direction of travel regardless of week-to-week fluctuations. Best for seeing the big picture over time.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <div style="min-width:10px;height:10px;border-radius:50%;background:var(--navy);margin-top:3px;"></div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:3px;">Week over Week</div>
+            <div style="font-size:11px;color:var(--muted);line-height:1.6;">Shows each individual week's change step by step. Useful for spotting whether momentum is building, slowing, or reversing. A location may improve overall but show a dip in the middle week.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <div style="min-width:10px;height:10px;border-radius:50%;background:var(--navy);margin-top:3px;"></div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:3px;">Consecutive Streak</div>
+            <div style="font-size:11px;color:var(--muted);line-height:1.6;">Only shows locations that improved or declined every single week without exception. The strictest filter &mdash; a true streak with no off weeks. Becomes more meaningful as weeks accumulate. Empty early in the year is normal.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+<script>
+
+
+
+//    Page switcher                                                             
+function showPage(id){
+  document.querySelectorAll('.tab-page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.page-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+//    Data                                                                      
+function getMv(loc){
+  var mv=MOVEMENT[loc]||0;
+  if(mv===0)return '<span style="color:#888780;">&#8212;</span>';
+  var col=mv>0?'#1a7a4a':'#c0392b';
+  var arrow=mv>0?'&#9650;':'&#9660;';
+  return '<span style="color:'+col+';font-weight:600;">'+Math.abs(mv)+' <span style="font-size:16px;vertical-align:middle;">'+arrow+'</span></span>';
+}
+const MOVEMENT = {"40959":1, "10865":3, "16753":1, "24497":5, "39954":-4, "22694":-3, "37958":13, "26499":14, "24797":-2, "13669":17, "7433":-5, "32107":6, "10150":2, "38616":-2, "24135":-7, "11744":-6, "22228":-6, "11124":-1, "2327":6, "12566":-7, "36285":8, "4235":1, "11529":-9, "27493":3, "38349":6, "17470":-2, "6853":-8, "1313":4, "7013":-8, "21383":-14, "7703":2, "25117":-6, "7932":2, "6891":-4};
+
+const RANKED = [
+  {rank:1,loc:"40959",gm:"Jose Sanchez",sup:"Raymond",supColor:"#b87a00",score:5.0,oepe:119,kvs:35,kiosk:84.5,kvs_r:6,oepe_r:8,kiosk_r:11,sales_r:2,gc_r:3,mcd_r:1,mcd:"1:20",mcd_bold:false,sales:"+11.6%",gc:"+2.5%",prev:2,move:1},
+  {rank:2,loc:"10865",gm:"Maria Figueroa",sup:"Mike",supColor:"#2e7d32",score:7.9,oepe:119,kvs:25,kiosk:93.5,kvs_r:2,oepe_r:8,kiosk_r:8,sales_r:12,gc_r:6,mcd_r:11,mcd:"3:04",mcd_bold:false,sales:"+0.9%",gc:"-3.1%",prev:5,move:3},
+  {rank:3,loc:"16753",gm:"Monica Garcia",sup:"Michelle",supColor:"#1a7a4a",score:8.0,oepe:120,kvs:49,kiosk:98.6,kvs_r:25,oepe_r:10,kiosk_r:3,sales_r:3,gc_r:1,mcd_r:30,mcd:"--",mcd_bold:false,sales:"+11.1%",gc:"+4.4%",prev:4,move:1},
+  {rank:4,loc:"24497",gm:"Paola Martinez",sup:"Mike",supColor:"#2e7d32",score:8.4,oepe:125,kvs:39,kiosk:98.6,kvs_r:10,oepe_r:16,kiosk_r:2,sales_r:6,gc_r:8,mcd_r:18,mcd:"3:21",mcd_bold:false,sales:"+4.3%",gc:"-3.5%",prev:9,move:5},
+  {rank:5,loc:"39954",gm:"Angela Cruz",sup:"Mike",supColor:"#2e7d32",score:8.7,oepe:100,kvs:35,kiosk:84.3,kvs_r:6,oepe_r:3,kiosk_r:12,sales_r:10,gc_r:9,mcd_r:7,mcd:"2:55",mcd_bold:false,sales:"+3.2%",gc:"-3.8%",prev:1,move:-4},
+  {rank:6,loc:"22694",gm:"Juan Gomez",sup:"Michelle",supColor:"#1a7a4a",score:8.9,oepe:97,kvs:22,kiosk:71.7,kvs_r:1,oepe_r:2,kiosk_r:24,sales_r:1,gc_r:2,mcd_r:30,mcd:"--",mcd_bold:false,sales:"+12.2%",gc:"+4.3%",prev:3,move:-3},
+  {rank:7,loc:"37958",gm:"Martha Perez",sup:"Raymond",supColor:"#b87a00",score:9.3,oepe:135,kvs:45,kiosk:99.9,kvs_r:17,oepe_r:25,kiosk_r:1,sales_r:13,gc_r:7,mcd_r:2,mcd:"1:35",mcd_bold:false,sales:"+0.6%",gc:"-3.4%",prev:20,move:13},
+  {rank:8,loc:"26499",gm:"Itzel Negrete",sup:"Mike",supColor:"#2e7d32",score:10.8,oepe:130,kvs:41,kiosk:82.0,kvs_r:13,oepe_r:19,kiosk_r:13,sales_r:4,gc_r:4,mcd_r:30,mcd:"--",mcd_bold:false,sales:"+9.7%",gc:"+0.2%",prev:22,move:14},
+  {rank:9,loc:"24797",gm:"Ariana Cervantes",sup:"Michelle",supColor:"#1a7a4a",score:11.2,oepe:116,kvs:43,kiosk:95.4,kvs_r:15,oepe_r:6,kiosk_r:6,sales_r:11,gc_r:11,mcd_r:24,mcd:"3:37",mcd_bold:false,sales:"+1.2%",gc:"-4.3%",prev:7,move:-2},
+  {rank:10,loc:"13669",gm:"Bree Alvidrez",sup:"Mike",supColor:"#2e7d32",score:14.1,oepe:121,kvs:28,kiosk:79.7,kvs_r:3,oepe_r:12,kiosk_r:17,sales_r:18,gc_r:12,mcd_r:20,mcd:"3:26",mcd_bold:false,sales:"-0.6%",gc:"-4.3%",prev:27,move:17},
+  {rank:11,loc:"7433",gm:"Imelda Cortez",sup:"Ray",supColor:"#0097a7",score:14.2,oepe:134,kvs:49,kiosk:91.7,kvs_r:25,oepe_r:23,kiosk_r:9,sales_r:8,gc_r:10,mcd_r:30,mcd:"--",mcd_bold:false,sales:"+3.6%",gc:"-3.9%",prev:6,move:-5},
+  {rank:12,loc:"32107",gm:"Jennifer Lagace",sup:"Mona",supColor:"#7b3fa8",score:14.4,oepe:146,kvs:48,kiosk:95.5,kvs_r:22,oepe_r:29,kiosk_r:5,sales_r:9,gc_r:18,mcd_r:11,mcd:"3:04",mcd_bold:false,sales:"+3.5%",gc:"-6.1%",prev:18,move:6},
+  {rank:13,loc:"10150",gm:"Yvonne Sylvia",sup:"Mona",supColor:"#7b3fa8",score:14.5,oepe:167,kvs:55,kiosk:75.2,kvs_r:29,oepe_r:34,kiosk_r:21,sales_r:5,gc_r:5,mcd_r:15,mcd:"3:14",mcd_bold:false,sales:"+6.8%",gc:"-1.4%",prev:15,move:2},
+  {rank:14,loc:"38616",gm:"Brenda Ramos",sup:"Mona",supColor:"#7b3fa8",score:15.7,oepe:124,kvs:48,kiosk:79.6,kvs_r:22,oepe_r:14,kiosk_r:18,sales_r:17,gc_r:15,mcd_r:6,mcd:"2:45",mcd_bold:false,sales:"-0.6%",gc:"-5.8%",prev:12,move:-2},
+  {rank:15,loc:"24135",gm:"Ashley Andujar",sup:"Michelle",supColor:"#1a7a4a",score:16.0,oepe:120,kvs:45,kiosk:96.6,kvs_r:17,oepe_r:10,kiosk_r:4,sales_r:23,gc_r:21,mcd_r:16,mcd:"3:17",mcd_bold:false,sales:"-1.2%",gc:"-7.6%",prev:8,move:-7},
+  {rank:16,loc:"11744",gm:"Sabrina Rocha",sup:"Sylvia",supColor:"#e65100",score:16.9,oepe:138,kvs:28,kiosk:95.1,kvs_r:3,oepe_r:27,kiosk_r:7,sales_r:21,gc_r:19,mcd_r:26,mcd:"3:45",mcd_bold:false,sales:"-0.9%",gc:"-6.6%",prev:10,move:-6},
+  {rank:17,loc:"22228",gm:"Monique Castro",sup:"Mona",supColor:"#7b3fa8",score:19.0,oepe:128,kvs:48,kiosk:74.5,kvs_r:22,oepe_r:17,kiosk_r:22,sales_r:22,gc_r:20,mcd_r:3,mcd:"2:18",mcd_bold:false,sales:"-0.9%",gc:"-6.7%",prev:11,move:-6},
+  {rank:18,loc:"11124",gm:"Cassandra Campbell",sup:"Elton",supColor:"#c0392b",score:19.4,oepe:155,kvs:56,kiosk:72.9,kvs_r:30,oepe_r:31,kiosk_r:23,sales_r:7,gc_r:17,mcd_r:22,mcd:"3:32",mcd_bold:false,sales:"+4.1%",gc:"-6.0%",prev:17,move:-1},
+  {rank:19,loc:"2327",gm:"Alex Beltran",sup:"Michelle",supColor:"#1a7a4a",score:19.5,oepe:137,kvs:56,kiosk:87.1,kvs_r:30,oepe_r:26,kiosk_r:10,sales_r:25,gc_r:16,mcd_r:21,mcd:"3:28",mcd_bold:false,sales:"-1.8%",gc:"-5.9%",prev:25,move:6},
+  {rank:20,loc:"12566",gm:"Reyes Charnin",sup:"Michelle",supColor:"#1a7a4a",score:20.2,oepe:132,kvs:54,kiosk:62.6,kvs_r:28,oepe_r:21,kiosk_r:28,sales_r:14,gc_r:13,mcd_r:30,mcd:"--",mcd_bold:false,sales:"+0.4%",gc:"-4.4%",prev:13,move:-7},
+  {rank:21,loc:"36285",gm:"Salma Chavez - Interim GM",sup:"Sylvia",supColor:"#e65100",score:20.6,oepe:147,kvs:38,kiosk:80.3,kvs_r:8,oepe_r:30,kiosk_r:16,sales_r:26,gc_r:25,mcd_r:9,mcd:"3:02",mcd_bold:false,sales:"-2.3%",gc:"-9.3%",prev:29,move:8},
+  {rank:22,loc:"4235",gm:"Emilia Lezama",sup:"Elton",supColor:"#c0392b",score:20.9,oepe:157,kvs:40,kiosk:63.3,kvs_r:11,oepe_r:33,kiosk_r:27,sales_r:20,gc_r:14,mcd_r:29,mcd:"4:42",mcd_bold:false,sales:"-0.8%",gc:"-5.3%",prev:23,move:1},
+  {rank:23,loc:"11529",gm:"Soran Meyers",sup:"Sylvia",supColor:"#e65100",score:21.7,oepe:122,kvs:49,kiosk:53.9,kvs_r:25,oepe_r:13,kiosk_r:31,sales_r:16,gc_r:24,mcd_r:13,mcd:"3:10",mcd_bold:false,sales:"-0.5%",gc:"-9.0%",prev:14,move:-9},
+  {rank:24,loc:"27493",gm:"Ana Hernandez",sup:"Mona",supColor:"#7b3fa8",score:22.3,oepe:139,kvs:57,kiosk:76.5,kvs_r:33,oepe_r:28,kiosk_r:19,sales_r:15,gc_r:22,mcd_r:28,mcd:"4:27",mcd_bold:false,sales:"+0.1%",gc:"-7.8%",prev:27,move:3},
+  {rank:25,loc:"38349",gm:"Evelyn Gonzalez",sup:"Sylvia",supColor:"#e65100",score:22.5,oepe:116,kvs:45,kiosk:53.9,kvs_r:17,oepe_r:6,kiosk_r:30,sales_r:28,gc_r:26,mcd_r:8,mcd:"2:59",mcd_bold:false,sales:"-4.1%",gc:"-9.8%",prev:31,move:6},
+  {rank:26,loc:"17470",gm:"Tammy Martin",sup:"Sylvia",supColor:"#e65100",score:22.6,oepe:96,kvs:40,kiosk:50.0,kvs_r:11,oepe_r:1,kiosk_r:33,sales_r:27,gc_r:30,mcd_r:4,mcd:"2:36",mcd_bold:false,sales:"-3.8%",gc:"-10.9%",prev:24,move:-2},
+  {rank:27,loc:"6853",gm:"Eloina Lopez",sup:"Mona",supColor:"#7b3fa8",score:23.3,oepe:130,kvs:41,kiosk:75.4,kvs_r:13,oepe_r:19,kiosk_r:20,sales_r:29,gc_r:28,mcd_r:19,mcd:"3:24",mcd_bold:false,sales:"-4.9%",gc:"-10.0%",prev:19,move:-8},
+  {rank:28,loc:"1313",gm:"Destiny Baker",sup:"Sylvia",supColor:"#e65100",score:23.8,oepe:134,kvs:57,kiosk:66.3,kvs_r:33,oepe_r:23,kiosk_r:25,sales_r:19,gc_r:23,mcd_r:25,mcd:"3:42",mcd_bold:false,sales:"-0.7%",gc:"-8.6%",prev:32,move:4},
+  {rank:29,loc:"7013",gm:"Luis Yepez",sup:"Ray",supColor:"#0097a7",score:23.9,oepe:114,kvs:56,kiosk:81.0,kvs_r:30,oepe_r:5,kiosk_r:14,sales_r:33,gc_r:32,mcd_r:14,mcd:"3:13",mcd_bold:false,sales:"-8.0%",gc:"-11.7%",prev:21,move:-8},
+  {rank:30,loc:"21383",gm:"Janeth Alvarez",sup:"Elton",supColor:"#c0392b",score:24.6,oepe:124,kvs:46,kiosk:43.1,kvs_r:20,oepe_r:14,kiosk_r:34,sales_r:24,gc_r:29,mcd_r:9,mcd:"3:02",mcd_bold:false,sales:"-1.7%",gc:"-10.4%",prev:16,move:-14},
+  {rank:31,loc:"7703",gm:"Cris Reeves",sup:"Ray",supColor:"#0097a7",score:25.3,oepe:155,kvs:46,kiosk:80.5,kvs_r:20,oepe_r:31,kiosk_r:15,sales_r:32,gc_r:27,mcd_r:27,mcd:"4:17",mcd_bold:false,sales:"-6.2%",gc:"-9.9%",prev:33,move:2},
+  {rank:32,loc:"25117",gm:"Ana Godinez",sup:"Elton",supColor:"#c0392b",score:25.7,oepe:110,kvs:44,kiosk:53.6,kvs_r:16,oepe_r:4,kiosk_r:32,sales_r:30,gc_r:32,mcd_r:17,mcd:"3:19",mcd_bold:false,sales:"-5.3%",gc:"-11.7%",prev:26,move:-6},
+  {rank:32,loc:"7932",gm:"Gloria Huizar",sup:"Elton",supColor:"#c0392b",score:25.7,oepe:133,kvs:32,kiosk:64.9,kvs_r:5,oepe_r:22,kiosk_r:26,sales_r:31,gc_r:31,mcd_r:23,mcd:"3:34",mcd_bold:false,sales:"-6.0%",gc:"-11.7%",prev:34,move:2},
+  {rank:34,loc:"6891",gm:"Soran Meyers",sup:"Elton",supColor:"#c0392b",score:25.8,oepe:128,kvs:38,kiosk:58.4,kvs_r:8,oepe_r:17,kiosk_r:29,sales_r:34,gc_r:34,mcd_r:5,mcd:"2:44",mcd_bold:false,sales:"-9.9%",gc:"-14.3%",prev:30,move:-4}
+];
+
+const SUPS = [
+  {pos:1,sup:"Raymond",avg:4.0,locs:[1, 7]},
+  {pos:2,sup:"Mike",avg:5.8,locs:[2, 4, 5, 8, 10]},
+  {pos:3,sup:"Michelle",avg:12.0,locs:[3, 6, 9, 15, 19, 20]},
+  {pos:4,sup:"Mona",avg:17.8,locs:[12, 13, 14, 17, 24, 27]},
+  {pos:5,sup:"Sylvia",avg:23.2,locs:[16, 21, 23, 25, 26, 28]},
+  {pos:6,sup:"Ray",avg:23.7,locs:[11, 29, 31]},
+  {pos:7,sup:"Elton",avg:28.0,locs:[18, 22, 30, 32, 32, 34]}
+];
+
+
+const PEAKS = {"7am": [{"loc":"22694","gm":"Juan Gomez","oepe":72,"kvs":19},{"loc":"16753","gm":"Monica Garcia","oepe":83,"kvs":41},{"loc":"27493","gm":"Ana Hernandez","oepe":84,"kvs":33},{"loc":"11529","gm":"Soran Meyers","oepe":87,"kvs":34},{"loc":"38616","gm":"Brenda Ramos","oepe":87,"kvs":17},{"loc":"39954","gm":"Angela Cruz","oepe":87,"kvs":28},{"loc":"37958","gm":"Martha Perez","oepe":88,"kvs":26},{"loc":"21383","gm":"Janeth Alvarez","oepe":89,"kvs":45},{"loc":"1313","gm":"Destiny Baker","oepe":90,"kvs":44},{"loc":"17470","gm":"Tammy Martin","oepe":91,"kvs":28},{"loc":"25117","gm":"Ana Godinez","oepe":94,"kvs":39},{"loc":"40959","gm":"Jose Sanchez","oepe":95,"kvs":33},{"loc":"2327","gm":"Alex Beltran","oepe":97,"kvs":39},{"loc":"10865","gm":"Maria Figueroa","oepe":98,"kvs":21},{"loc":"32107","gm":"Jennifer Lagace","oepe":99,"kvs":35},{"loc":"11124","gm":"Cassandra Campbell","oepe":101,"kvs":29},{"loc":"4235","gm":"Emilia Lezama","oepe":103,"kvs":27},{"loc":"24497","gm":"Paola Martinez","oepe":103,"kvs":30},{"loc":"24797","gm":"Ariana Cervantes","oepe":103,"kvs":34},{"loc":"7703","gm":"Cris Reeves","oepe":104,"kvs":40},{"loc":"22228","gm":"Monique Castro","oepe":104,"kvs":57},{"loc":"12566","gm":"Reyes Charnin","oepe":105,"kvs":48},{"loc":"36285","gm":"Salma Chavez - Interim GM","oepe":105,"kvs":33},{"loc":"7013","gm":"Luis Yepez","oepe":106,"kvs":42},{"loc":"13669","gm":"Bree Alvidrez","oepe":106,"kvs":20},{"loc":"7932","gm":"Gloria Huizar","oepe":108,"kvs":24},{"loc":"24135","gm":"Ashley Andujar","oepe":109,"kvs":34},{"loc":"26499","gm":"Itzel Negrete","oepe":110,"kvs":40},{"loc":"38349","gm":"Evelyn Gonzalez","oepe":111,"kvs":35},{"loc":"7433","gm":"Imelda Cortez","oepe":112,"kvs":39},{"loc":"6853","gm":"Eloina Lopez","oepe":116,"kvs":44},{"loc":"6891","gm":"Soran Meyers","oepe":117,"kvs":30},{"loc":"10150","gm":"Yvonne Sylvia","oepe":124,"kvs":39},{"loc":"11744","gm":"Sabrina Rocha","oepe":126,"kvs":21}], "11am": [{"loc":"22694","gm":"Juan Gomez","oepe":105,"kvs":19},{"loc":"17470","gm":"Tammy Martin","oepe":115,"kvs":44},{"loc":"26499","gm":"Itzel Negrete","oepe":116,"kvs":43},{"loc":"1313","gm":"Destiny Baker","oepe":118,"kvs":67},{"loc":"40959","gm":"Jose Sanchez","oepe":122,"kvs":41},{"loc":"27493","gm":"Ana Hernandez","oepe":123,"kvs":42},{"loc":"7433","gm":"Imelda Cortez","oepe":124,"kvs":31},{"loc":"24135","gm":"Ashley Andujar","oepe":124,"kvs":42},{"loc":"39954","gm":"Angela Cruz","oepe":124,"kvs":44},{"loc":"10865","gm":"Maria Figueroa","oepe":126,"kvs":20},{"loc":"22228","gm":"Monique Castro","oepe":127,"kvs":41},{"loc":"16753","gm":"Monica Garcia","oepe":128,"kvs":52},{"loc":"21383","gm":"Janeth Alvarez","oepe":128,"kvs":48},{"loc":"7013","gm":"Luis Yepez","oepe":131,"kvs":62},{"loc":"24497","gm":"Paola Martinez","oepe":131,"kvs":41},{"loc":"37958","gm":"Martha Perez","oepe":133,"kvs":51},{"loc":"6891","gm":"Soran Meyers","oepe":135,"kvs":36},{"loc":"13669","gm":"Bree Alvidrez","oepe":135,"kvs":33},{"loc":"24797","gm":"Ariana Cervantes","oepe":135,"kvs":44},{"loc":"38616","gm":"Brenda Ramos","oepe":139,"kvs":57},{"loc":"6853","gm":"Eloina Lopez","oepe":140,"kvs":44},{"loc":"25117","gm":"Ana Godinez","oepe":141,"kvs":41},{"loc":"32107","gm":"Jennifer Lagace","oepe":141,"kvs":46},{"loc":"11124","gm":"Cassandra Campbell","oepe":145,"kvs":60},{"loc":"11529","gm":"Soran Meyers","oepe":146,"kvs":54},{"loc":"38349","gm":"Evelyn Gonzalez","oepe":149,"kvs":49},{"loc":"12566","gm":"Reyes Charnin","oepe":154,"kvs":55},{"loc":"36285","gm":"Salma Chavez - Interim GM","oepe":154,"kvs":36},{"loc":"7703","gm":"Cris Reeves","oepe":162,"kvs":43},{"loc":"7932","gm":"Gloria Huizar","oepe":162,"kvs":36},{"loc":"4235","gm":"Emilia Lezama","oepe":163,"kvs":34},{"loc":"10150","gm":"Yvonne Sylvia","oepe":166,"kvs":64},{"loc":"11744","gm":"Sabrina Rocha","oepe":171,"kvs":22},{"loc":"2327","gm":"Alex Beltran","oepe":176,"kvs":61}], "5pm": [{"loc":"17470","gm":"Tammy Martin","oepe":92,"kvs":28},{"loc":"22694","gm":"Juan Gomez","oepe":99,"kvs":19},{"loc":"40959","gm":"Jose Sanchez","oepe":104,"kvs":19},{"loc":"7013","gm":"Luis Yepez","oepe":107,"kvs":60},{"loc":"12566","gm":"Reyes Charnin","oepe":111,"kvs":51},{"loc":"38349","gm":"Evelyn Gonzalez","oepe":117,"kvs":43},{"loc":"25117","gm":"Ana Godinez","oepe":118,"kvs":44},{"loc":"39954","gm":"Angela Cruz","oepe":118,"kvs":27},{"loc":"16753","gm":"Monica Garcia","oepe":121,"kvs":42},{"loc":"24497","gm":"Paola Martinez","oepe":121,"kvs":44},{"loc":"38616","gm":"Brenda Ramos","oepe":121,"kvs":61},{"loc":"11744","gm":"Sabrina Rocha","oepe":122,"kvs":25},{"loc":"10865","gm":"Maria Figueroa","oepe":123,"kvs":21},{"loc":"22228","gm":"Monique Castro","oepe":123,"kvs":37},{"loc":"13669","gm":"Bree Alvidrez","oepe":127,"kvs":25},{"loc":"24135","gm":"Ashley Andujar","oepe":127,"kvs":43},{"loc":"10150","gm":"Yvonne Sylvia","oepe":128,"kvs":42},{"loc":"6891","gm":"Soran Meyers","oepe":130,"kvs":32},{"loc":"37958","gm":"Martha Perez","oepe":130,"kvs":38},{"loc":"32107","gm":"Jennifer Lagace","oepe":132,"kvs":27},{"loc":"1313","gm":"Destiny Baker","oepe":133,"kvs":55},{"loc":"2327","gm":"Alex Beltran","oepe":134,"kvs":52},{"loc":"24797","gm":"Ariana Cervantes","oepe":136,"kvs":46},{"loc":"27493","gm":"Ana Hernandez","oepe":139,"kvs":56},{"loc":"6853","gm":"Eloina Lopez","oepe":144,"kvs":25},{"loc":"7932","gm":"Gloria Huizar","oepe":144,"kvs":31},{"loc":"21383","gm":"Janeth Alvarez","oepe":150,"kvs":43},{"loc":"11529","gm":"Soran Meyers","oepe":151,"kvs":48},{"loc":"26499","gm":"Itzel Negrete","oepe":163,"kvs":38},{"loc":"7433","gm":"Imelda Cortez","oepe":164,"kvs":52},{"loc":"4235","gm":"Emilia Lezama","oepe":167,"kvs":41},{"loc":"7703","gm":"Cris Reeves","oepe":172,"kvs":48},{"loc":"36285","gm":"Salma Chavez - Interim GM","oepe":173,"kvs":31},{"loc":"11124","gm":"Cassandra Campbell","oepe":174,"kvs":66}]};
+
+const RAW_DATA = [[40959,35,6,119,8,0.845,11,"+11.6%",2,"+2.5%",3,"1:20",1,false],[10865,25,2,119,8,0.935,8,"+0.9%",12,"-3.1%",6,"3:04",11,false],[16753,49,25,120,10,0.986,3,"+11.1%",3,"+4.4%",1,"--",30,false],[24497,39,10,125,16,0.986,2,"+4.3%",6,"-3.5%",8,"3:21",18,false],[39954,35,6,100,3,0.843,12,"+3.2%",10,"-3.8%",9,"2:55",7,false],[22694,22,1,97,2,0.717,24,"+12.2%",1,"+4.3%",2,"--",30,false],[37958,45,17,135,25,0.999,1,"+0.6%",13,"-3.4%",7,"1:35",2,false],[26499,41,13,130,19,0.82,13,"+9.7%",4,"+0.2%",4,"--",30,false],[24797,43,15,116,6,0.954,6,"+1.2%",11,"-4.3%",11,"3:37",24,false],[13669,28,3,121,12,0.797,17,"-0.6%",18,"-4.3%",12,"3:26",20,false],[7433,49,25,134,23,0.917,9,"+3.6%",8,"-3.9%",10,"--",30,false],[32107,48,22,146,29,0.955,5,"+3.5%",9,"-6.1%",18,"3:04",11,false],[10150,55,29,167,34,0.752,21,"+6.8%",5,"-1.4%",5,"3:14",15,false],[38616,48,22,124,14,0.796,18,"-0.6%",17,"-5.8%",15,"2:45",6,false],[24135,45,17,120,10,0.966,4,"-1.2%",23,"-7.6%",21,"3:17",16,false],[11744,28,3,138,27,0.951,7,"-0.9%",21,"-6.6%",19,"3:45",26,false],[22228,48,22,128,17,0.745,22,"-0.9%",22,"-6.7%",20,"2:18",3,false],[11124,56,30,155,31,0.729,23,"+4.1%",7,"-6.0%",17,"3:32",22,false],[2327,56,30,137,26,0.871,10,"-1.8%",25,"-5.9%",16,"3:28",21,false],[12566,54,28,132,21,0.626,28,"+0.4%",14,"-4.4%",13,"--",30,false],[36285,38,8,147,30,0.803,16,"-2.3%",26,"-9.3%",25,"3:02",9,false],[4235,40,11,157,33,0.633,27,"-0.8%",20,"-5.3%",14,"4:42",29,false],[11529,49,25,122,13,0.539,31,"-0.5%",16,"-9.0%",24,"3:10",13,false],[27493,57,33,139,28,0.765,19,"+0.1%",15,"-7.8%",22,"4:27",28,false],[38349,45,17,116,6,0.539,30,"-4.1%",28,"-9.8%",26,"2:59",8,false],[17470,40,11,96,1,0.5,33,"-3.8%",27,"-10.9%",30,"2:36",4,false],[6853,41,13,130,19,0.754,20,"-4.9%",29,"-10.0%",28,"3:24",19,false],[1313,57,33,134,23,0.663,25,"-0.7%",19,"-8.6%",23,"3:42",25,false],[7013,56,30,114,5,0.81,14,"-8.0%",33,"-11.7%",32,"3:13",14,false],[21383,46,20,124,14,0.431,34,"-1.7%",24,"-10.4%",29,"3:02",9,false],[7703,46,20,155,31,0.805,15,"-6.2%",32,"-9.9%",27,"4:17",27,false],[25117,44,16,110,4,0.536,32,"-5.3%",30,"-11.7%",32,"3:19",17,false],[7932,32,5,133,22,0.649,26,"-6.0%",31,"-11.7%",31,"3:34",23,false],[6891,38,8,128,17,0.584,29,"-9.9%",34,"-14.3%",34,"2:44",5,false]];
+const RAW_TOTAL = [0, 44, null, 130, null, 0.7537, null, "-0.3%", null, "-6.7%", null, "3:30", null];
+
+
+//    Helpers                                                                   
+function oepeCol(v){return v<115?'var(--green)':v<135?'var(--amber)':'var(--red)';}
+function rankBadge(r,n){
+  const cls=r<=Math.ceil(n*.2)?'rb-top':r>=Math.floor(n*.8)?'rb-bot':'rb-mid';
+  return `<span class="rank-badge ${cls}">${r}</span>`;
+}
+function scoreClass(rank,total){
+  const p=rank/total;
+  return p<=.2?'score-top':p<=.8?'score-mid':'score-bot';
+}
+function rowBg(rank){
+  if(rank<=5)  return '#d6f0e0';  // green tier
+  if(rank<=14) return '#eaf7d6';  // light green tier
+  if(rank<=22) return '#feffd6';  // yellow tier
+  if(rank<=29) return '#fef0c8';  // amber tier
+  return '#ffd6d8';               // red tier
+}
+function rowTextCol(rank){
+  if(rank<=5)  return '#0a5c28';
+  if(rank<=14) return '#2d5a0a';
+  if(rank<=22) return '#5a5a00';
+  if(rank<=29) return '#6b3a00';
+  return '#7a0008';
+}
+function fmtMcd(s){const m=Math.floor(s/60);return m>0?`${m}m ${Math.round(s%60)}s`:`${Math.round(s)}s`;}
+function fmtPct(v){return(v>=0?'+':'')+Math.round(v*100)+'%';}
+
+const N = RANKED.length;
+
+//    PAGE 1: Ranking table                                                      
+const tbody = document.getElementById('rankBody');
+
+// -- KPI Sort --
+function sortRanking(kpi) {
+  var isFullRanking = (kpi === 'score');
+  document.querySelectorAll('.w-chip').forEach(function(c){c.classList.remove('sort-active');});
+  var chip = document.getElementById('chip-'+kpi);
+  if(chip) chip.classList.add('sort-active');
+  var moveHdr = document.querySelector('#rankTable thead th:last-child');
+  if(moveHdr) moveHdr.style.display = isFullRanking ? '' : 'none';
+  var sorted = RANKED.slice().sort(function(a,b){
+    if(kpi==='score')  return a.rank - b.rank;
+    if(kpi==='oepe')   return a.oepe_r - b.oepe_r;
+    if(kpi==='kvs')    return a.kvs_r - b.kvs_r;
+    if(kpi==='kiosk')  return a.kiosk_r - b.kiosk_r;
+    if(kpi==='sales')  return a.sales_r - b.sales_r;
+    if(kpi==='gc')     return a.gc_r - b.gc_r;
+    if(kpi==='mcd')    return a.mcd_r - b.mcd_r;
+    return 0;
+  });
+  var labels = {score:'Score',oepe:'OEPE',kvs:'KVS',kiosk:'Kiosk%',sales:'Sales',gc:'Guest Counts',mcd:'McDelivery'};
+  var rb = document.getElementById('rankBody');
+  rb.innerHTML = '';
+  for(var i=0;i<sorted.length;i++){
+    var r=sorted[i]; var pos=i+1;
+    var bg=rowBg(isFullRanking?r.rank:pos);
+    var tc=rowTextCol(isFullRanking?r.rank:pos);
+    var kv='';
+    if(kpi==='score')      kv=r.score;
+    else if(kpi==='oepe')  kv=r.oepe+'s';
+    else if(kpi==='kvs')   kv=r.kvs+'s';
+    else if(kpi==='kiosk') kv=r.kiosk+'%';
+    else if(kpi==='sales') kv=r.sales||'';
+    else if(kpi==='gc')    kv=r.gc||'';
+    else if(kpi==='mcd')   kv=r.mcd;
+    var tr=document.createElement('tr');
+    tr.style.background=bg;
+    tr.innerHTML=
+      '<td><span style="font-family:DM Mono,monospace;font-size:12px;font-weight:600;color:'+tc+';">'+pos+'</span></td>'+
+      '<td><span style="font-family:DM Mono,monospace;font-weight:600;font-size:13px;color:'+tc+';">'+r.loc+'</span></td>'+
+      '<td class="r"><span style="font-family:DM Mono,monospace;font-size:13px;font-weight:700;color:'+tc+';">'+kv+'</span></td>'+
+      '<td><div style="font-size:13px;font-weight:600;color:'+tc+';">'+r.gm+'</div></td>'+
+      '<td><div style="font-size:13px;color:'+tc+';">'+r.sup+'</div></td>'+
+      (isFullRanking?'<td class="r">'+getMv(r.loc)+'</td>':'');
+    rb.appendChild(tr);
+  }
+  var sh=document.querySelector('#rankTable thead th:nth-child(3)');
+  if(sh) sh.textContent=labels[kpi]||'Score';
+}
+
+// -- Making Moves --
+var MOVERS=[
+  {loc:"13669",gm:"Bree Alvidrez",sup:"Mike Van Houten",rank:10,mv:17,oepe:121,oepe_r:12,kvs:28,kvs_r:3,kiosk:79.7,kiosk_r:17,sales:"-0.6%",sales_r:18,gc:"-4.3%",gc_r:12,mcd:"3:26",mcd_r:20,driver:"Moved up 17 spots from #27 to #10. Best-ranked metric: KVS 28s (rank 3)."},
+  {loc:"26499",gm:"Itzel Negrete",sup:"Mike Van Houten",rank:8,mv:14,oepe:130,oepe_r:19,kvs:41,kvs_r:13,kiosk:82.0,kiosk_r:13,sales:"+9.7%",sales_r:4,gc:"+0.2%",gc_r:4,mcd:"--",mcd_r:30,driver:"Moved up 14 spots from #22 to #8. Best-ranked metric: Sales +9.7% (rank 4)."},
+  {loc:"37958",gm:"Martha Perez",sup:"Raymond Gallardo",rank:7,mv:13,oepe:135,oepe_r:25,kvs:45,kvs_r:17,kiosk:99.9,kiosk_r:1,sales:"+0.6%",sales_r:13,gc:"-3.4%",gc_r:7,mcd:"1:35",mcd_r:2,driver:"Moved up 13 spots from #20 to #7. Best-ranked metric: Kiosk 99.9% (rank 1)."},
+  {loc:"36285",gm:"Salma Chavez - Interim GM",sup:"Sylvia Corona",rank:21,mv:8,oepe:147,oepe_r:30,kvs:38,kvs_r:8,kiosk:80.3,kiosk_r:16,sales:"-2.3%",sales_r:26,gc:"-9.3%",gc_r:25,mcd:"3:02",mcd_r:9,driver:"Moved up 8 spots from #29 to #21. Best-ranked metric: KVS 38s (rank 8)."},
+  {loc:"32107",gm:"Jennifer Lagace",sup:"Mona Aguilar",rank:12,mv:6,oepe:146,oepe_r:29,kvs:48,kvs_r:22,kiosk:95.5,kiosk_r:5,sales:"+3.5%",sales_r:9,gc:"-6.1%",gc_r:18,mcd:"3:04",mcd_r:11,driver:"Moved up 6 spots from #18 to #12. Best-ranked metric: Kiosk 95.5% (rank 5)."},
+  {loc:"2327",gm:"Alex Beltran",sup:"Michelle Uribe",rank:19,mv:6,oepe:137,oepe_r:26,kvs:56,kvs_r:30,kiosk:87.1,kiosk_r:10,sales:"-1.8%",sales_r:25,gc:"-5.9%",gc_r:16,mcd:"3:28",mcd_r:21,driver:"Moved up 6 spots from #25 to #19. Best-ranked metric: Kiosk 87.1% (rank 10)."},
+  {loc:"38349",gm:"Evelyn Gonzalez",sup:"Sylvia Corona",rank:25,mv:6,oepe:116,oepe_r:6,kvs:45,kvs_r:17,kiosk:53.9,kiosk_r:30,sales:"-4.1%",sales_r:28,gc:"-9.8%",gc_r:26,mcd:"2:59",mcd_r:8,driver:"Moved up 6 spots from #31 to #25. Best-ranked metric: OEPE 116s (rank 6)."},
+  {loc:"24497",gm:"Paola Martinez",sup:"Mike Van Houten",rank:4,mv:5,oepe:125,oepe_r:16,kvs:39,kvs_r:10,kiosk:98.6,kiosk_r:2,sales:"+4.3%",sales_r:6,gc:"-3.5%",gc_r:8,mcd:"3:21",mcd_r:18,driver:"Moved up 5 spots from #9 to #4. Best-ranked metric: Kiosk 98.6% (rank 2)."},
+  {loc:"1313",gm:"Destiny Baker",sup:"Sylvia Corona",rank:28,mv:4,oepe:134,oepe_r:23,kvs:57,kvs_r:33,kiosk:66.3,kiosk_r:25,sales:"-0.7%",sales_r:19,gc:"-8.6%",gc_r:23,mcd:"3:42",mcd_r:25,driver:"Moved up 4 spots from #32 to #28. Best-ranked metric: Sales -0.7% (rank 19)."},
+  {loc:"10865",gm:"Maria Figueroa",sup:"Mike Van Houten",rank:2,mv:3,oepe:119,oepe_r:8,kvs:25,kvs_r:2,kiosk:93.5,kiosk_r:8,sales:"+0.9%",sales_r:12,gc:"-3.1%",gc_r:6,mcd:"3:04",mcd_r:11,driver:"Moved up 3 spots from #5 to #2. Best-ranked metric: KVS 25s (rank 2)."},
+  {loc:"27493",gm:"Ana Hernandez",sup:"Mona Aguilar",rank:24,mv:3,oepe:139,oepe_r:28,kvs:57,kvs_r:33,kiosk:76.5,kiosk_r:19,sales:"+0.1%",sales_r:15,gc:"-7.8%",gc_r:22,mcd:"4:27",mcd_r:28,driver:"Moved up 3 spots from #27 to #24. Best-ranked metric: Sales +0.1% (rank 15)."},
+  {loc:"10150",gm:"Yvonne Sylvia",sup:"Mona Aguilar",rank:13,mv:2,oepe:167,oepe_r:34,kvs:55,kvs_r:29,kiosk:75.2,kiosk_r:21,sales:"+6.8%",sales_r:5,gc:"-1.4%",gc_r:5,mcd:"3:14",mcd_r:15,driver:"Moved up 2 spots from #15 to #13. Best-ranked metric: Sales +6.8% (rank 5)."},
+  {loc:"7703",gm:"Cris Reeves",sup:"Ray Marez",rank:31,mv:2,oepe:155,oepe_r:31,kvs:46,kvs_r:20,kiosk:80.5,kiosk_r:15,sales:"-6.2%",sales_r:32,gc:"-9.9%",gc_r:27,mcd:"4:17",mcd_r:27,driver:"Moved up 2 spots from #33 to #31. Best-ranked metric: Kiosk 80.5% (rank 15)."},
+  {loc:"7932",gm:"Gloria Huizar",sup:"Elton Perez",rank:32,mv:2,oepe:133,oepe_r:22,kvs:32,kvs_r:5,kiosk:64.9,kiosk_r:26,sales:"-6.0%",sales_r:31,gc:"-11.7%",gc_r:31,mcd:"3:34",mcd_r:23,driver:"Moved up 2 spots from #34 to #32. Best-ranked metric: KVS 32s (rank 5)."},
+  {loc:"40959",gm:"Jose Sanchez",sup:"Raymond Gallardo",rank:1,mv:1,oepe:119,oepe_r:8,kvs:35,kvs_r:6,kiosk:84.5,kiosk_r:11,sales:"+11.6%",sales_r:2,gc:"+2.5%",gc_r:3,mcd:"1:20",mcd_r:1,driver:"Moved up 1 spots from #2 to #1. Best-ranked metric: McDelivery 1:20 (rank 1)."},
+  {loc:"16753",gm:"Monica Garcia",sup:"Michelle Uribe",rank:3,mv:1,oepe:120,oepe_r:10,kvs:49,kvs_r:25,kiosk:98.6,kiosk_r:3,sales:"+11.1%",sales_r:3,gc:"+4.4%",gc_r:1,mcd:"--",mcd_r:30,driver:"Moved up 1 spots from #4 to #3. Best-ranked metric: GC +4.4% (rank 1)."},
+  {loc:"4235",gm:"Emilia Lezama",sup:"Elton Perez",rank:22,mv:1,oepe:157,oepe_r:33,kvs:40,kvs_r:11,kiosk:63.3,kiosk_r:27,sales:"-0.8%",sales_r:20,gc:"-5.3%",gc_r:14,mcd:"4:42",mcd_r:29,driver:"Moved up 1 spots from #23 to #22. Best-ranked metric: KVS 40s (rank 11)."}
+];
+
+function kpiChip(label,val,rank,total,lo){
+  var isTop=rank<=5; var isBot=rank>=total-4;
+  var bg=isTop?'#d6f0e0':isBot?'#fce8e8':'#f0ede8';
+  var tc=isTop?'#0a5c28':isBot?'#8b1a1a':'#5f5e5a';
+  return '<div style="display:inline-flex;flex-direction:column;align-items:center;background:'+bg+';border-radius:8px;padding:8px 10px;min-width:64px;">'+
+    '<div style="font-size:9px;font-weight:600;color:'+tc+';text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">'+label+'</div>'+
+    '<div style="font-size:14px;font-weight:700;color:'+tc+';font-family:DM Mono,monospace;">'+val+'</div>'+
+    '<div style="font-size:9px;color:'+tc+';opacity:0.75;margin-top:2px;">rank #'+rank+'</div></div>';
+}
+
+var mc=document.getElementById('movesContainer');
+if(mc){
+  MOVERS.forEach(function(m){
+    var salesCol=m.sales.charAt(0)==='+' ? '#1a7a4a' : '#c0392b';
+    var gcCol=m.gc.charAt(0)==='+' ? '#1a7a4a' : '#c0392b';
+    var card=document.createElement('div');
+    card.style.cssText='background:#fff;border:1px solid #d3d1c7;border-left:4px solid #1a7a4a;border-radius:0 12px 12px 0;padding:20px 24px;margin-bottom:16px;';
+    card.innerHTML=
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;flex-wrap:wrap;gap:8px;">'+
+        '<div>'+
+          '<div style="font-family:DM Mono,monospace;font-size:14px;font-weight:700;color:#2c2c2a;">'+m.loc+'</div>'+
+          '<div style="font-size:14px;font-weight:600;color:#2c2c2a;margin-top:2px;">'+m.gm+'</div>'+
+          '<div style="font-size:11px;color:#888780;margin-top:2px;">Supervisor: '+m.sup+'</div>'+
+        '</div>'+
+        '<div style="display:flex;align-items:center;gap:10px;">'+
+          '<div style="text-align:center;background:#0f2347;border-radius:10px;padding:8px 14px;">'+
+            '<div style="font-size:10px;color:#e8c97a;font-weight:600;text-transform:uppercase;">Rank</div>'+
+            '<div style="font-size:22px;font-weight:700;color:#fff;font-family:DM Mono,monospace;">#'+m.rank+'</div>'+
+          '</div>'+
+          '<div style="text-align:center;background:#1a7a4a;border-radius:10px;padding:8px 14px;">'+
+            '<div style="font-size:10px;color:#a8e8c0;font-weight:600;text-transform:uppercase;">Move</div>'+
+            '<div style="font-size:22px;font-weight:700;color:#fff;font-family:DM Mono,monospace;">&#9650;'+m.mv+'</div>'+
+          '</div>'+
+        '</div>'+
+      '</div>'+
+      '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;">'+
+        kpiChip('OEPE',m.oepe+'s',m.oepe_r,34,true)+
+        kpiChip('KVS',m.kvs+'s',m.kvs_r,34,true)+
+        kpiChip('Kiosk',m.kiosk+'%',m.kiosk_r,34,false)+
+        '<div style="display:inline-flex;flex-direction:column;align-items:center;background:#f0ede8;border-radius:8px;padding:8px 10px;min-width:64px;">'+
+          '<div style="font-size:9px;font-weight:600;color:#5f5e5a;text-transform:uppercase;margin-bottom:3px;">Sales</div>'+
+          '<div style="font-size:14px;font-weight:700;color:'+salesCol+';font-family:DM Mono,monospace;">'+m.sales+'</div>'+
+          '<div style="font-size:9px;color:#5f5e5a;margin-top:2px;">rank #'+m.sales_r+'</div>'+
+        '</div>'+
+        '<div style="display:inline-flex;flex-direction:column;align-items:center;background:#f0ede8;border-radius:8px;padding:8px 10px;min-width:64px;">'+
+          '<div style="font-size:9px;font-weight:600;color:#5f5e5a;text-transform:uppercase;margin-bottom:3px;">GC</div>'+
+          '<div style="font-size:14px;font-weight:700;color:'+gcCol+';font-family:DM Mono,monospace;">'+m.gc+'</div>'+
+          '<div style="font-size:9px;color:#5f5e5a;margin-top:2px;">rank #'+m.gc_r+'</div>'+
+        '</div>'+
+        kpiChip('McDelivery',m.mcd+(m.mcd_bold?'*':''),m.mcd_r,34,true)+
+      '</div>'+
+      '<div style="background:#f8f7f4;border-radius:8px;padding:12px 16px;font-size:12px;line-height:1.7;color:#444;">'+
+        '<strong style="color:#1a7a4a;">What drove the move:</strong> '+m.driver+
+      '</div>';
+    mc.appendChild(card);
+  });
+}
+
+RANKED.forEach((r,i)=>{
+  const tr=document.createElement('tr');
+  const bg=rowBg(r.rank);
+  const tc=rowTextCol(r.rank);
+  tr.style.background=bg;
+  tr.innerHTML=`
+    <td><span style="font-family:DM Mono,monospace;font-size:12px;font-weight:600;color:${tc};">${r.rank}</span></td>
+    <td><span style="font-family:DM Mono,monospace;font-weight:600;font-size:13px;color:${tc};">${r.loc}</span></td>
+    <td class="r"><span style="font-family:DM Mono,monospace;font-size:13px;font-weight:600;color:${tc};">${r.score.toFixed(1)}</span></td>
+    <td><div style="font-size:13px;font-weight:600;color:${tc};">${r.gm}</div></td>
+    <td><div style="font-size:13px;color:${tc};">${r.sup}</div></td>
+    <td class="r">${getMv(r.loc)}</td>`;
+  tbody.appendChild(tr);
+});
+
+//    PAGE 1: Supervisor rankings                                                
+const supEl=document.getElementById('supBody');
+SUPS.forEach(s=>{
+  const div=document.createElement('div');
+  div.className='sup-row';
+  const sbg=s.pos<=2?'#d6f0e0':s.pos<=4?'#feffd6':s.pos<=6?'#fef0c8':'#ffd6d8';
+  const stc=s.pos<=2?'#0a5c28':s.pos<=4?'#5a5a00':s.pos<=6?'#6b3a00':'#7a0008';
+  div.style.background=sbg;
+  div.innerHTML=`
+    <div class="sup-pos" style="color:${stc};">${s.pos}</div>
+    <div>
+      <div class="sup-name" style="color:${stc};font-weight:600;">${s.sup}</div>
+      <div class="sup-locs" style="color:${stc};opacity:0.75;">${s.locs.length} locations &#183; ${s.locs.join(', ')}</div>
+    </div>
+    <div class="sup-avg" style="color:${stc};">avg <strong>${s.avg.toFixed(1)}</strong></div>`;
+  supEl.appendChild(div);
+});
+
+//    PAGE 2: Ranking Data &#8212; exact C3:O37 from workbook                         
+
+
+
+function fmtSales(v){ return v===null?'':(v>=0?'+':'')+Math.round(v*100)+'%'; }
+function fmtKiosk(v){ return v===null?'':Math.round(v*100)+'%'; }
+
+const dataBody=document.getElementById('dataBody');
+var RAW_SORTED=RAW_DATA.slice().sort(function(a,b){return parseInt(a[0])-parseInt(b[0]);});
+RAW_SORTED.forEach(r=>{
+  const loc=r[0],kvs=r[1],kvs_r=r[2],oepe=r[3],oepe_r=r[4],kiosk=r[5],kiosk_r=r[6],sales=r[7],sales_r=r[8],gc=r[9],gc_r=r[10],mcd=r[11],mcd_r=r[12],mcd_bold=r[13];
+  const oCol=oepe<115?'var(--green)':oepe<135?'var(--amber)':'var(--red)';
+  const sCol=String(sales).charAt(0)==='-'?'var(--red)':'var(--green)';
+  const gCol=String(gc).charAt(0)==='-'?'var(--red)':'var(--green)';
+  const mcdCell=mcd_bold?'<strong style="color:#2c2c2a;">'+mcd+'</strong>':mcd;
+  const tr=document.createElement('tr');
+  tr.innerHTML=
+    '<td class="l"><span style="font-family:DM Mono,monospace;font-weight:500;">'+loc+'</span></td>'+
+    '<td>'+Math.round(kvs)+'</td><td class="grp-end">'+rankBadge(kvs_r,34)+' </td>'+
+    '<td style="color:'+oCol+';font-weight:500;">'+Math.round(oepe)+'</td><td class="grp-end">'+rankBadge(oepe_r,34)+' </td>'+
+    '<td>'+fmtKiosk(kiosk)+'</td><td class="grp-end">'+rankBadge(kiosk_r,34)+' </td>'+
+    '<td style="color:'+sCol+';">'+sales+'</td><td class="grp-end">'+rankBadge(sales_r,34)+' </td>'+
+    '<td style="color:'+gCol+';">'+gc+'</td><td class="grp-end">'+rankBadge(gc_r,34)+' </td>'+
+    '<td style="color:var(--muted);">'+mcdCell+'</td><td>'+rankBadge(mcd_r,34)+' </td>';
+  dataBody.appendChild(tr);
+});
+
+// Totals row
+const dataFoot=document.getElementById('dataFoot');
+const tloc=RAW_TOTAL[0],tkvs=RAW_TOTAL[1],toepe=RAW_TOTAL[3],tkiosk=RAW_TOTAL[5],tsales=RAW_TOTAL[7],tgc=RAW_TOTAL[9],tmcd=RAW_TOTAL[11];
+const tfr=document.createElement('tr');
+tfr.style.cssText='border-top:2px solid var(--border);background:var(--surface2);font-weight:600;';
+const tsCol=String(tsales).charAt(0)==='-'?'var(--red)':'var(--green)';
+const tgCol=String(tgc).charAt(0)==='-'?'var(--red)':'var(--green)';
+tfr.innerHTML=
+  '<td class="l" style="color:var(--muted);font-size:10px;text-transform:uppercase;">'+tloc+'</td>'+
+  '<td style="color:var(--accent);">'+Math.round(tkvs)+'</td><td class="grp-end"></td>'+
+  '<td style="color:var(--accent);">'+Math.round(toepe)+'</td><td class="grp-end"></td>'+
+  '<td style="color:var(--accent);">'+fmtKiosk(tkiosk)+'</td><td class="grp-end"></td>'+
+  '<td style="color:'+tsCol+';">'+tsales+'</td><td class="grp-end"></td>'+
+  '<td style="color:'+tgCol+';">'+tgc+'</td><td class="grp-end"></td>'+
+  '<td style="color:var(--muted);"><strong>'+tmcd+'</strong></td><td></td>';
+dataFoot.appendChild(tfr);
+
+
+//    PAGE 3: Best & Worst 5 per KPI                                           
+var GM = {};
+for (var gi=0; gi<RANKED.length; gi++) { GM[RANKED[gi].loc]={gm:RANKED[gi].gm,sup:RANKED[gi].sup}; }
+
+var KPIS = [
+  {label:'KVS',unit:'s',valIdx:1,rankIdx:2},
+  {label:'OEPE',unit:'s',valIdx:3,rankIdx:4},
+  {label:'Kiosk %',unit:'%',valIdx:5,rankIdx:6},
+  {label:'Sales',unit:'%',valIdx:7,rankIdx:8},
+  {label:'Guest Counts',unit:'%',valIdx:9,rankIdx:10},
+  {label:'McDelivery',unit:'',valIdx:11,rankIdx:12}
+];
+
+function fmtKpiVal(kpi, raw){
+  if(kpi.label==='McDelivery') return raw;
+  if(kpi.label==='Kiosk %') return Math.round(raw*100)+'%';
+  if(kpi.label==='Sales'||kpi.label==='Guest Counts') return String(raw);
+  return Math.round(raw)+kpi.unit;
+}
+
+var container = document.getElementById('kpiSplitContainer');
+var N_LOCS = RANKED.length;
+
+for (var ki=0; ki<KPIS.length; ki++) {
+  var kpi = KPIS[ki];
+  var sorted = RAW_DATA.slice().sort(function(a,b){ return a[kpi.rankIdx]-b[kpi.rankIdx]; });
+  var best5  = sorted.slice(0,5);
+  var worst5 = sorted.slice(-5).reverse();
+
+  var section = document.createElement('div');
+  section.style.cssText='margin-bottom:20px;';
+  var title = document.createElement('div');
+  title.className='sec-title'; title.style.marginBottom='10px'; title.textContent=kpi.label;
+  section.appendChild(title);
+  var grid = document.createElement('div'); grid.className='split-grid';
+
+  var bestCard = document.createElement('div'); bestCard.className='card';
+  bestCard.innerHTML='<div class="split-header"><div class="title">Top Performers</div></div>';
+  var bestBody = document.createElement('div');
+  for (var bi=0; bi<best5.length; bi++) {
+    var r=best5[bi], val=fmtKpiVal(kpi,r[kpi.valIdx]), info=GM[r[0]]||{gm:'',sup:''};
+    var div=document.createElement('div'); div.className='split-row'; div.style.background='#d6f0e0';
+    div.innerHTML=
+      '<div style="font-size:11px;font-weight:600;color:#0a5c28;">'+(bi+1)+'</div>'+
+      '<div style="font-family:DM Mono,monospace;font-size:13px;font-weight:600;color:#0a5c28;">'+r[0]+'</div>'+
+      '<div style="font-size:12px;font-weight:600;color:#0a5c28;">'+info.gm+'</div>'+
+      '<div style="font-size:11px;color:#0a5c28;opacity:0.8;">'+info.sup+'</div>'+
+      '<div style="text-align:right;"><div style="color:#0a5c28;font-family:DM Mono,monospace;font-weight:600;">'+val+'</div>'+
+      '<div style="font-size:9px;color:#0a5c28;opacity:0.7;">rank '+r[kpi.rankIdx]+'</div></div>';
+    bestBody.appendChild(div);
+  }
+  bestCard.appendChild(bestBody);
+
+  var worstCard = document.createElement('div'); worstCard.className='card';
+  worstCard.innerHTML='<div class="split-header"><div class="title">80/20 Locations</div></div>';
+  var worstBody = document.createElement('div');
+  for (var wi=0; wi<worst5.length; wi++) {
+    var r=worst5[wi], val=fmtKpiVal(kpi,r[kpi.valIdx]), info=GM[r[0]]||{gm:'',sup:''};
+    var div=document.createElement('div'); div.className='split-row'; div.style.background='#ffd6d8';
+    div.innerHTML=
+      '<div style="font-size:11px;font-weight:600;color:#7a0008;">'+(N_LOCS-wi)+'</div>'+
+      '<div style="font-family:DM Mono,monospace;font-size:13px;font-weight:600;color:#7a0008;">'+r[0]+'</div>'+
+      '<div style="font-size:12px;font-weight:600;color:#7a0008;">'+info.gm+'</div>'+
+      '<div style="font-size:11px;color:#7a0008;opacity:0.8;">'+info.sup+'</div>'+
+      '<div style="text-align:right;"><div style="color:#7a0008;font-family:DM Mono,monospace;font-weight:600;">'+val+'</div>'+
+      '<div style="font-size:9px;color:#7a0008;opacity:0.7;">rank '+r[kpi.rankIdx]+'</div></div>';
+    worstBody.appendChild(div);
+  }
+  worstCard.appendChild(worstBody);
+  grid.appendChild(bestCard); grid.appendChild(worstCard);
+  section.appendChild(grid); container.appendChild(section);
+}
+
+//    PAGE 4: Peaks                                                              
+function renderPeak(containerId,data){
+  var el=document.getElementById(containerId);
+  var seen={};
+  var pos=0;
+  for (var pi=0; pi<data.length; pi++) {
+    var r=data[pi];
+    if(seen[r.loc]) continue;
+    seen[r.loc]=true; pos++;
+    var div=document.createElement('div');
+    div.className='peak-row';
+    var pbg=r.oepe<121?'#d6f0e0':r.oepe<=150?'#feffd6':'#ffd6d8';
+    var ptc=r.oepe<121?'#0a5c28':r.oepe<=150?'#5a5a00':'#7a0008';
+    div.style.background=pbg;
+    div.innerHTML=
+      '<div class="peak-pos" style="color:'+ptc+';">'+pos+'</div>'+
+      '<div class="peak-loc" style="color:'+ptc+';">'+r.loc+'</div>'+
+      '<div class="peak-oepe" style="color:'+ptc+';">'+Math.round(r.oepe)+'s</div>'+
+      '<div class="peak-kvs" style="color:'+ptc+';opacity:0.75;">'+Math.round(r.kvs)+'s KVS</div>';
+    el.appendChild(div);
+  }
+}
+renderPeak('peak7am',PEAKS['7am']);
+renderPeak('peak11am',PEAKS['11am']);
+renderPeak('peak5pm',PEAKS['5pm']);
+
+
+var HISTORY = [
+  {week:'Apr 19-25',data:{
+    '1313':{rank:17,oepe:91,kvs:40,kiosk:72,sales:0,gc:0,mcd:160},
+    '2327':{rank:4,oepe:108,kvs:41,kiosk:81,sales:0,gc:0,mcd:104},
+    '4235':{rank:23,oepe:117,kvs:45,kiosk:60,sales:0,gc:0,mcd:105},
+    '6853':{rank:24,oepe:111,kvs:36,kiosk:69,sales:0,gc:0,mcd:167},
+    '6891':{rank:34,oepe:132,kvs:44,kiosk:56,sales:0,gc:0,mcd:182},
+    '7013':{rank:30,oepe:127,kvs:50,kiosk:79,sales:0,gc:0,mcd:152},
+    '7433':{rank:6,oepe:128,kvs:36,kiosk:89,sales:0,gc:0,mcd:167},
+    '7703':{rank:12,oepe:117,kvs:41,kiosk:85,sales:0,gc:0,mcd:202},
+    '7932':{rank:21,oepe:102,kvs:29,kiosk:66,sales:0,gc:0,mcd:142},
+    '10150':{rank:19,oepe:118,kvs:37,kiosk:76,sales:0,gc:0,mcd:136},
+    '10865':{rank:3,oepe:99,kvs:26,kiosk:90,sales:0,gc:0,mcd:129},
+    '11124':{rank:13,oepe:109,kvs:34,kiosk:72,sales:0,gc:0,mcd:187},
+    '11529':{rank:15,oepe:100,kvs:35,kiosk:54,sales:0,gc:0,mcd:130},
+    '11744':{rank:27,oepe:115,kvs:35,kiosk:94,sales:0,gc:0,mcd:240},
+    '12566':{rank:33,oepe:103,kvs:38,kiosk:49,sales:0,gc:0,mcd:167},
+    '13669':{rank:7,oepe:132,kvs:29,kiosk:75,sales:0,gc:0,mcd:173},
+    '16753':{rank:16,oepe:115,kvs:45,kiosk:97,sales:0,gc:0,mcd:167},
+    '17470':{rank:28,oepe:121,kvs:42,kiosk:42,sales:0,gc:0,mcd:134},
+    '21383':{rank:22,oepe:117,kvs:45,kiosk:41,sales:0,gc:0,mcd:147},
+    '22228':{rank:11,oepe:105,kvs:43,kiosk:74,sales:0,gc:0,mcd:138},
+    '22694':{rank:25,oepe:99,kvs:22,kiosk:70,sales:0,gc:0,mcd:167},
+    '24135':{rank:5,oepe:108,kvs:36,kiosk:96,sales:0,gc:0,mcd:153},
+    '24497':{rank:10,oepe:126,kvs:45,kiosk:99,sales:0,gc:0,mcd:164},
+    '24797':{rank:14,oepe:131,kvs:34,kiosk:96,sales:0,gc:0,mcd:206},
+    '25117':{rank:31,oepe:109,kvs:47,kiosk:55,sales:0,gc:0,mcd:188},
+    '26499':{rank:32,oepe:135,kvs:42,kiosk:79,sales:0,gc:0,mcd:167},
+    '27493':{rank:18,oepe:135,kvs:42,kiosk:79,sales:0,gc:0,mcd:233},
+    '32107':{rank:20,oepe:126,kvs:31,kiosk:95,sales:0,gc:0,mcd:189},
+    '36285':{rank:29,oepe:108,kvs:31,kiosk:77,sales:0,gc:0,mcd:80},
+    '37958':{rank:2,oepe:108,kvs:38,kiosk:100,sales:0,gc:0,mcd:70},
+    '38349':{rank:26,oepe:117,kvs:41,kiosk:46,sales:0,gc:0,mcd:196},
+    '38616':{rank:9,oepe:103,kvs:39,kiosk:77,sales:0,gc:0,mcd:78},
+    '39954':{rank:8,oepe:99,kvs:39,kiosk:86,sales:0,gc:0,mcd:79},
+    '40959':{rank:1,oepe:98,kvs:34,kiosk:85,sales:0,gc:0,mcd:38}
+  }},
+  {week:'Apr 26-May 2',data:{
+    '1313':{rank:18,oepe:95,kvs:39,kiosk:69,sales:1,gc:-2,mcd:193},
+    '2327':{rank:19,oepe:113,kvs:40,kiosk:82,sales:-1,gc:-2,mcd:197},
+    '4235':{rank:28,oepe:139,kvs:38,kiosk:59,sales:-2,gc:-4,mcd:180},
+    '6853':{rank:9,oepe:117,kvs:34,kiosk:69,sales:6,gc:1,mcd:547},
+    '6891':{rank:32,oepe:146,kvs:52,kiosk:60,sales:-4,gc:-7,mcd:187},
+    '7013':{rank:15,oepe:121,kvs:48,kiosk:73,sales:6,gc:-1,mcd:135},
+    '7433':{rank:5,oepe:159,kvs:44,kiosk:90,sales:9,gc:5,mcd:182},
+    '7703':{rank:31,oepe:162,kvs:42,kiosk:82,sales:-8,gc:-8,mcd:227},
+    '7932':{rank:25,oepe:127,kvs:28,kiosk:66,sales:-2,gc:-4,mcd:205},
+    '10150':{rank:17,oepe:137,kvs:41,kiosk:80,sales:2,gc:-1,mcd:138},
+    '10865':{rank:16,oepe:117,kvs:27,kiosk:89,sales:-1,gc:-2,mcd:162},
+    '11124':{rank:21,oepe:137,kvs:45,kiosk:68,sales:3,gc:-1,mcd:163},
+    '11529':{rank:23,oepe:114,kvs:36,kiosk:55,sales:0,gc:-2,mcd:150},
+    '11744':{rank:22,oepe:134,kvs:33,kiosk:91,sales:-2,gc:-5,mcd:192},
+    '12566':{rank:27,oepe:110,kvs:34,kiosk:51,sales:-4,gc:-4,mcd:360},
+    '13669':{rank:13,oepe:145,kvs:29,kiosk:77,sales:1,gc:1,mcd:161},
+    '16753':{rank:2,oepe:92,kvs:44,kiosk:97,sales:6,gc:4,mcd:182},
+    '17470':{rank:33,oepe:150,kvs:46,kiosk:45,sales:-6,gc:-7,mcd:176},
+    '21383':{rank:29,oepe:127,kvs:52,kiosk:38,sales:1,gc:-4,mcd:167},
+    '22228':{rank:11,oepe:139,kvs:49,kiosk:73,sales:8,gc:7,mcd:162},
+    '22694':{rank:4,oepe:95,kvs:32,kiosk:71,sales:5,gc:3,mcd:182},
+    '24135':{rank:12,oepe:112,kvs:36,kiosk:95,sales:0,gc:-1,mcd:139},
+    '24497':{rank:10,oepe:122,kvs:38,kiosk:99,sales:1,gc:0,mcd:160},
+    '24797':{rank:8,oepe:138,kvs:36,kiosk:96,sales:3,gc:3,mcd:161},
+    '25117':{rank:30,oepe:123,kvs:46,kiosk:52,sales:-2,gc:-4,mcd:143},
+    '26499':{rank:26,oepe:128,kvs:34,kiosk:77,sales:-2,gc:-6,mcd:182},
+    '27493':{rank:24,oepe:136,kvs:45,kiosk:75,sales:2,gc:-2,mcd:229},
+    '32107':{rank:20,oepe:125,kvs:31,kiosk:96,sales:-1,gc:-6,mcd:184},
+    '36285':{rank:14,oepe:130,kvs:31,kiosk:80,sales:4,gc:-1,mcd:132},
+    '37958':{rank:7,oepe:119,kvs:40,kiosk:99,sales:5,gc:1,mcd:94},
+    '38349':{rank:34,oepe:153,kvs:49,kiosk:45,sales:-7,gc:-7,mcd:179},
+    '38616':{rank:6,oepe:98,kvs:35,kiosk:77,sales:6,gc:3,mcd:129},
+    '39954':{rank:3,oepe:114,kvs:36,kiosk:84,sales:11,gc:3,mcd:130},
+    '40959':{rank:1,oepe:95,kvs:39,kiosk:87,sales:25,gc:26,mcd:91}
+  }},
+  {week:'May 3-9',data:{
+    '40959':{rank:1,oepe:117,kvs:37,kiosk:81.3,sales:14.1,gc:12.3,mcd:110},
+    '16753':{rank:2,oepe:99,kvs:38,kiosk:96.1,sales:6.7,gc:1.8,mcd:177},
+    '24135':{rank:3,oepe:115,kvs:38,kiosk:95.2,sales:6.0,gc:1.8,mcd:147},
+    '32107':{rank:4,oepe:163,kvs:40,kiosk:97.4,sales:13.0,gc:8.1,mcd:205},
+    '13669':{rank:5,oepe:134,kvs:28,kiosk:81.6,sales:5.2,gc:4.4,mcd:180},
+    '2327':{rank:6,oepe:133,kvs:45,kiosk:81.8,sales:13.1,gc:6.4,mcd:170},
+    '22694':{rank:7,oepe:97,kvs:30,kiosk:70.4,sales:8.6,gc:2.4,mcd:177},
+    '7433':{rank:8,oepe:152,kvs:47,kiosk:91.1,sales:25.9,gc:17.4,mcd:177},
+    '38616':{rank:9,oepe:115,kvs:40,kiosk:78.5,sales:7.6,gc:3.6,mcd:161},
+    '24797':{rank:10,oepe:141,kvs:38,kiosk:94.9,sales:4.2,gc:1.8,mcd:188},
+    '10865':{rank:11,oepe:138,kvs:27,kiosk:91.6,sales:2.2,gc:-0.1,mcd:158},
+    '24497':{rank:12,oepe:120,kvs:39,kiosk:98.5,sales:1.0,gc:-2.2,mcd:211},
+    '22228':{rank:13,oepe:145,kvs:47,kiosk:72.5,sales:8.0,gc:2.1,mcd:157},
+    '37958':{rank:14,oepe:133,kvs:49,kiosk:99.4,sales:-0.5,gc:0.3,mcd:87},
+    '7932':{rank:15,oepe:145,kvs:30,kiosk:66.9,sales:4.6,gc:0.5,mcd:205},
+    '39954':{rank:16,oepe:137,kvs:41,kiosk:83.1,sales:3.8,gc:-2.9,mcd:140},
+    '10150':{rank:17,oepe:136,kvs:44,kiosk:73.7,sales:2.7,gc:-0.1,mcd:165},
+    '1313':{rank:18,oepe:123,kvs:44,kiosk:68.6,sales:3.4,gc:-2.0,mcd:195},
+    '11124':{rank:19,oepe:141,kvs:44,kiosk:74.4,sales:0.2,gc:-1.7,mcd:258},
+    '11744':{rank:20,oepe:158,kvs:38,kiosk:94.1,sales:1.0,gc:-4.8,mcd:226},
+    '7703':{rank:21,oepe:150,kvs:38,kiosk:85.2,sales:-0.9,gc:-4.1,mcd:232},
+    '25117':{rank:22,oepe:130,kvs:45,kiosk:53.2,sales:2.8,gc:-3.2,mcd:166},
+    '12566':{rank:23,oepe:121,kvs:42,kiosk:51.0,sales:-0.5,gc:-2.9,mcd:177},
+    '6853':{rank:24,oepe:135,kvs:42,kiosk:70.3,sales:0.0,gc:-3.6,mcd:180},
+    '11529':{rank:25,oepe:114,kvs:36,kiosk:52.8,sales:-3.1,gc:-4.3,mcd:153},
+    '36285':{rank:26,oepe:149,kvs:38,kiosk:78.5,sales:-1.2,gc:-4.4,mcd:136},
+    '21383':{rank:27,oepe:137,kvs:62,kiosk:41.9,sales:3.0,gc:-2.4,mcd:163},
+    '26499':{rank:28,oepe:132,kvs:41,kiosk:78.6,sales:-3.7,gc:-5.5,mcd:177},
+    '27493':{rank:29,oepe:143,kvs:53,kiosk:76.9,sales:0.7,gc:-4.4,mcd:228},
+    '7013':{rank:30,oepe:117,kvs:54,kiosk:73.8,sales:0.6,gc:-6.0,mcd:154},
+    '4235':{rank:31,oepe:150,kvs:50,kiosk:66.2,sales:0.3,gc:-3.0,mcd:195},
+    '6891':{rank:32,oepe:128,kvs:45,kiosk:55.6,sales:-3.6,gc:-6.0,mcd:182},
+    '38349':{rank:33,oepe:148,kvs:43,kiosk:42.2,sales:-4.4,gc:-5.8,mcd:201},
+    '17470':{rank:34,oepe:142,kvs:47,kiosk:51.1,sales:-6.9,gc:-10.5,mcd:193}
+  }},
+  {week:'May 10-16',data:{
+    '16753':{rank:1,oepe:104,kvs:40,kiosk:96.7,sales:12.1,gc:7.7,mcd:161},
+    '40959':{rank:2,oepe:130,kvs:37,kiosk:83.7,sales:12.9,gc:10.7,mcd:112},
+    '22694':{rank:3,oepe:96,kvs:21,kiosk:73.5,sales:10.0,gc:5.0,mcd:161},
+    '37958':{rank:4,oepe:134,kvs:42,kiosk:99.8,sales:3.2,gc:1.9,mcd:80},
+    '24135':{rank:5,oepe:115,kvs:37,kiosk:95.0,sales:3.2,gc:-2.1,mcd:151},
+    '24797':{rank:6,oepe:138,kvs:39,kiosk:96.6,sales:6.9,gc:3.9,mcd:163},
+    '38616':{rank:7,oepe:118,kvs:44,kiosk:76.4,sales:4.6,gc:-0.3,mcd:178},
+    '24497':{rank:7,oepe:124,kvs:42,kiosk:99.2,sales:1.7,gc:-2.0,mcd:141},
+    '7433':{rank:9,oepe:166,kvs:50,kiosk:91.7,sales:17.5,gc:11.7,mcd:161},
+    '22228':{rank:10,oepe:143,kvs:46,kiosk:71.2,sales:8.9,gc:3.9,mcd:120},
+    '32107':{rank:11,oepe:170,kvs:47,kiosk:95.9,sales:11.5,gc:12.1,mcd:179},
+    '11529':{rank:12,oepe:118,kvs:38,kiosk:55.0,sales:-0.2,gc:-2.6,mcd:141},
+    '12566':{rank:13,oepe:134,kvs:48,kiosk:56.7,sales:3.5,gc:0.8,mcd:161},
+    '2327':{rank:14,oepe:126,kvs:46,kiosk:85.7,sales:2.4,gc:-0.4,mcd:192},
+    '39954':{rank:15,oepe:139,kvs:41,kiosk:77.9,sales:2.9,gc:-2.0,mcd:170},
+    '6853':{rank:16,oepe:129,kvs:37,kiosk:73.3,sales:-2.6,gc:-3.7,mcd:101},
+    '7932':{rank:17,oepe:144,kvs:33,kiosk:67.7,sales:2.6,gc:-1.7,mcd:170},
+    '10865':{rank:18,oepe:139,kvs:27,kiosk:87.8,sales:0.9,gc:-5.2,mcd:166},
+    '36285':{rank:19,oepe:168,kvs:42,kiosk:77.5,sales:3.0,gc:-3.1,mcd:160},
+    '1313':{rank:20,oepe:132,kvs:50,kiosk:71.0,sales:2.3,gc:-3.8,mcd:173},
+    '21383':{rank:21,oepe:139,kvs:63,kiosk:40.6,sales:2.6,gc:-3.9,mcd:158},
+    '7013':{rank:22,oepe:121,kvs:57,kiosk:74.8,sales:-0.2,gc:-6.1,mcd:174},
+    '10150':{rank:23,oepe:139,kvs:44,kiosk:73.4,sales:-1.5,gc:-5.9,mcd:148},
+    '13669':{rank:24,oepe:144,kvs:35,kiosk:76.3,sales:-2.2,gc:-8.6,mcd:155},
+    '6891':{rank:25,oepe:119,kvs:40,kiosk:56.9,sales:-8.8,gc:-10.1,mcd:149},
+    '26499':{rank:26,oepe:143,kvs:42,kiosk:79.0,sales:-4.4,gc:-7.7,mcd:161},
+    '7703':{rank:27,oepe:141,kvs:37,kiosk:87.5,sales:-4.9,gc:-7.9,mcd:191},
+    '11744':{rank:28,oepe:163,kvs:41,kiosk:94.0,sales:-1.2,gc:-5.7,mcd:222},
+    '27493':{rank:29,oepe:146,kvs:54,kiosk:76.3,sales:-1.0,gc:-5.4,mcd:187},
+    '4235':{rank:30,oepe:161,kvs:43,kiosk:59.3,sales:-1.1,gc:-4.1,mcd:200},
+    '25117':{rank:31,oepe:133,kvs:44,kiosk:48.5,sales:-5.8,gc:-9.1,mcd:166},
+    '17470':{rank:32,oepe:135,kvs:46,kiosk:45.6,sales:-8.3,gc:-11.1,mcd:162},
+    '11124':{rank:33,oepe:137,kvs:52,kiosk:72.5,sales:-6.5,gc:-11.6,mcd:186},
+    '38349':{rank:34,oepe:148,kvs:45,kiosk:39.8,sales:-4.8,gc:-9.1,mcd:199}
+  }},
+  {week:'May 17-23',data:{
+    '40959':{rank:1,oepe:122,kvs:40,kiosk:84.7,sales:15.2,gc:13.0,mcd:101},
+    '16753':{rank:2,oepe:103,kvs:41,kiosk:97.4,sales:11.1,gc:11.8,mcd:176},
+    '22694':{rank:3,oepe:99,kvs:19,kiosk:73.0,sales:7.9,gc:2.8,mcd:176},
+    '37958':{rank:4,oepe:136,kvs:42,kiosk:99.5,sales:4.6,gc:3.0,mcd:106},
+    '22228':{rank:5,oepe:141,kvs:39,kiosk:75.0,sales:5.2,gc:1.1,mcd:154},
+    '2327':{rank:6,oepe:126,kvs:39,kiosk:86.9,sales:5.2,gc:-0.1,mcd:189},
+    '32107':{rank:6,oepe:164,kvs:39,kiosk:92.8,sales:14.1,gc:14.1,mcd:202},
+    '24497':{rank:8,oepe:119,kvs:36,kiosk:99.0,sales:1.8,gc:-1.7,mcd:155},
+    '7013':{rank:9,oepe:124,kvs:50,kiosk:77.7,sales:4.6,gc:0.5,mcd:140},
+    '7433':{rank:10,oepe:148,kvs:57,kiosk:90.6,sales:19.9,gc:12.5,mcd:176},
+    '38616':{rank:11,oepe:117,kvs:43,kiosk:75.6,sales:3.7,gc:-0.8,mcd:137},
+    '13669':{rank:12,oepe:147,kvs:37,kiosk:82.9,sales:6.6,gc:-0.4,mcd:160},
+    '24135':{rank:13,oepe:116,kvs:37,kiosk:96.8,sales:2.9,gc:-4.6,mcd:153},
+    '11529':{rank:14,oepe:113,kvs:38,kiosk:57.9,sales:2.9,gc:-1.5,mcd:162},
+    '10150':{rank:15,oepe:146,kvs:46,kiosk:74.4,sales:5.2,gc:0.6,mcd:149},
+    '7932':{rank:16,oepe:153,kvs:31,kiosk:69.3,sales:6.5,gc:0.1,mcd:197},
+    '26499':{rank:17,oepe:138,kvs:40,kiosk:78.1,sales:4.5,gc:-3.9,mcd:176},
+    '1313':{rank:18,oepe:121,kvs:47,kiosk:66.9,sales:4.5,gc:-3.4,mcd:195},
+    '24797':{rank:19,oepe:146,kvs:42,kiosk:96.2,sales:-0.2,gc:-1.2,mcd:168},
+    '10865':{rank:20,oepe:130,kvs:31,kiosk:90.4,sales:0.2,gc:-4.8,mcd:201},
+    '39954':{rank:21,oepe:142,kvs:45,kiosk:81.5,sales:2.8,gc:-4.4,mcd:145},
+    '12566':{rank:22,oepe:148,kvs:54,kiosk:60.3,sales:2.3,gc:0.6,mcd:176},
+    '11124':{rank:23,oepe:136,kvs:43,kiosk:71.6,sales:0.8,gc:-3.7,mcd:180},
+    '11744':{rank:24,oepe:154,kvs:40,kiosk:93.8,sales:3.5,gc:-2.3,mcd:240},
+    '6891':{rank:25,oepe:118,kvs:39,kiosk:58.0,sales:-3.3,gc:-7.5,mcd:156},
+    '4235':{rank:26,oepe:147,kvs:45,kiosk:66.8,sales:1.5,gc:-3.9,mcd:215},
+    '25117':{rank:27,oepe:140,kvs:45,kiosk:54.2,sales:0.5,gc:-5.9,mcd:187},
+    '7703':{rank:28,oepe:137,kvs:42,kiosk:82.4,sales:-8.9,gc:-10.0,mcd:181},
+    '6853':{rank:29,oepe:145,kvs:40,kiosk:76.9,sales:-3.8,gc:-6.1,mcd:267},
+    '27493':{rank:29,oepe:148,kvs:46,kiosk:73.7,sales:0.5,gc:-4.8,mcd:212},
+    '21383':{rank:31,oepe:134,kvs:58,kiosk:36.6,sales:-2.1,gc:-9.3,mcd:175},
+    '38349':{rank:32,oepe:142,kvs:38,kiosk:39.3,sales:-2.4,gc:-9.4,mcd:182},
+    '17470':{rank:33,oepe:141,kvs:57,kiosk:54.1,sales:-2.3,gc:-7.8,mcd:173},
+    '36285':{rank:34,oepe:170,kvs:41,kiosk:80.3,sales:-1.7,gc:-6.6,mcd:237},
+  }},
+  {week:'May 31-Jun 6',data:{
+    '11744':{rank:1, oepe:138,kvs:37, kiosk:93.4,sales:5.6, gc:-1.1, mcd:44},
+    '24135':{rank:2, oepe:111,kvs:39, kiosk:95.9,sales:3.0, gc:-3.5, mcd:26},
+    '24797':{rank:3, oepe:123,kvs:43, kiosk:95.3,sales:9.4, gc:2.1, mcd:29},
+    '24497':{rank:4, oepe:124,kvs:39, kiosk:98.7,sales:4.4, gc:0.3, mcd:28},
+    '1313':{rank:5, oepe:125,kvs:51, kiosk:67.5,sales:5.1, gc:-1.8, mcd:32},
+    '7703':{rank:6, oepe:136,kvs:36, kiosk:79.7,sales:0.2, gc:-7.6, mcd:39},
+    '7932':{rank:7, oepe:140,kvs:27, kiosk:65.3,sales:-1.2, gc:-7.7, mcd:30},
+    '10865':{rank:8, oepe:116,kvs:24, kiosk:88.8,sales:5.5, gc:-1.4, mcd:28},
+    '27493':{rank:9, oepe:150,kvs:50, kiosk:73.3,sales:3.8, gc:-1.9, mcd:40},
+    '32107':{rank:10, oepe:144,kvs:36, kiosk:94.5,sales:5.4, gc:-1.7, mcd:27},
+    '25117':{rank:11, oepe:115,kvs:43, kiosk:52.7,sales:0.8, gc:-7.3, mcd:30},
+    '21383':{rank:12, oepe:122,kvs:48, kiosk:39.7,sales:-0.1, gc:-7.2, mcd:28},
+    '6891':{rank:13, oepe:134,kvs:44, kiosk:55.8,sales:-1.3, gc:-7.9, mcd:30},
+    '16753':{rank:14, oepe:103,kvs:37, kiosk:98.3,sales:3.5, gc:0.1, mcd:0},
+    '36285':{rank:15, oepe:164,kvs:35, kiosk:78.9,sales:8.1, gc:0.7, mcd:25},
+    '4235':{rank:16, oepe:162,kvs:56, kiosk:71.6,sales:0.1, gc:-6.2, mcd:30},
+    '13669':{rank:17, oepe:132,kvs:34, kiosk:79.3,sales:7.9, gc:1.5, mcd:22},
+    '11529':{rank:18, oepe:112,kvs:41, kiosk:55.1,sales:1.4, gc:-4.2, mcd:24},
+    '38349':{rank:19, oepe:128,kvs:44, kiosk:38.0,sales:1.9, gc:-2.9, mcd:33},
+    '2327':{rank:20, oepe:129,kvs:45, kiosk:86.0,sales:11.0, gc:2.9, mcd:32},
+    '37958':{rank:21, oepe:137,kvs:47, kiosk:99.4,sales:5.5, gc:-0.8, mcd:12},
+    '10150':{rank:22, oepe:150,kvs:47, kiosk:73.2,sales:3.2, gc:-1.0, mcd:27},
+    '22228':{rank:23, oepe:144,kvs:48, kiosk:75.3,sales:10.4, gc:4.8, mcd:30},
+    '6853':{rank:24, oepe:125,kvs:40, kiosk:74.8,sales:4.5, gc:-0.9, mcd:40},
+    '38616':{rank:25, oepe:120,kvs:46, kiosk:83.9,sales:5.7, gc:0.9, mcd:25},
+    '39954':{rank:26, oepe:105,kvs:40, kiosk:85.7,sales:3.6, gc:-4.3, mcd:25},
+    '11124':{rank:27, oepe:146,kvs:46, kiosk:70.1,sales:3.1, gc:-2.2, mcd:35},
+    '22694':{rank:28, oepe:96,kvs:18, kiosk:70.4,sales:4.7, gc:0.4, mcd:0},
+    '7013':{rank:29, oepe:132,kvs:65, kiosk:76.9,sales:10.8, gc:4.2, mcd:32},
+    '26499':{rank:30, oepe:127,kvs:36, kiosk:80.4,sales:-2.0, gc:-7.1, mcd:0},
+    '7433':{rank:31, oepe:155,kvs:52, kiosk:92.2,sales:21.1, gc:11.6, mcd:0},
+    '17470':{rank:32, oepe:127,kvs:53, kiosk:50.9,sales:9.6, gc:1.7, mcd:29},
+    '40959':{rank:33, oepe:139,kvs:48, kiosk:82.9,sales:20.8, gc:18.4, mcd:21},
+    '12566':{rank:34, oepe:138,kvs:49, kiosk:57.0,sales:3.1, gc:-0.4, mcd:0}
+  }}
+,
+{week:'Jun 14-20',data:{
+    '40959':{rank:1, oepe:121,kvs:40, kiosk:85.8,sales:21.7, gc:12.7, mcd:12},
+    '16753':{rank:2, oepe:113,kvs:48, kiosk:99.1,sales:14.4, gc:6.8, mcd:0},
+    '22694':{rank:3, oepe:91,kvs:20, kiosk:73.8,sales:22.7, gc:9.1, mcd:0},
+    '24497':{rank:4, oepe:128,kvs:40, kiosk:98.9,sales:14.0, gc:4.1, mcd:31},
+    '26499':{rank:5, oepe:136,kvs:40, kiosk:83.5,sales:19.2, gc:5.4, mcd:0},
+    '24135':{rank:6, oepe:120,kvs:42, kiosk:97.0,sales:9.5, gc:0.1, mcd:33},
+    '7433':{rank:7, oepe:132,kvs:44, kiosk:89.8,sales:11.1, gc:2.4, mcd:0},
+    '37958':{rank:8, oepe:137,kvs:47, kiosk:99.8,sales:6.4, gc:1.0, mcd:15},
+    '24797':{rank:9, oepe:135,kvs:50, kiosk:95.2,sales:9.1, gc:0.8, mcd:39},
+    '7013':{rank:10, oepe:141,kvs:66, kiosk:79.4,sales:12.8, gc:3.8, mcd:33},
+    '10150':{rank:11, oepe:147,kvs:47, kiosk:72.9,sales:11.8, gc:4.2, mcd:24},
+    '13669':{rank:12, oepe:134,kvs:31, kiosk:78.8,sales:6.6, gc:-0.5, mcd:34},
+    '32107':{rank:13, oepe:137,kvs:36, kiosk:97.8,sales:6.4, gc:-2.4, mcd:33},
+    '39954':{rank:14, oepe:107,kvs:41, kiosk:89.3,sales:5.3, gc:-2.6, mcd:30},
+    '38616':{rank:15, oepe:117,kvs:49, kiosk:78.4,sales:6.7, gc:-0.6, mcd:24},
+    '10865':{rank:16, oepe:115,kvs:23, kiosk:90.1,sales:5.1, gc:-4.6, mcd:25},
+    '11744':{rank:17, oepe:123,kvs:32, kiosk:96.4,sales:4.2, gc:-3.7, mcd:36},
+    '2327':{rank:18, oepe:123,kvs:45, kiosk:88.0,sales:3.8, gc:-1.6, mcd:32},
+    '22228':{rank:19, oepe:167,kvs:57, kiosk:77.1,sales:10.0, gc:-1.3, mcd:30},
+    '12566':{rank:20, oepe:154,kvs:52, kiosk:59.2,sales:9.6, gc:0.2, mcd:0},
+    '25117':{rank:21, oepe:122,kvs:45, kiosk:55.5,sales:6.5, gc:-1.6, mcd:30},
+    '1313':{rank:22, oepe:130,kvs:50, kiosk:67.4,sales:7.6, gc:-3.5, mcd:36},
+    '27493':{rank:23, oepe:145,kvs:58, kiosk:71.1,sales:6.8, gc:-1.7, mcd:40},
+    '11124':{rank:24, oepe:147,kvs:45, kiosk:69.4,sales:6.1, gc:-2.6, mcd:35},
+    '36285':{rank:25, oepe:162,kvs:42, kiosk:79.0,sales:3.6, gc:-5.3, mcd:34},
+    '4235':{rank:26, oepe:138,kvs:46, kiosk:71.3,sales:4.0, gc:-4.5, mcd:36},
+    '7932':{rank:27, oepe:130,kvs:31, kiosk:68.2,sales:-1.6, gc:-8.3, mcd:32},
+    '38349':{rank:28, oepe:112,kvs:41, kiosk:45.7,sales:2.7, gc:-7.9, mcd:31},
+    '11529':{rank:29, oepe:122,kvs:48, kiosk:56.2,sales:3.4, gc:-6.0, mcd:31},
+    '7703':{rank:30, oepe:142,kvs:51, kiosk:80.0,sales:1.3, gc:-7.5, mcd:42},
+    '21383':{rank:31, oepe:123,kvs:49, kiosk:41.4,sales:4.6, gc:-7.2, mcd:30},
+    '6891':{rank:32, oepe:123,kvs:41, kiosk:56.1,sales:-2.4, gc:-9.8, mcd:27},
+    '6853':{rank:33, oepe:142,kvs:45, kiosk:77.9,sales:-4.2, gc:-11.0, mcd:24},
+    '17470':{rank:34, oepe:121,kvs:52, kiosk:52.8,sales:-5.0, gc:-8.8, mcd:32}
+  }},
+  {week:'Jun 21-27',data:{
+    '1313':{rank:24, oepe:130,kvs:56, kiosk:66.1,sales:3.8, gc:-6.4, mcd:120},
+    '2327':{rank:11, oepe:131,kvs:51, kiosk:89.4,sales:9.6, gc:-1.9, mcd:133},
+    '4235':{rank:17, oepe:136,kvs:44, kiosk:70.5,sales:3.9, gc:-4.1, mcd:143},
+    '6853':{rank:21, oepe:132,kvs:46, kiosk:71.5,sales:3.7, gc:-4.8, mcd:156},
+    '6891':{rank:33, oepe:126,kvs:42, kiosk:58.7,sales:-2.1, gc:-9.6, mcd:141},
+    '7013':{rank:30, oepe:121,kvs:71, kiosk:77.5,sales:0.6, gc:-7.4, mcd:208},
+    '7433':{rank:20, oepe:125,kvs:40, kiosk:88.4,sales:-0.6, gc:-5.7, mcd:0},
+    '7703':{rank:26, oepe:134,kvs:42, kiosk:80.5,sales:0.3, gc:-7.6, mcd:144},
+    '7932':{rank:31, oepe:135,kvs:33, kiosk:62.9,sales:0.9, gc:-8.1, mcd:168},
+    '10150':{rank:12, oepe:147,kvs:46, kiosk:77.3,sales:3.6, gc:-1.5, mcd:122},
+    '10865':{rank:2, oepe:119,kvs:27, kiosk:90.4,sales:8.0, gc:2.5, mcd:143},
+    '11124':{rank:16, oepe:124,kvs:39, kiosk:71.0,sales:3.0, gc:-3.9, mcd:131},
+    '11529':{rank:29, oepe:120,kvs:45, kiosk:47.7,sales:1.3, gc:-9.2, mcd:98},
+    '11744':{rank:6, oepe:138,kvs:29, kiosk:96.5,sales:5.3, gc:-1.9, mcd:111},
+    '12566':{rank:14, oepe:129,kvs:47, kiosk:56.9,sales:10.0, gc:-0.5, mcd:0},
+    '13669':{rank:19, oepe:133,kvs:35, kiosk:74.1,sales:-1.9, gc:-5.3, mcd:129},
+    '16753':{rank:1, oepe:105,kvs:39, kiosk:99.1,sales:15.3, gc:6.6, mcd:0},
+    '17470':{rank:34, oepe:125,kvs:52, kiosk:49.7,sales:-6.7, gc:-10.2, mcd:196},
+    '21383':{rank:32, oepe:122,kvs:45, kiosk:39.8,sales:0.9, gc:-8.5, mcd:165},
+    '22228':{rank:23, oepe:143,kvs:51, kiosk:73.2,sales:6.9, gc:-5.9, mcd:165},
+    '22694':{rank:4, oepe:95,kvs:21, kiosk:73.7,sales:16.2, gc:6.2, mcd:0},
+    '24135':{rank:8, oepe:115,kvs:42, kiosk:93.3,sales:6.3, gc:-3.7, mcd:124},
+    '24497':{rank:5, oepe:114,kvs:38, kiosk:98.6,sales:5.0, gc:-1.5, mcd:148},
+    '24797':{rank:7, oepe:125,kvs:46, kiosk:96.6,sales:7.2, gc:-2.5, mcd:118},
+    '25117':{rank:13, oepe:112,kvs:44, kiosk:50.8,sales:6.1, gc:-4.5, mcd:117},
+    '26499':{rank:8, oepe:121,kvs:41, kiosk:80.9,sales:14.7, gc:1.8, mcd:0},
+    '27493':{rank:27, oepe:137,kvs:53, kiosk:71.9,sales:2.4, gc:-6.5, mcd:122},
+    '32107':{rank:25, oepe:134,kvs:37, kiosk:95.8,sales:-2.0, gc:-8.6, mcd:138},
+    '36285':{rank:22, oepe:149,kvs:35, kiosk:79.0,sales:0.9, gc:-6.0, mcd:147},
+    '37958':{rank:17, oepe:131,kvs:43, kiosk:99.3,sales:-1.6, gc:-5.5, mcd:172},
+    '38349':{rank:28, oepe:120,kvs:46, kiosk:56.9,sales:1.4, gc:-8.2, mcd:128},
+    '38616':{rank:15, oepe:116,kvs:41, kiosk:78.2,sales:3.5, gc:-4.3, mcd:174},
+    '39954':{rank:10, oepe:101,kvs:35, kiosk:82.6,sales:7.2, gc:-3.3, mcd:157},
+    '40959':{rank:3, oepe:120,kvs:44, kiosk:84.5,sales:17.2, gc:7.9, mcd:171}
+  }},
+  {week:'Jun 28-Jul 4',data:{
+    '39954':{rank:1,oepe:107,kvs:41,kiosk:87.6,sales:12.3,gc:0.9,mcd:28},
+    '40959':{rank:2,oepe:135,kvs:46,kiosk:87.1,sales:16.2,gc:6.0,mcd:19},
+    '22694':{rank:3,oepe:98,kvs:20,kiosk:76.1,sales:18.6,gc:8.7,mcd:40},
+    '16753':{rank:4,oepe:121,kvs:65,kiosk:98.9,sales:22.3,gc:13.4,mcd:0},
+    '10865':{rank:5,oepe:124,kvs:27,kiosk:92.4,sales:5.1,gc:1.2,mcd:30},
+    '7433':{rank:6,oepe:127,kvs:42,kiosk:90.0,sales:17.8,gc:6.3,mcd:0},
+    '24797':{rank:7,oepe:124,kvs:48,kiosk:95.1,sales:12.4,gc:0.6,mcd:43},
+    '24135':{rank:8,oepe:114,kvs:39,kiosk:95.9,sales:6.3,gc:-2.4,mcd:35},
+    '24497':{rank:9,oepe:127,kvs:35,kiosk:99.3,sales:3.4,gc:-1.1,mcd:36},
+    '11744':{rank:10,oepe:133,kvs:32,kiosk:95.2,sales:5.1,gc:-2.2,mcd:33},
+    '22228':{rank:11,oepe:142,kvs:53,kiosk:75.9,sales:10.2,gc:0.9,mcd:28},
+    '38616':{rank:12,oepe:118,kvs:48,kiosk:79.5,sales:4.1,gc:-3.7,mcd:21},
+    '12566':{rank:13,oepe:127,kvs:47,kiosk:59.4,sales:8.7,gc:0.3,mcd:0},
+    '11529':{rank:14,oepe:126,kvs:48,kiosk:55.4,sales:6.8,gc:-2.1,mcd:31},
+    '10150':{rank:15,oepe:157,kvs:53,kiosk:76.8,sales:5.6,gc:-1.4,mcd:31},
+    '21383':{rank:16,oepe:121,kvs:49,kiosk:38.1,sales:7.4,gc:-4.5,mcd:27},
+    '11124':{rank:17,oepe:138,kvs:51,kiosk:68.2,sales:5.9,gc:-2.2,mcd:34},
+    '32107':{rank:18,oepe:156,kvs:46,kiosk:96.7,sales:1.0,gc:-5.4,mcd:26},
+    '6853':{rank:19,oepe:138,kvs:49,kiosk:77.5,sales:6.9,gc:-5.1,mcd:34},
+    '37958':{rank:20,oepe:134,kvs:47,kiosk:99.6,sales:-0.3,gc:-7.3,mcd:18},
+    '7013':{rank:21,oepe:113,kvs:69,kiosk:81.0,sales:2.6,gc:-5.0,mcd:35},
+    '26499':{rank:22,oepe:129,kvs:52,kiosk:82.7,sales:7.2,gc:-5.5,mcd:0},
+    '4235':{rank:23,oepe:144,kvs:44,kiosk:68.0,sales:4.6,gc:-4.5,mcd:35},
+    '17470':{rank:24,oepe:115,kvs:50,kiosk:45.5,sales:2.4,gc:-4.4,mcd:32},
+    '2327':{rank:25,oepe:127,kvs:51,kiosk:84.8,sales:0.7,gc:-5.0,mcd:37},
+    '25117':{rank:26,oepe:126,kvs:52,kiosk:48.9,sales:4.3,gc:-4.9,mcd:33},
+    '13669':{rank:27,oepe:130,kvs:34,kiosk:76.9,sales:-0.3,gc:-5.7,mcd:38},
+    '27493':{rank:27,oepe:144,kvs:59,kiosk:76.5,sales:1.9,gc:-4.0,mcd:45},
+    '36285':{rank:29,oepe:159,kvs:40,kiosk:81.3,sales:-0.7,gc:-8.1,mcd:28},
+    '6891':{rank:30,oepe:118,kvs:41,kiosk:58.3,sales:1.1,gc:-8.2,mcd:31},
+    '38349':{rank:31,oepe:108,kvs:48,kiosk:49.0,sales:0.3,gc:-6.6,mcd:30},
+    '1313':{rank:32,oepe:130,kvs:59,kiosk:66.7,sales:4.7,gc:-5.5,mcd:37},
+    '7703':{rank:33,oepe:146,kvs:45,kiosk:80.5,sales:-1.6,gc:-6.5,mcd:42},
+    '7932':{rank:34,oepe:136,kvs:32,kiosk:65.1,sales:-0.9,gc:-9.5,mcd:33}
+  }},
+  {week:'Jul 5-11',data:{
+    '40959':{rank:1,oepe:119,kvs:35,kiosk:84.5,sales:11.6,gc:2.5,mcd:13},
+    '10865':{rank:2,oepe:119,kvs:25,kiosk:93.5,sales:0.9,gc:-3.1,mcd:31},
+    '16753':{rank:3,oepe:120,kvs:49,kiosk:98.6,sales:11.1,gc:4.4,mcd:0},
+    '24497':{rank:4,oepe:125,kvs:39,kiosk:98.6,sales:4.3,gc:-3.5,mcd:34},
+    '39954':{rank:5,oepe:100,kvs:35,kiosk:84.3,sales:3.2,gc:-3.8,mcd:29},
+    '22694':{rank:6,oepe:97,kvs:22,kiosk:71.7,sales:12.2,gc:4.3,mcd:0},
+    '37958':{rank:7,oepe:135,kvs:45,kiosk:99.9,sales:0.6,gc:-3.4,mcd:16},
+    '26499':{rank:8,oepe:130,kvs:41,kiosk:82.0,sales:9.7,gc:0.2,mcd:0},
+    '24797':{rank:9,oepe:116,kvs:43,kiosk:95.4,sales:1.2,gc:-4.3,mcd:36},
+    '13669':{rank:10,oepe:121,kvs:28,kiosk:79.7,sales:-0.6,gc:-4.3,mcd:34},
+    '7433':{rank:11,oepe:134,kvs:49,kiosk:91.7,sales:3.6,gc:-3.9,mcd:0},
+    '32107':{rank:12,oepe:146,kvs:48,kiosk:95.5,sales:3.5,gc:-6.1,mcd:31},
+    '10150':{rank:13,oepe:167,kvs:55,kiosk:75.2,sales:6.8,gc:-1.4,mcd:32},
+    '38616':{rank:14,oepe:124,kvs:48,kiosk:79.6,sales:-0.6,gc:-5.8,mcd:28},
+    '24135':{rank:15,oepe:120,kvs:45,kiosk:96.6,sales:-1.2,gc:-7.6,mcd:33},
+    '11744':{rank:16,oepe:138,kvs:28,kiosk:95.1,sales:-0.9,gc:-6.6,mcd:38},
+    '22228':{rank:17,oepe:128,kvs:48,kiosk:74.5,sales:-0.9,gc:-6.7,mcd:23},
+    '11124':{rank:18,oepe:155,kvs:56,kiosk:72.9,sales:4.1,gc:-6.0,mcd:35},
+    '2327':{rank:19,oepe:137,kvs:56,kiosk:87.1,sales:-1.8,gc:-5.9,mcd:35},
+    '12566':{rank:20,oepe:132,kvs:54,kiosk:62.6,sales:0.4,gc:-4.4,mcd:0},
+    '36285':{rank:21,oepe:147,kvs:38,kiosk:80.3,sales:-2.3,gc:-9.3,mcd:30},
+    '4235':{rank:22,oepe:157,kvs:40,kiosk:63.3,sales:-0.8,gc:-5.3,mcd:47},
+    '11529':{rank:23,oepe:122,kvs:49,kiosk:53.9,sales:-0.5,gc:-9.0,mcd:32},
+    '27493':{rank:24,oepe:139,kvs:57,kiosk:76.5,sales:0.1,gc:-7.8,mcd:44},
+    '38349':{rank:25,oepe:116,kvs:45,kiosk:53.9,sales:-4.1,gc:-9.8,mcd:30},
+    '17470':{rank:26,oepe:96,kvs:40,kiosk:50.0,sales:-3.8,gc:-10.9,mcd:26},
+    '6853':{rank:27,oepe:130,kvs:41,kiosk:75.4,sales:-4.9,gc:-10.0,mcd:34},
+    '1313':{rank:28,oepe:134,kvs:57,kiosk:66.3,sales:-0.7,gc:-8.6,mcd:37},
+    '7013':{rank:29,oepe:114,kvs:56,kiosk:81.0,sales:-8.0,gc:-11.7,mcd:32},
+    '21383':{rank:30,oepe:124,kvs:46,kiosk:43.1,sales:-1.7,gc:-10.4,mcd:30},
+    '7703':{rank:31,oepe:155,kvs:46,kiosk:80.5,sales:-6.2,gc:-9.9,mcd:43},
+    '25117':{rank:32,oepe:110,kvs:44,kiosk:53.6,sales:-5.3,gc:-11.7,mcd:33},
+    '7932':{rank:32,oepe:133,kvs:32,kiosk:64.9,sales:-6.0,gc:-11.7,mcd:36},
+    '6891':{rank:34,oepe:128,kvs:38,kiosk:58.4,sales:-9.9,gc:-14.3,mcd:27}
+  }}
+];
+
+
+var MC_STANDARDS={
+  oepe: {target:120,label:'Brand Standard: 120s or less',lowerBetter:true},
+  kvs:  {target:55, label:'Brand Standard: 55s or less', lowerBetter:true},
+  kiosk:{target:85, label:'Brand Standard: 85% or more', lowerBetter:false},
+  mcd:  {target:240,label:'Brand Standard: 4:00 or less',lowerBetter:true},
+  sales:{target:0,  label:'Target: Positive Variance',   lowerBetter:false},
+  gc:   {target:0,  label:'Target: Positive Variance',   lowerBetter:false},
+  rank: {target:17, label:'Top Half of Portfolio',       lowerBetter:true}
+};
+
+var KPI_META={
+  rank: {label:'Overall Rank', fmt:function(v){return '#'+v;},lowerBetter:true},
+  oepe: {label:'OEPE',         fmt:function(v){return v+'s';},lowerBetter:true},
+  kvs:  {label:'KVS',          fmt:function(v){return v+'s';},lowerBetter:true},
+  kiosk:{label:'Kiosk %',      fmt:function(v){return v+'%';},lowerBetter:false},
+  sales:{label:'Sales vs LY',  fmt:function(v){return (v>=0?'+':'')+v+'%';},lowerBetter:false},
+  gc:   {label:'Guest Counts', fmt:function(v){return (v>=0?'+':'')+v+'%';},lowerBetter:false},
+  mcd:  {label:'McDelivery',   fmt:function(v){var sec=Math.round(v);var m=Math.floor(sec/60);var s=sec%60;return m+':'+(s<10?'0':'')+s;},lowerBetter:true}
+};
+
+var LINE_COLORS=['#1a5fa8','#1a7a4a','#b87a00','#c0392b','#7b3fa8','#0097a7','#e65100','#2e7d32','#ad1457','#4527a0','#00695c','#827717','#37474f','#558b2f','#6a1b9a','#1565c0','#bf360c','#004d40','#880e4f','#1a237e'];
+
+var T={kpi:'rank',showAvg:true,showStd:true,loc:'',span:'span'};
+
+(function initTrendDropdown(){
+  var sel=document.getElementById('trendLocSelect');
+  if(!sel) return;
+  var opt0=document.createElement('option');opt0.value='';opt0.textContent='All Locations';sel.appendChild(opt0);
+  var locs=Object.keys(HISTORY[HISTORY.length-1].data).sort(function(a,b){return parseInt(a)-parseInt(b);});
+  locs.forEach(function(loc){var opt=document.createElement('option');opt.value=loc;opt.textContent=loc;sel.appendChild(opt);});
+})();
+
+function setTrendKpi(kpi,btn){T.kpi=kpi;document.querySelectorAll('.trend-pill').forEach(function(b){b.classList.remove('trend-pill-active');});if(btn)btn.classList.add('trend-pill-active');renderTrend();}
+function toggleTrendOverlay(which,btn){if(which==='avg')T.showAvg=!T.showAvg;if(which==='std')T.showStd=!T.showStd;btn.classList.toggle('trend-toggle-on');renderTrend();}
+function setTrendLoc(loc){T.loc=loc;var sel=document.getElementById('trendLocSelect');if(sel)sel.value=loc;renderTrend();}
+function setTrendSpan(mode,btn){T.span=mode;document.querySelectorAll('#tog-span,#tog-wow,#tog-consec').forEach(function(b){b.classList.remove('trend-toggle-on');});if(btn)btn.classList.add('trend-toggle-on');renderTrendingCards();}
+function trendVal(weekData,loc,kpi){var d=weekData[loc];if(!d)return null;return d[kpi]!==undefined?d[kpi]:null;}
+
+function renderTrend(){
+  var m=KPI_META[T.kpi];
+  var weeks=HISTORY;
+  var allLocs=Object.keys(weeks[weeks.length-1].data);
+  var std=MC_STANDARDS[T.kpi];
+  var chartWrap=document.getElementById('trendChartWrap');
+  var noSelMsg=document.getElementById('trendNoSel');
+  if(!T.loc){
+    if(chartWrap)chartWrap.style.display='none';
+    if(noSelMsg)noSelMsg.style.display='block';
+    renderTrendingCards();
+    return;
+  }
+  if(chartWrap)chartWrap.style.display='block';
+  if(noSelMsg)noSelMsg.style.display='none';
+  var titleEl=document.getElementById('trendChartTitle');
+  var subEl=document.getElementById('trendChartSub');
+  if(titleEl)titleEl.textContent=m.label+' - '+T.loc;
+  if(subEl)subEl.textContent=weeks.length+' weeks of data';
+  var weekAvgs=weeks.map(function(w){var vals=allLocs.map(function(l){return trendVal(w.data,l,T.kpi);}).filter(function(v){return v!==null;});return vals.length?vals.reduce(function(a,b){return a+b;},0)/vals.length:null;});
+  var canvas=document.getElementById('trendCanvas');
+  if(!canvas)return;
+  var dpr=window.devicePixelRatio||1;
+  var cssW=canvas.parentElement.clientWidth-40;
+  var cssH=380;
+  canvas.width=cssW*dpr;canvas.height=cssH*dpr;
+  canvas.style.width=cssW+'px';canvas.style.height=cssH+'px';
+  var ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
+  var W=cssW,H=cssH,padL=64,padR=24,padT=24,padB=48;
+  var chartW=W-padL-padR,chartH=H-padT-padB;
+  var showLocs=[T.loc];
+  var allVals=[];
+  showLocs.forEach(function(loc){weeks.forEach(function(w){var v=trendVal(w.data,loc,T.kpi);if(v!==null)allVals.push(v);});});
+  if(T.showAvg)weekAvgs.forEach(function(v){if(v!==null)allVals.push(v);});
+  if(T.showStd&&std)allVals.push(std.target);
+  if(!allVals.length)return;
+  var minV=Math.min.apply(null,allVals),maxV=Math.max.apply(null,allVals);
+  var pad=(maxV-minV)*0.12||1;
+  if(T.kpi==='sales'||T.kpi==='gc'){minV=minV-pad;}else{minV=Math.max(0,minV-pad);}
+  maxV=maxV+pad;
+  var invertY=(T.kpi==='rank');
+  function yPos(v){return invertY?padT+(v-minV)/(maxV-minV)*chartH:padT+(1-(v-minV)/(maxV-minV))*chartH;}
+  function xPos(wi){return weeks.length===1?padL+chartW/2:padL+wi/(weeks.length-1)*chartW;}
+  ctx.clearRect(0,0,W,H);
+  ctx.strokeStyle='#e8e6e0';ctx.lineWidth=1;
+  for(var ti=0;ti<=5;ti++){
+    var v=minV+(maxV-minV)*ti/5;var y=yPos(v);
+    ctx.beginPath();ctx.moveTo(padL,y);ctx.lineTo(padL+chartW,y);ctx.stroke();
+    ctx.fillStyle='#888780';ctx.font='10px DM Sans,sans-serif';ctx.textAlign='right';
+    var tickV=(T.kpi==='mcd')?Math.round(v):Math.round(v*10)/10;
+    ctx.fillText(m.fmt(tickV),padL-8,y+3.5);
+  }
+  weeks.forEach(function(w,wi){
+    var x=xPos(wi);
+    ctx.fillStyle='#2c2c2a';ctx.font='bold 11px DM Sans,sans-serif';ctx.textAlign='center';
+    ctx.fillText(w.week,x,H-10);
+    ctx.strokeStyle='#d3d1c7';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,padT+chartH);ctx.lineTo(x,padT+chartH+5);ctx.stroke();
+  });
+  if(T.showStd&&std){
+    var sy=yPos(std.target);ctx.save();ctx.setLineDash([6,4]);ctx.strokeStyle='#ff9800';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(padL,sy);ctx.lineTo(padL+chartW,sy);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#e65100';ctx.font='bold 9px DM Sans,sans-serif';ctx.textAlign='left';
+    ctx.fillText('Brand Standard: '+m.fmt(std.target),padL+4,sy-4);ctx.restore();
+  }
+  if(T.showAvg){
+    ctx.save();ctx.setLineDash([4,3]);ctx.strokeStyle='#1a5fa8';ctx.lineWidth=2;ctx.beginPath();
+    var started=false;
+    weekAvgs.forEach(function(avg,wi){if(avg===null)return;var x=xPos(wi),y=yPos(avg);if(!started){ctx.moveTo(x,y);started=true;}else{ctx.lineTo(x,y);}});
+    ctx.stroke();ctx.setLineDash([]);
+    var lastAvg=null,lastWi=0;weekAvgs.forEach(function(v,wi){if(v!==null){lastAvg=v;lastWi=wi;}});
+    if(lastAvg!==null){var avgDisp=(T.kpi==='mcd')?Math.round(lastAvg):Math.round(lastAvg*10)/10;ctx.fillStyle='#1a5fa8';ctx.font='bold 9px DM Sans,sans-serif';ctx.textAlign='right';ctx.fillText('Avg '+m.fmt(avgDisp),xPos(lastWi)-4,yPos(lastAvg)-5);}
+    ctx.restore();
+  }
+  showLocs.forEach(function(loc,li){
+    var color=LINE_COLORS[li%LINE_COLORS.length];
+    var vals=weeks.map(function(w){return trendVal(w.data,loc,T.kpi);});
+    var points=[];vals.forEach(function(v,wi){if(v!==null)points.push({x:xPos(wi),y:yPos(v),v:v,wi:wi});});
+    if(!points.length)return;
+    ctx.save();ctx.strokeStyle=color;ctx.lineWidth=3;ctx.lineJoin='round';ctx.beginPath();
+    points.forEach(function(p,i){if(i===0)ctx.moveTo(p.x,p.y);else ctx.lineTo(p.x,p.y);});ctx.stroke();
+    points.forEach(function(p){
+      ctx.beginPath();ctx.arc(p.x,p.y,5,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
+      var dotV=(T.kpi==='mcd')?Math.round(p.v):p.v;
+      ctx.fillStyle=color;ctx.font='bold 10px DM Mono,monospace';ctx.textAlign='center';ctx.fillText(m.fmt(dotV),p.x,p.y-10);
+    });
+    ctx.restore();
+  });
+  var legendEl=document.getElementById('trendLegend');
+  if(legendEl){
+    var lh='';
+    if(T.showAvg)lh+='<div style="display:flex;align-items:center;gap:5px;font-size:10px;color:#1a5fa8;"><span style="display:inline-block;width:20px;height:2px;border-top:2px dashed #1a5fa8;"></span>Portfolio Average</div>';
+    if(T.showStd&&std)lh+='<div style="display:flex;align-items:center;gap:5px;font-size:10px;color:#e65100;"><span style="display:inline-block;width:20px;height:2px;border-top:2px dashed #ff9800;"></span>'+std.label+'</div>';
+    showLocs.forEach(function(loc,li){var color=LINE_COLORS[li%LINE_COLORS.length];lh+='<div style="display:flex;align-items:center;gap:5px;font-size:10px;color:'+color+';"><span style="display:inline-block;width:20px;height:3px;background:'+color+';border-radius:2px;"></span>'+loc+'</div>';});
+    legendEl.innerHTML=lh;
+  }
+  renderTrendingCards();
+}
+
+function renderTrendingCards(){
+  var weeks=HISTORY;
+  var allLocs=Object.keys(weeks[weeks.length-1].data);
+  var m=KPI_META[T.kpi];
+  var improving=[],declining=[];
+  allLocs.forEach(function(loc){
+    var vals=weeks.map(function(w){return trendVal(w.data,loc,T.kpi);}).filter(function(v){return v!==null;});
+    if(vals.length<2)return;
+    var first=vals[0],last=vals[vals.length-1];
+    var chg=m.lowerBetter?Math.round((first-last)*10)/10:Math.round((last-first)*10)/10;
+    var wowChanges=[];
+    for(var ri=1;ri<vals.length;ri++){var wc=m.lowerBetter?Math.round((vals[ri-1]-vals[ri])*10)/10:Math.round((vals[ri]-vals[ri-1])*10)/10;wowChanges.push(wc);}
+    var consecUp=true,consecDn=true;
+    for(var ci=1;ci<vals.length;ci++){if(!(m.lowerBetter?vals[ci]<vals[ci-1]:vals[ci]>vals[ci-1]))consecUp=false;if(!(m.lowerBetter?vals[ci]>vals[ci-1]:vals[ci]<vals[ci-1]))consecDn=false;}
+    var netBetter=m.lowerBetter?last<first:last>first;
+    var netWorse=m.lowerBetter?last>first:last<first;
+    var qualUp=T.span==='consec'?consecUp:netBetter;
+    var qualDn=T.span==='consec'?consecDn:netWorse;
+    if(qualUp)improving.push({loc:loc,chg:chg,first:first,last:last,wowChanges:wowChanges});
+    if(qualDn)declining.push({loc:loc,chg:chg,first:first,last:last,wowChanges:wowChanges});
+  });
+  improving.sort(function(a,b){return b.chg-a.chg;});declining.sort(function(a,b){return b.chg-a.chg;});
+  improving=improving.slice(0,5);declining=declining.slice(0,5);
+  var upHdrEl=document.getElementById('trendUpHdr');
+  var dnHdrEl=document.getElementById('trendDnHdr');
+  if(upHdrEl)upHdrEl.textContent=m.label;
+  if(dnHdrEl)dnHdrEl.textContent=m.label;
+  function fmtItem(r,isGood){
+    var color=isGood?'#1a7a4a':'#c0392b';var arrow=isGood?'&#9650;':'&#9660;';
+    var streak=T.span==='consec'?'<span style="font-size:9px;background:'+(isGood?'#d6f0e0':'#fce8e8')+';color:'+(isGood?'#0a5c28':'#8b1a1a')+';border-radius:4px;padding:1px 5px;margin-left:5px;font-weight:700;">'+r.wowChanges.length+'-wk streak</span>':'';
+    var detail='';
+    if(T.span==='span'||T.span==='consec'){
+      var fromStr=m.fmt(T.kpi==='mcd'?Math.round(r.first):r.first);
+      var toStr=m.fmt(T.kpi==='mcd'?Math.round(r.last):r.last);
+      var chgStr=m.fmt(T.kpi==='mcd'?Math.round(r.chg):r.chg);
+      var wk1=HISTORY[0].week;var wkN=HISTORY[HISTORY.length-1].week;
+      detail='<span style="font-size:9px;opacity:0.7;">'+wk1+'</span> '+fromStr+' &#8594; '+toStr+' '+arrow+chgStr+' <span style="font-size:9px;opacity:0.7;">'+wkN+'</span>'+streak;
+    } else {
+      var parts=[];
+      for(var wi=0;wi<r.wowChanges.length;wi++){var wc=r.wowChanges[wi];var wcStr=m.fmt(T.kpi==='mcd'?Math.round(Math.abs(wc)):Math.abs(wc));var wkLbl=HISTORY[wi+1].week.replace('Apr ','').replace('May ','May ');parts.push(wkLbl+': '+arrow+wcStr);}
+      detail=parts.join(' &nbsp;|&nbsp; ')+streak;
+    }
+    return '<div class="trend-card-item"><span style="font-family:DM Mono,monospace;font-size:12px;font-weight:600;">'+r.loc+'</span><span style="color:'+color+';font-weight:700;font-family:DM Mono,monospace;font-size:11px;">'+detail+'</span></div>';
+  }
+  var upEl=document.getElementById('trendUpList');
+  var dnEl=document.getElementById('trendDownList');
+  if(upEl)upEl.innerHTML=improving.length?improving.map(function(r){return fmtItem(r,true);}).join(''):'<div style="padding:16px;color:var(--muted);font-size:12px;">No qualifying locations yet</div>';
+  if(dnEl)dnEl.innerHTML=declining.length?declining.map(function(r){return fmtItem(r,false);}).join(''):'<div style="padding:16px;color:var(--muted);font-size:12px;">No qualifying locations yet</div>';
+}
+
+renderTrend();
+// -- Green Sweep --
+function buildGreenSweep(){
+  // Build GM lookup from RANKED
+  var gmMap = {};
+  RANKED.forEach(function(r){ gmMap[r.loc] = r.gm; });
+
+  // Build per-loc daypart oepe
+  var locData = {};
+  ['7am','11am','5pm'].forEach(function(dp){
+    PEAKS[dp].forEach(function(r){
+      if(!locData[r.loc]) locData[r.loc] = {};
+      locData[r.loc][dp] = r.oepe;
+    });
+  });
+
+  // Green Sweep = green (oepe < 121) in all 3 dayparts
+  var sweepData = [];
+  Object.keys(locData).forEach(function(loc){
+    var d = locData[loc];
+    var am7 = d['7am'], am11 = d['11am'], pm5 = d['5pm'];
+    if(am7 !== undefined && am11 !== undefined && pm5 !== undefined &&
+       am7 < 121 && am11 < 121 && pm5 < 121){
+      var avg = Math.round((am7 + am11 + pm5) / 3);
+      sweepData.push({loc:loc, gm:gmMap[loc]||'', avg:avg, am7:am7, am11:am11, pm5:pm5});
+    }
+  });
+  sweepData.sort(function(a,b){return a.avg-b.avg;});
+
+  var countEl = document.getElementById('sweepCount');
+  var listEl  = document.getElementById('sweepList');
+  if(!countEl || !listEl) return;
+
+  countEl.textContent = sweepData.length;
+
+  if(sweepData.length === 0){
+    listEl.innerHTML = '<div style="padding:16px 20px;color:#888780;font-size:12px;">No locations achieved a Green Sweep this week.</div>';
+    return;
+  }
+
+  function chip(label, val){
+    return '<div style="display:inline-flex;flex-direction:column;align-items:center;background:#d6f0e0;border-radius:6px;padding:5px 10px;min-width:56px;">'+
+      '<div style="font-size:9px;font-weight:600;color:#0a5c28;text-transform:uppercase;margin-bottom:2px;">'+label+'</div>'+
+      '<div style="font-size:13px;font-weight:700;color:#0a5c28;font-family:DM Mono,monospace;">'+val+'s</div>'+
+    '</div>';
+  }
+
+  listEl.innerHTML = sweepData.map(function(s,i){
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 20px;border-top:'+(i===0?'none':'1px solid #d3d1c7')+';flex-wrap:wrap;gap:8px;">'+
+      '<div>'+
+        '<div style="font-family:DM Mono,monospace;font-size:13px;font-weight:700;color:#2c2c2a;">'+s.loc+'</div>'+
+        '<div style="font-size:12px;font-weight:600;color:#2c2c2a;margin-top:2px;">'+s.gm+'</div>'+
+        '<div style="font-size:10px;color:#888780;margin-top:2px;">Avg OEPE: '+s.avg+'s across all dayparts</div>'+
+      '</div>'+
+      '<div style="display:flex;gap:6px;align-items:center;">'+
+        chip('7am', s.am7)+chip('11am', s.am11)+chip('5pm', s.pm5)+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+buildGreenSweep();
+
+
+</script>
+</body>
+</html>
