@@ -132,15 +132,20 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
       <div class="s-val" id="top-sup"></div>
       <div class="s-sub" id="top-sup-score"></div>
     </div>
-    <div class="s-card">
-      <div class="s-lbl">Locations ≥ 1.00</div>
-      <div class="s-val" id="at-std"></div>
-      <div class="s-sub">meeting standard</div>
+    <div class="s-card" style="border:2px solid #1a9a5a;background:linear-gradient(135deg,#eaf7ee,#f0fdf4)">
+      <div class="s-lbl" style="color:#0a7a3a">Locations ≥ 100%</div>
+      <div class="s-val" id="at-std" style="color:#0a7a3a"></div>
+      <div class="s-sub" style="color:#1a9a5a;font-weight:600">meeting standard</div>
     </div>
     <div class="s-card">
       <div class="s-lbl">Active Locations</div>
       <div class="s-val">34</div>
       <div class="s-sub">CA Portfolio</div>
+    </div>
+    <div class="s-card">
+      <div class="s-lbl">Top GM</div>
+      <div class="s-val" id="top-gm-name"></div>
+      <div class="s-sub" id="top-gm-sub"></div>
     </div>
   </div>
 
@@ -187,62 +192,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
             <th style="padding:10px 14px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.07em;font-weight:600">Portfolio Ranks</th>
           </tr>
         </thead>
-        <tbody><tr>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;color:#888;text-align:center;width:30px">1</td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-size:15px;width:28px">🥇</td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea"><span style="display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700;background:#1a7a4a22;color:#1a7a4a;border:1px solid #1a7a4a44">Michelle</span></td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;font-size:15px;color:#1a9a5a;text-align:center">10.8</td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;text-align:center;color:#888;font-size:12px">6</td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;color:#aaa;font-size:11px">3, 4, 8, 10, 19, 21</td>
-    </tr>
-<tr>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;color:#888;text-align:center;width:30px">2</td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-size:15px;width:28px">🥈</td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea"><span style="display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700;background:#2e7d3222;color:#2e7d32;border:1px solid #2e7d3244">Mike</span></td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;font-size:15px;color:#1a9a5a;text-align:center">12.6</td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;text-align:center;color:#888;font-size:12px">5</td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;color:#aaa;font-size:11px">1, 5, 6, 24, 27</td>
-    </tr>
-<tr>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;color:#888;text-align:center;width:30px">3</td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-size:15px;width:28px">🥉</td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea"><span style="display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700;background:#b87a0022;color:#b87a00;border:1px solid #b87a0044">Raymond</span></td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;font-size:15px;color:#1a9a5a;text-align:center">12.7</td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;text-align:center;color:#888;font-size:12px">3</td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;color:#aaa;font-size:11px">2, 7, 29</td>
-    </tr>
-<tr>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;color:#888;text-align:center;width:30px">4</td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-size:15px;width:28px"></td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea"><span style="display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700;background:#0097a722;color:#0097a7;border:1px solid #0097a744">Ray</span></td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;font-size:15px;color:#c07000;text-align:center">16.2</td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;text-align:center;color:#888;font-size:12px">4</td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;color:#aaa;font-size:11px">8, 12, 12, 33</td>
-    </tr>
-<tr>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;color:#888;text-align:center;width:30px">5</td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-size:15px;width:28px"></td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea"><span style="display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700;background:#e6510022;color:#e65100;border:1px solid #e6510044">Sylvia</span></td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;font-size:15px;color:#d05800;text-align:center">20.5</td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;text-align:center;color:#888;font-size:12px">6</td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;color:#aaa;font-size:11px">15, 17, 20, 21, 23, 27</td>
-    </tr>
-<tr>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;color:#888;text-align:center;width:30px">6</td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-size:15px;width:28px"></td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea"><span style="display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700;background:#7b3fa822;color:#7b3fa8;border:1px solid #7b3fa844">Mona</span></td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;font-size:15px;color:#d05800;text-align:center">21.5</td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;text-align:center;color:#888;font-size:12px">6</td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;color:#aaa;font-size:11px">14, 16, 18, 25, 26, 30</td>
-    </tr>
-<tr>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;color:#888;text-align:center;width:30px">7</td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-size:15px;width:28px"></td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea"><span style="display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700;background:#c0392b22;color:#c0392b;border:1px solid #c0392b44">Elton</span></td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;font-size:15px;color:#b01010;text-align:center">27.0</td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;text-align:center;color:#888;font-size:12px">4</td>
-      <td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;color:#aaa;font-size:11px">11, 31, 32, 34</td>
-    </tr></tbody>
+        <tbody id="sup-rank-tbody"></tbody>
       </table>
     </div>
   </div>
@@ -337,278 +287,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
               <th style="padding:8px 10px;text-align:center;font-size:9px;text-transform:uppercase;letter-spacing:.07em;font-weight:600">3PO</th>
             </tr>
           </thead>
-          <tbody><tr style="background:#eaf7ee;cursor:pointer" onclick="window.showDetail('40959')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">40959</div><div style="font-weight:600;font-size:11px">Jose Sanchez</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.10</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#0a7a3a;font-weight:600">1.15</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.00</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.50</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#0a7a3a">1.30</span></td>
-    </tr>
-<tr style="background:#fff8e0;cursor:pointer" onclick="window.showDetail('10865')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">10865</div><div style="font-weight:600;font-size:11px">Maria Figueroa</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#c07000;font-weight:600">0.99</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#0a7a3a;font-weight:600">1.41</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.85</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.50</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#1a9a5a">1.07</span></td>
-    </tr>
-<tr style="background:#fff8e0;cursor:pointer" onclick="window.showDetail('22694')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">22694</div><div style="font-weight:600;font-size:11px">Juan Gomez</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.10</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.07</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.85</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.50</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#ccc">—</span></td>
-    </tr>
-<tr style="background:#fff8e0;cursor:pointer" onclick="window.showDetail('7932')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">7932</div><div style="font-weight:600;font-size:11px">Gloria Huizar</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.76</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.85</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#0a7a3a;font-weight:600">1.29</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#0a7a3a;font-weight:600">1.16</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#c07000">0.91</span></td>
-    </tr>
-<tr style="background:#fff8e0;cursor:pointer" onclick="window.showDetail('37958')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">37958</div><div style="font-weight:600;font-size:11px">Martha Perez</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#c07000;font-weight:600">0.94</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.85</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#c07000;font-weight:600">0.94</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#c07000;font-weight:600">0.95</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#0a7a3a">1.31</span></td>
-    </tr>
-<tr style="background:#fff8e0;cursor:pointer" onclick="window.showDetail('36285')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">36285</div><div style="font-weight:600;font-size:11px">Salma Chavez - Interim</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.73</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#0a7a3a;font-weight:600">1.12</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#0a7a3a;font-weight:600">1.17</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.04</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#1a9a5a">1.09</span></td>
-    </tr>
-<tr style="background:#fff8e0;cursor:pointer" onclick="window.showDetail('6891')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">6891</div><div style="font-weight:600;font-size:11px">Soran Meyers</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.88</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.83</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.05</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.89</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#1a9a5a">1.07</span></td>
-    </tr>
-<tr style="background:#fff8e0;cursor:pointer" onclick="window.showDetail('16753')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">16753</div><div style="font-weight:600;font-size:11px">Monica Garcia</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.05</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.75</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.00</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.50</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#ccc">—</span></td>
-    </tr>
-<tr style="background:#fff8e0;cursor:pointer" onclick="window.showDetail('24135')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">24135</div><div style="font-weight:600;font-size:11px">Ashley Andujar</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#c07000;font-weight:600">0.98</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.88</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.00</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.50</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#1a9a5a">1.00</span></td>
-    </tr>
-<tr style="background:#fff8e0;cursor:pointer" onclick="window.showDetail('21383')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">21383</div><div style="font-weight:600;font-size:11px">Janeth Alvarez</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.87</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.07</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#c07000;font-weight:600">0.90</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.86</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#c07000">0.96</span></td>
-    </tr>
-<tr style="background:#fff8e0;cursor:pointer" onclick="window.showDetail('6853')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">6853</div><div style="font-weight:600;font-size:11px">Eloina Lopez</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.01</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.85</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.00</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.50</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#ccc">—</span></td>
-    </tr>
-<tr style="background:#fff8e0;cursor:pointer" onclick="window.showDetail('7013')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">7013</div><div style="font-weight:600;font-size:11px">Luis Yepez</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.85</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#0a7a3a;font-weight:600">1.36</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.00</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.50</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#d05800">0.89</span></td>
-    </tr>
-<tr style="background:#fff0e6;cursor:pointer" onclick="window.showDetail('17470')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">17470</div><div style="font-weight:600;font-size:11px">Tammy Martin</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#c07000;font-weight:600">0.91</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.02</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.00</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.53</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#0a7a3a">1.13</span></td>
-    </tr>
-<tr style="background:#fff0e6;cursor:pointer" onclick="window.showDetail('38349')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">38349</div><div style="font-weight:600;font-size:11px">Evelyn Gonzalez</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.82</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.00</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.07</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.69</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#c07000">0.98</span></td>
-    </tr>
-<tr style="background:#fff0e6;cursor:pointer" onclick="window.showDetail('25117')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">25117</div><div style="font-weight:600;font-size:11px">Ana Godinez</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.88</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.83</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.82</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.01</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#c07000">0.95</span></td>
-    </tr>
-<tr style="background:#fff0e6;cursor:pointer" onclick="window.showDetail('26499')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">26499</div><div style="font-weight:600;font-size:11px">Itzel Negrete</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#c07000;font-weight:600">0.91</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.00</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.00</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.50</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#ccc">—</span></td>
-    </tr>
-<tr style="background:#fff0e6;cursor:pointer" onclick="window.showDetail('32107')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">32107</div><div style="font-weight:600;font-size:11px">Jennifer Lagace</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.82</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#c07000;font-weight:600">0.98</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.88</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.90</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#c07000">0.97</span></td>
-    </tr>
-<tr style="background:#fff0e6;cursor:pointer" onclick="window.showDetail('1313')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">1313</div><div style="font-weight:600;font-size:11px">Destiny Baker</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.89</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.64</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.71</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#0a7a3a;font-weight:600">1.15</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#c07000">0.95</span></td>
-    </tr>
-<tr style="background:#fff0e6;cursor:pointer" onclick="window.showDetail('11124')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">11124</div><div style="font-weight:600;font-size:11px">Cassandra Campbell</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.90</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.87</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.00</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.50</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#c07000">0.96</span></td>
-    </tr>
-<tr style="background:#fff0e6;cursor:pointer" onclick="window.showDetail('11744')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">11744</div><div style="font-weight:600;font-size:11px">Sabrina Rocha</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.71</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.63</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#0a7a3a;font-weight:600">1.31</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.03</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#d05800">0.85</span></td>
-    </tr>
-<tr style="background:#fff0e6;cursor:pointer" onclick="window.showDetail('11529')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">11529</div><div style="font-weight:600;font-size:11px">Soran Meyers</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#c07000;font-weight:600">0.93</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.50</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.79</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.90</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#1a9a5a">1.09</span></td>
-    </tr>
-<tr style="background:#fff0e6;cursor:pointer" onclick="window.showDetail('24497')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">24497</div><div style="font-weight:600;font-size:11px">Paola Martinez</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.89</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.85</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.00</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.50</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#1a9a5a">1.01</span></td>
-    </tr>
-<tr style="background:#fff0e6;cursor:pointer" onclick="window.showDetail('7433')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">7433</div><div style="font-weight:600;font-size:11px">Imelda Cortez</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.81</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.10</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.00</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.50</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#ccc">—</span></td>
-    </tr>
-<tr style="background:#fff0e6;cursor:pointer" onclick="window.showDetail('4235')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">4235</div><div style="font-weight:600;font-size:11px">Emilia Lezama</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.78</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.82</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.08</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.80</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#d05800">0.82</span></td>
-    </tr>
-<tr style="background:#fff0e6;cursor:pointer" onclick="window.showDetail('22228')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">22228</div><div style="font-weight:600;font-size:11px">Monique Castro</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.86</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.66</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.77</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#c07000;font-weight:600">0.95</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#1a9a5a">1.02</span></td>
-    </tr>
-<tr style="background:#fff0e6;cursor:pointer" onclick="window.showDetail('7703')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">7703</div><div style="font-weight:600;font-size:11px">Cris Reeves</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.78</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.07</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.84</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.67</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#d05800">0.87</span></td>
-    </tr>
-<tr style="background:#fff0e6;cursor:pointer" onclick="window.showDetail('13669')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">13669</div><div style="font-weight:600;font-size:11px">Bree Alvidrez</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.81</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.80</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.00</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.50</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#1a9a5a">1.00</span></td>
-    </tr>
-<tr style="background:#fff0e6;cursor:pointer" onclick="window.showDetail('39954')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">39954</div><div style="font-weight:600;font-size:11px">Angela Cruz</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.83</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.76</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.00</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.50</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#0a7a3a">1.22</span></td>
-    </tr>
-<tr style="background:#ffeaea;cursor:pointer" onclick="window.showDetail('10150')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">10150</div><div style="font-weight:600;font-size:11px">Reyes Charnin</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.75</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.83</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.69</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.89</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#1a9a5a">1.06</span></td>
-    </tr>
-<tr style="background:#ffeaea;cursor:pointer" onclick="window.showDetail('2327')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">2327</div><div style="font-weight:600;font-size:11px">Alex Beltran</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.84</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.61</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.00</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.50</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#d05800">0.80</span></td>
-    </tr>
-<tr style="background:#ffeaea;cursor:pointer" onclick="window.showDetail('24797')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">24797</div><div style="font-weight:600;font-size:11px">Ariana Cervantes</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.86</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.50</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.00</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.50</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#d05800">0.85</span></td>
-    </tr>
-<tr style="background:#ffeaea;cursor:pointer" onclick="window.showDetail('12566')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">12566</div><div style="font-weight:600;font-size:11px">Reyes Charnin</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.76</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.85</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.00</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.50</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#ccc">—</span></td>
-    </tr>
-<tr style="background:#ffeaea;cursor:pointer" onclick="window.showDetail('27493')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">27493</div><div style="font-weight:600;font-size:11px">Ana Hernandez</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.77</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.50</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#d05800;font-weight:600">0.82</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#c07000;font-weight:600">0.91</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#c07000">0.91</span></td>
-    </tr>
-<tr style="background:#ffeaea;cursor:pointer" onclick="window.showDetail('38616')">
-      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea"><div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">38616</div><div style="font-weight:600;font-size:11px">Brenda Ramos</div></td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.77</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.61</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#1a9a5a;font-weight:600">1.00</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:#b01010;font-weight:600">0.50</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea"><span style="color:#0a7a3a">1.13</span></td>
-    </tr></tbody>
+          <tbody id="sup-kpi-tbody"></tbody>
         </table>
       </div>
     </div>
@@ -711,7 +390,7 @@ function tierLabel(v){
   if(v>=0.80) return 'BELOW STD';
   return 'NEEDS ATTN';
 }
-function fmtScore(v){ return v!==null&&v!==undefined ? v.toFixed(2) : '—'; }
+function fmtScore(v){ return v!==null&&v!==undefined ? Math.round(v*100)+'%' : '—'; }
 function fmtS(v){ return v!==null&&v!==undefined ? Math.round(v)+'s' : '—'; }
 function fmtPct(v){ return v!==null&&v!==undefined ? (v*100).toFixed(1)+'%' : '—'; }
 function fmtMin(v){ return v!==null&&v!==undefined ? v.toFixed(1)+'m' : '—'; }
@@ -729,9 +408,53 @@ const top1 = RANKED[0];
 document.getElementById('s1-nsn').textContent = top1.nsn;
 document.getElementById('s1-gm').textContent = top1.gm + ' · ' + top1.sup;
 document.getElementById('s1-score').textContent = fmtScore(top1.composite);
-document.getElementById('top-sup').textContent = SUPS[0].sup;
-document.getElementById('top-sup-score').textContent = 'avg ' + fmtScore(SUPS[0].avg_comp);
+// Build service-KPI sup rankings from RANKED
+const supMap = {};
+RANKED.forEach(r => {
+  if (!supMap[r.sup]) supMap[r.sup] = {sup: r.sup, color: r.supColor, comps: []};
+  supMap[r.sup].comps.push(r.composite || 0);
+});
+const SERVICE_SUPS = Object.values(supMap).map(s => ({
+  sup: s.sup, color: s.color,
+  avg_comp: s.comps.reduce((a,b)=>a+b,0)/s.comps.length,
+  count: s.comps.length
+})).sort((a,b) => b.avg_comp - a.avg_comp);
+
+document.getElementById('top-sup').textContent = SERVICE_SUPS[0].sup;
+document.getElementById('top-sup-score').textContent = fmtScore(SERVICE_SUPS[0].avg_comp) + ' avg';
+
+// Render supervisor tables from SERVICE_SUPS
+function renderSupTables() {
+  ['sup-rank-tbody','sup-kpi-tbody'].forEach(id => {
+    const tb = document.getElementById(id);
+    if (!tb) return;
+    tb.innerHTML = '';
+    const medals = ['🥇','🥈','🥉'];
+    SERVICE_SUPS.forEach((s, i) => {
+      const medal = medals[i] || '';
+      const rc = s.avg_comp >= 1.00 ? '#0a7a3a' : s.avg_comp >= 0.90 ? '#c07000' : s.avg_comp >= 0.80 ? '#d05800' : '#b01010';
+      // Get ranked positions for this supervisor
+      const locs = RANKED.filter(r => r.sup === s.sup).map(r => r.rank).sort((a,b)=>a-b);
+      const avgRank = locs.length ? (locs.reduce((a,b)=>a+b,0)/locs.length).toFixed(1) : '—';
+      const isRankTable = id === 'sup-rank-tbody';
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;color:#888;text-align:center;width:28px">${i+1}</td>
+        <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea;font-size:${isRankTable?'15':'16'}px;width:${isRankTable?28:26}px">${medal}</td>
+        <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea"><span style="display:inline-block;padding:${isRankTable?'2':'3'}px 10px;border-radius:20px;font-size:11px;font-weight:700;background:${s.color}22;color:${s.color};border:1px solid ${s.color}44">${s.sup}</span></td>
+        <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;font-size:${isRankTable?'15':'16'}px;color:${rc};text-align:center">${fmtScore(s.avg_comp)}</td>
+        <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea;text-align:center;color:#${isRankTable?'888':'666'};font-size:${isRankTable?'12':'13'}px">${s.count}</td>
+        ${isRankTable ? `<td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;color:#aaa;font-size:11px">${locs.join(', ')}</td>` : ''}
+      `;
+      tb.appendChild(tr);
+    });
+  });
+}
+renderSupTables();
 document.getElementById('at-std').textContent = RANKED.filter(r=>r.composite>=1.00).length + ' / 34';
+const topGM = RANKED[0];
+document.getElementById('top-gm-name').textContent = topGM.gm;
+document.getElementById('top-gm-sub').innerHTML = '<span style="display:inline-block;padding:1px 8px;border-radius:20px;font-size:10px;font-weight:700;background:'+topGM.supColor+'22;color:'+topGM.supColor+';border:1px solid '+topGM.supColor+'44">'+topGM.sup+'</span>&nbsp; '+fmtScore(topGM.composite);
 
 // Render ranking table
 const tbody = document.getElementById('rank-tbody');
@@ -758,13 +481,29 @@ function sortByKPI(kpi) {
 
   const tbody = document.getElementById('rank-tbody');
   tbody.innerHTML = '';
-  [...sorted, ...nulls].forEach((r, i) => {
+  const allRows = [...sorted, ...nulls];
+  const total = allRows.length;
+  const third = Math.ceil(total / 3);
+
+  function tierBg(i) {
+    if (i < third) return '#f0faf4';
+    if (i < third * 2) return '#fffdf0';
+    return '#fff5f5';
+  }
+  function tierStripe(i) {
+    if (i < third) return i % 2 === 0 ? '#e8f7ee' : '#f0faf4';
+    if (i < third * 2) return i % 2 === 0 ? '#fff8e0' : '#fffdf0';
+    return i % 2 === 0 ? '#ffeaea' : '#fff5f5';
+  }
+
+  allRows.forEach((r, i) => {
     const val = kpi === 'composite' ? r.composite : r[kpi];
-    const bg = val !== null && val !== undefined ? scoreBg(val) : '#f8f8f8';
     const displayVal = val !== null && val !== undefined ? fmtScore(val) : '—';
     const dispColor = val !== null && val !== undefined ? scoreColor(val) : '#bbb';
+    const rowBg = tierStripe(i);
+
     const tr = document.createElement('tr');
-    tr.style.background = bg;
+    tr.style.background = rowBg;
     tr.style.cursor = 'pointer';
     tr.onclick = ()=>window.showDetail(r.nsn);
     tr.innerHTML = `
@@ -779,6 +518,7 @@ function sortByKPI(kpi) {
 
 // Initial render
 sortByKPI('composite');
+renderSupTables();
 
 
 
@@ -815,7 +555,10 @@ function renderDetail(nsn) {
         <div>
           <div class="detail-name">${r.nsn} — ${r.gm}</div>
           <div class="detail-meta"><span style="color:${r.supColor};font-weight:600">${r.sup}</span> &nbsp;·&nbsp; Rank #${r.rank} of 34 &nbsp;·&nbsp; ${WEEK}</div>
-          <div class="detail-score-big" style="color:${scoreColor(comp)}">${fmtScore(comp)}</div>
+          <div style="display:flex;align-items:baseline;gap:8px">
+            <div class="detail-score-big" style="color:${scoreColor(comp)}">${fmtScore(comp)}</div>
+            <div style="font-size:13px;color:var(--muted);font-weight:500">of the standard</div>
+          </div>
           <span class="detail-tier" style="background:${scoreBg(comp)};color:${scoreColor(comp)};border:1px solid ${scoreColor(comp)}33">${tierLabel(comp)}</span>
         </div>
         <div style="text-align:right">
