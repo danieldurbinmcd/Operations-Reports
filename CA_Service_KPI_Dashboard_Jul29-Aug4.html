@@ -126,12 +126,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   50% { opacity: .4; transform: scale(.8); }
 }
 
+/* Hide scrollbar on tab row */
+.nav div::-webkit-scrollbar { display: none; }
+
 /* ── Mobile ── */
 @media (max-width: 768px) {
-  .nav { height: auto; flex-wrap: wrap; padding: 8px 12px 0; }
-  .nav-title { font-size: 13px; width: 100%; padding: 6px 0 2px; }
-  .nav-week { font-size: 9px; margin-right: 0; }
-  .tab { font-size: 10px; padding: 0 10px; height: 36px; letter-spacing: 0; }
+  .nav-title { font-size: 12px; }
+  .nav-week { font-size: 9px; }
+  .tab { font-size: 10px; padding: 0 10px; height: 38px; }
   .page { padding: 12px; }
   .summary-strip { gap: 8px; }
   .s-card { min-width: 130px; padding: 10px 12px; }
@@ -172,12 +174,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 </head>
 <body>
 
-<div class="nav" style="flex-wrap:wrap;height:auto;padding:0 24px">
-  <div style="width:100%;padding:8px 0 2px;display:flex;align-items:center;justify-content:space-between">
-    <div class="nav-title" style="font-size:17px;letter-spacing:.01em">California Alia Corp Efficiency Dashboard</div>
-    <div class="nav-week">WEEK OF JUL 29 – AUG 4, 2026</div>
+<div style="background:var(--accent);position:sticky;top:0;z-index:100;box-shadow:0 2px 8px #0003">
+  <div style="padding:8px 16px 4px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+    <div class="nav-title" style="font-size:15px;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">California Alia Corp Efficiency Dashboard</div>
+    <div class="nav-week" style="white-space:nowrap;flex-shrink:0">WEEK OF JUL 29 – AUG 4, 2026</div>
   </div>
-  <div style="display:flex;width:100%;border-top:1px solid #ffffff18;padding-bottom:2px">
+  <div style="display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;border-top:1px solid #ffffff18;padding-bottom:2px">
     <div class="tab active" onclick="window.showPage('page-rank', this)">Rankings</div>
   <div class="tab" onclick="window.showPage('page-kpi', this)">KPI Detail</div>
   <div class="tab" onclick="window.showPage('page-detail', this)">Location Detail</div>
@@ -306,8 +308,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
         <span style="font-size:14px">👆</span>
         <span>Click any location row to view its full KPI breakdown, pillar scores, and coaching actions.</span>
       </div>
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden">
-        <table style="width:100%;border-collapse:collapse;font-size:12px">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden"><div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table style="width:100%;min-width:360px;border-collapse:collapse;font-size:12px">
           <thead>
             <tr style="background:var(--accent);color:#fff">
               <th style="padding:8px 10px;text-align:left;font-size:9px;text-transform:uppercase;letter-spacing:.07em;font-weight:600">Location</th>
@@ -319,7 +320,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
             </tr>
           </thead>
           <tbody id="kpi-scores-tbody"></tbody>
-        </table>
+        </table></div>
       </div>
     </div>
 
