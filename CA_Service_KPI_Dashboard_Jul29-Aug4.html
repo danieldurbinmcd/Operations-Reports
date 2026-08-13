@@ -125,6 +125,49 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: .4; transform: scale(.8); }
 }
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .nav { height: auto; flex-wrap: wrap; padding: 8px 12px 0; }
+  .nav-title { font-size: 13px; width: 100%; padding: 6px 0 2px; }
+  .nav-week { font-size: 9px; margin-right: 0; }
+  .tab { font-size: 10px; padding: 0 10px; height: 36px; letter-spacing: 0; }
+  .page { padding: 12px; }
+  .summary-strip { gap: 8px; }
+  .s-card { min-width: 130px; padding: 10px 12px; }
+  .s-val { font-size: 15px; }
+  .weights-bar { gap: 8px; padding: 10px 12px; }
+  .w-chip { font-size: 10px; padding: 3px 8px; }
+  .rank-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .rank-table { min-width: 480px; }
+  .pillars { grid-template-columns: 1fr; }
+  .sup-grid { grid-template-columns: 1fr; }
+  .detail-select { min-width: 100%; }
+  .detail-select-wrap { flex-direction: column; align-items: flex-start; }
+  .detail-score-big { font-size: 28px; }
+  #page-kpi > div { grid-template-columns: 1fr !important; }
+  #page-kpi > div > div:nth-child(2) { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  #page-kpi > div > div:nth-child(2) table { min-width: 420px; }
+  #sup-loc-list .loc-action-header { flex-wrap: wrap; gap: 8px; }
+  #trends-grid { grid-template-columns: 1fr !important; }
+  #trend-improving, #trend-declining { min-width: 0; }
+  .sup-header-bar { flex-wrap: wrap; }
+  #trend-chart-wrap svg { height: auto !important; }
+  .about-card { padding: 16px; }
+  /* Improving/Declining panels stack on mobile */
+  #page-trends > div:last-child { grid-template-columns: 1fr !important; }
+  /* Supervisor view location cards */
+  .pillar-row { flex-wrap: wrap; gap: 6px; }
+  .pillar-action-text { min-width: 100%; }
+  /* Summary strip scrollable on very small screens */
+  .summary-strip { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; }
+  .s-card { flex: 0 0 auto; }
+}
+@media (max-width: 480px) {
+  .tab { font-size: 9px; padding: 0 7px; }
+  .nav-title { font-size: 12px; }
+}
+
 </style>
 </head>
 <body>
