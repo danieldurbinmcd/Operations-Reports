@@ -268,7 +268,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
             <th style="padding:10px 14px;text-align:center;font-size:10px;text-transform:uppercase;letter-spacing:.07em;font-weight:600;width:30px">#</th>
             <th style="padding:10px 14px;font-size:10px;text-transform:uppercase;letter-spacing:.07em;font-weight:600;width:28px"></th>
             <th style="padding:10px 14px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.07em;font-weight:600">Supervisor</th>
-            <th style="padding:10px 14px;text-align:center;font-size:10px;text-transform:uppercase;letter-spacing:.07em;font-weight:600">Avg Rank</th>
+            <th id="sup-rank-col-hdr" style="padding:10px 14px;text-align:center;font-size:10px;text-transform:uppercase;letter-spacing:.07em;font-weight:600">Avg Rank</th>
             <th style="padding:10px 14px;text-align:center;font-size:10px;text-transform:uppercase;letter-spacing:.07em;font-weight:600">Locations</th>
             <th style="padding:10px 14px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.07em;font-weight:600">Portfolio Ranks</th>
           </tr>
@@ -710,15 +710,35 @@ document.getElementById('top-sup').textContent = SERVICE_SUPS[0].sup;
 document.getElementById('top-sup-score').textContent = 'avg rank #' + SERVICE_SUPS[0].avg_rank.toFixed(1);
 
 // Render supervisor tables from SERVICE_SUPS
-function renderSupTables() {
+function renderSupTables(kpi) {
+  kpi = kpi || 'rank';
+  const kpiLabels = {rank:'Avg Rank',composite:'Avg Rank',k:'Avg DT',l:'Avg R2P',m:'Avg KVS',n:'Avg HUSS',del_idx:'Avg 3PO'};
+  const hdrEl = document.getElementById('sup-rank-col-hdr');
+  if (hdrEl) hdrEl.textContent = kpiLabels[kpi] || 'Avg Rank';
   ['sup-rank-tbody','sup-kpi-tbody'].forEach(id => {
     const tb = document.getElementById(id);
     if (!tb) return;
     tb.innerHTML = '';
     const medals = ['🥇','🥈','🥉'];
-    SERVICE_SUPS.forEach((s, i) => {
+    // Re-rank supervisors by selected KPI avg position
+    const supRanked = [...SERVICE_SUPS].map(s => {
+      if (kpi === 'rank' || kpi === 'composite') {
+        return {...s, display_rank: s.avg_rank, display_val: '#' + s.avg_rank.toFixed(1)};
+      }
+      // For a specific KPI, compute avg score on that KPI across their locations
+      const kpiVals = RANKED.filter(r => r.sup === s.sup).map(r => r[kpi]).filter(v => v !== null && v !== undefined);
+      const kpiAvg = kpiVals.length ? kpiVals.reduce((a,b)=>a+b,0)/kpiVals.length : null;
+      // Rank by score descending — higher is better
+      return {...s, kpi_avg: kpiAvg, display_val: kpiAvg !== null ? Math.round(kpiAvg*100)+'%' : '—'};
+    });
+    if (kpi !== 'rank' && kpi !== 'composite') {
+      supRanked.sort((a,b) => (b.kpi_avg||0) - (a.kpi_avg||0));
+    }
+    supRanked.forEach((s, i) => {
       const medal = medals[i] || '';
-      const rc = s.avg_rank <= 10 ? '#0a7a3a' : s.avg_rank <= 17 ? '#c07000' : '#b01010';
+      const rc = (kpi === 'rank' || kpi === 'composite')
+        ? (s.avg_rank <= 10 ? '#0a7a3a' : s.avg_rank <= 17 ? '#c07000' : '#b01010')
+        : (s.kpi_avg >= 1.00 ? '#0a7a3a' : s.kpi_avg >= 0.90 ? '#c07000' : s.kpi_avg >= 0.80 ? '#d05800' : '#b01010');
       const locs = s.ranks || RANKED.filter(r => r.sup === s.sup).map(r => r.rank).sort((a,b)=>a-b);
       const isRankTable = id === 'sup-rank-tbody';
       const tr = document.createElement('tr');
@@ -726,7 +746,7 @@ function renderSupTables() {
         <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;color:#888;text-align:center;width:28px">${i+1}</td>
         <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea;font-size:${isRankTable?'15':'16'}px;width:${isRankTable?28:26}px">${medal}</td>
         <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea"><span style="display:inline-block;padding:${isRankTable?'2':'3'}px 10px;border-radius:20px;font-size:11px;font-weight:700;background:${s.color}22;color:${s.color};border:1px solid ${s.color}44;cursor:pointer" onclick="window.showSupPage('${s.sup}')">${s.sup}</span></td>
-        <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;font-size:${isRankTable?'15':'16'}px;color:${rc};text-align:center">#${s.avg_rank.toFixed(1)}</td>
+        <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;font-size:${isRankTable?'15':'16'}px;color:${rc};text-align:center">${s.display_val}</td>
         <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea;text-align:center;color:#${isRankTable?'888':'666'};font-size:${isRankTable?'12':'13'}px">${s.count}</td>
         ${isRankTable ? `<td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;color:#aaa;font-size:11px">${locs.join(', ')}</td>` : ''}
       `;
@@ -1147,11 +1167,13 @@ window.sortByKPI = function(kpi) {
     `;
     tbody.appendChild(tr);
   });
+  // Re-rank supervisor table to match current KPI
+  renderSupTables(kpi);
 };
 
 // Initial render
 window.sortByKPI('composite');
-renderSupTables();
+renderSupTables('rank');
 
 
 
