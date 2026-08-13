@@ -1069,6 +1069,7 @@ initTrends();
       <td style="padding:7px 10px;border-bottom:1px solid #f0eeea;background:inherit">
         <div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">${r.nsn}</div>
         <div style="font-weight:600;font-size:11px">${r.gm}</div>
+        <div style="font-size:10px;color:${[r.k,r.l,r.m,r.n,...(r.del_wt>0?[r.del_idx]:[])].filter(v=>v!==null&&v<1.00).length===0?'#0a7a3a':[r.k,r.l,r.m,r.n,...(r.del_wt>0?[r.del_idx]:[])].filter(v=>v!==null&&v<1.00).length<=2?'#c07000':'#b01010'};margin-top:1px">${[r.k,r.l,r.m,r.n,...(r.del_wt>0?[r.del_idx]:[])].filter(v=>v!==null&&v<1.00).length}/${r.del_wt>0?5:4} below 100%</div>
       </td>
       <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:${scoreColor(r.k)};font-weight:600">${fmtScore(r.k)}</td>
       <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:${scoreColor(r.l)};font-weight:600">${fmtScore(r.l)}</td>
@@ -1141,7 +1142,7 @@ window.sortByKPI = function(kpi) {
     tr.onclick = ()=>window.showDetail(r.nsn);
     tr.innerHTML = `
       <td style="font-family:'DM Mono',monospace;font-weight:700;font-size:15px;color:${dispColor};width:36px;text-align:center;padding:10px 12px;border-bottom:1px solid #f0eeea">${i + 1}</td>
-      <td style="padding:10px 12px;border-bottom:1px solid #f0eeea"><div style="font-family:'DM Mono',monospace;font-size:11px;color:#888">${r.nsn}</div><div style="font-weight:600">${r.gm}</div></td>
+      <td style="padding:10px 12px;border-bottom:1px solid #f0eeea"><div style="font-family:'DM Mono',monospace;font-size:11px;color:#888">${r.nsn}</div><div style="font-weight:600">${r.gm}</div><div style="font-size:10px;color:${(()=>{const below=[r.k,r.l,r.m,r.n,...(r.del_wt>0?[r.del_idx]:[])].filter(v=>v!==null&&v<1.00).length;const total=r.del_wt>0?5:4;return below===0?'#0a7a3a':below<=2?'#c07000':'#b01010';})()};margin-top:2px">${(()=>{const below=[r.k,r.l,r.m,r.n,...(r.del_wt>0?[r.del_idx]:[])].filter(v=>v!==null&&v<1.00).length;const total=r.del_wt>0?5:4;return below+'/'+total+' below 100%';})()}</div></td>
       <td style="font-weight:700;color:${dispColor};font-size:15px;text-align:center;padding:10px 12px;border-bottom:1px solid #f0eeea">${displayVal}</td>
       <td style="padding:10px 12px;border-bottom:1px solid #f0eeea"><span style="display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;background:${r.supColor}22;color:${r.supColor};border:1px solid ${r.supColor}44">${r.sup}</span></td>
     `;
