@@ -715,28 +715,32 @@ function renderSupTables(kpi) {
   const kpiLabels = {rank:'Avg Rank',composite:'Avg Rank',k:'Avg DT',l:'Avg R2P',m:'Avg KVS',n:'Avg HUSS',del_idx:'Avg 3PO'};
   const hdrEl = document.getElementById('sup-rank-col-hdr');
   if (hdrEl) hdrEl.textContent = kpiLabels[kpi] || 'Avg Rank';
+  // KPI Detail sup table header always shows Avg Rank
+  const kpiHdrEl = document.getElementById('sup-kpi-col-hdr');
+  if (kpiHdrEl) kpiHdrEl.textContent = 'Avg Rank';
   ['sup-rank-tbody','sup-kpi-tbody'].forEach(id => {
+    const effectiveKPI = id === 'sup-kpi-tbody' ? 'rank' : kpi;
     const tb = document.getElementById(id);
     if (!tb) return;
     tb.innerHTML = '';
     const medals = ['🥇','🥈','🥉'];
     // Re-rank supervisors by selected KPI avg position
     const supRanked = [...SERVICE_SUPS].map(s => {
-      if (kpi === 'rank' || kpi === 'composite') {
+      if (effectiveKPI === 'rank' || effectiveKPI === 'composite') {
         return {...s, display_rank: s.avg_rank, display_val: '#' + s.avg_rank.toFixed(1)};
       }
       // For a specific KPI, compute avg score on that KPI across their locations
-      const kpiVals = RANKED.filter(r => r.sup === s.sup).map(r => r[kpi]).filter(v => v !== null && v !== undefined);
+      const kpiVals = RANKED.filter(r => r.sup === s.sup).map(r => r[effectiveKPI]).filter(v => v !== null && v !== undefined);
       const kpiAvg = kpiVals.length ? kpiVals.reduce((a,b)=>a+b,0)/kpiVals.length : null;
       // Rank by score descending — higher is better
       return {...s, kpi_avg: kpiAvg, display_val: kpiAvg !== null ? Math.round(kpiAvg*100)+'%' : '—'};
     });
-    if (kpi !== 'rank' && kpi !== 'composite') {
+    if (effectiveKPI !== 'rank' && effectiveKPI !== 'composite') {
       supRanked.sort((a,b) => (b.kpi_avg||0) - (a.kpi_avg||0));
     }
     supRanked.forEach((s, i) => {
       const medal = medals[i] || '';
-      const rc = (kpi === 'rank' || kpi === 'composite')
+      const rc = (effectiveKPI === 'rank' || effectiveKPI === 'composite')
         ? (s.avg_rank <= 10 ? '#0a7a3a' : s.avg_rank <= 17 ? '#c07000' : '#b01010')
         : (s.kpi_avg >= 1.00 ? '#0a7a3a' : s.kpi_avg >= 0.90 ? '#c07000' : s.kpi_avg >= 0.80 ? '#d05800' : '#b01010');
       const locs = s.ranks || RANKED.filter(r => r.sup === s.sup).map(r => r.rank).sort((a,b)=>a-b);
