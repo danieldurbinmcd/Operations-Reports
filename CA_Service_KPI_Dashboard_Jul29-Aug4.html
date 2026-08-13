@@ -696,17 +696,18 @@ document.getElementById('s1-score').textContent = fmtScore(top1.composite);
 // Build service-KPI sup rankings from RANKED
 const supMap = {};
 RANKED.forEach(r => {
-  if (!supMap[r.sup]) supMap[r.sup] = {sup: r.sup, color: r.supColor, comps: []};
+  if (!supMap[r.sup]) supMap[r.sup] = {sup: r.sup, color: r.supColor, ranks: [], comps: []};
+  supMap[r.sup].ranks.push(r.rank);
   supMap[r.sup].comps.push(r.composite || 0);
 });
-const SERVICE_SUPS = Object.values(supMap).map(s => ({
-  sup: s.sup, color: s.color,
-  avg_comp: s.comps.reduce((a,b)=>a+b,0)/s.comps.length,
-  count: s.comps.length
-})).sort((a,b) => b.avg_comp - a.avg_comp);
+const SERVICE_SUPS = Object.values(supMap).map(s => {
+  const avg_rank = s.ranks.reduce((a,b)=>a+b,0) / s.ranks.length;
+  const avg_comp = s.comps.reduce((a,b)=>a+b,0) / s.comps.length;
+  return {sup: s.sup, color: s.color, avg_rank: avg_rank, avg_comp: avg_comp, count: s.ranks.length, ranks: s.ranks.slice().sort((a,b)=>a-b)};
+}).sort((a,b) => a.avg_rank - b.avg_rank);
 
 document.getElementById('top-sup').textContent = SERVICE_SUPS[0].sup;
-document.getElementById('top-sup-score').textContent = fmtScore(SERVICE_SUPS[0].avg_comp) + ' avg';
+document.getElementById('top-sup-score').textContent = 'avg rank #' + SERVICE_SUPS[0].avg_rank.toFixed(1);
 
 // Render supervisor tables from SERVICE_SUPS
 function renderSupTables() {
@@ -717,17 +718,15 @@ function renderSupTables() {
     const medals = ['🥇','🥈','🥉'];
     SERVICE_SUPS.forEach((s, i) => {
       const medal = medals[i] || '';
-      const rc = s.avg_comp >= 1.00 ? '#0a7a3a' : s.avg_comp >= 0.90 ? '#c07000' : s.avg_comp >= 0.80 ? '#d05800' : '#b01010';
-      // Get ranked positions for this supervisor
-      const locs = RANKED.filter(r => r.sup === s.sup).map(r => r.rank).sort((a,b)=>a-b);
-      const avgRank = locs.length ? (locs.reduce((a,b)=>a+b,0)/locs.length).toFixed(1) : '—';
+      const rc = s.avg_rank <= 10 ? '#0a7a3a' : s.avg_rank <= 17 ? '#c07000' : '#b01010';
+      const locs = s.ranks || RANKED.filter(r => r.sup === s.sup).map(r => r.rank).sort((a,b)=>a-b);
       const isRankTable = id === 'sup-rank-tbody';
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;color:#888;text-align:center;width:28px">${i+1}</td>
         <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea;font-size:${isRankTable?'15':'16'}px;width:${isRankTable?28:26}px">${medal}</td>
         <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea"><span style="display:inline-block;padding:${isRankTable?'2':'3'}px 10px;border-radius:20px;font-size:11px;font-weight:700;background:${s.color}22;color:${s.color};border:1px solid ${s.color}44;cursor:pointer" onclick="window.showSupPage('${s.sup}')">${s.sup}</span></td>
-        <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;font-size:${isRankTable?'15':'16'}px;color:${rc};text-align:center">${fmtScore(s.avg_comp)}</td>
+        <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;font-size:${isRankTable?'15':'16'}px;color:${rc};text-align:center">#${s.avg_rank.toFixed(1)}</td>
         <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea;text-align:center;color:#${isRankTable?'888':'666'};font-size:${isRankTable?'12':'13'}px">${s.count}</td>
         ${isRankTable ? `<td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;color:#aaa;font-size:11px">${locs.join(', ')}</td>` : ''}
       `;
