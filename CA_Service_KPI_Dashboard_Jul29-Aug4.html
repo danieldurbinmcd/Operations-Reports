@@ -548,18 +548,45 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 <div class="page" id="page-about">
   <div class="about-card">
     <h3>How to Read Your Score</h3>
-    <p><strong>1.00 means you meet the standard on balance.</strong> Above 1.00, you're ahead. Below, you're behind. Scores are capped at 0.50–1.50 so no single extreme metric can dominate the composite.</p>
-    <p><strong>Effective DT Time (45% weight)</strong> — Timer OEPE + Parked% × Parked Time. Uses the magnetic plate timer (ungameable) where coverage is ≥ 80%. Falls back to bump basis with a red flag when timer is unavailable. Standard: 130s.</p>
-    <p><strong>R2P Front Counter (25% weight)</strong> — Receipt-to-present time at front counter. Gated: below 30s scores 0.85 penalty (physically impossible — investigate receipt-timing practices). Standard: 75s.</p>
-    <p><strong>KVS Time/Item (up to 30%, net of Side-2 weight)</strong> — Production speed per item, not per order. A restaurant building complex orders is not penalized. Gated: below 12s/item scores fixed penalty of 0.5 (data unreliable); below 12s/item scores 0.85 penalty (impossible number — investigate bump practices). Standard: 18s/item.</p>
-    <p><strong>Side-2 (HUSS) Deployment (up to 10%, volume-conditional · floor 0.90)</strong> — Bump discipline integrity. Standard: 80%. Below 50% triggers the KVS trust gate above.</p>
-    <p><strong>3PO Delivery Index (conditional, up to 15% weight)</strong> — Only for restaurants doing meaningful weekly delivery volume. Measures restaurant handoff time (60% weight) and order accuracy (40% weight). Driver drive time and courier ratings are not counted against you. Standard: 3.5 min handoff, 98.5% accuracy.</p>
+    <p><strong>1.00 means you meet the standard.</strong> Above 1.00, you're ahead. Below, you're behind. Every index is scored against a <em>fixed standard</em> — never against the portfolio average. A store's score can only move because the store's own performance moved. All index values are capped between 0.50 and 1.50 so no single extreme metric can dominate the composite.</p>
+
+    <p><strong>Effective DT Time (45%)</strong> — Measured by the HME magnetic plate timer at the food window — the one clock where crew gaming (early-bumping, bumping to Park) is actively policed with independent, non-manipulable data. The effective time includes parked-car impact: 120s OEPE standard plus a parked-car allowance = 130s fixed standard. Where timer coverage falls below 80%, the score falls back to bump basis and is flagged. Standard: <strong>130s</strong>.</p>
+
+    <p><strong>R2P — Received-to-Present (25%)</strong> — Receipt-to-present time at the front counter, measured from the moment the order is received to when it is presented to the guest. R2P is receipt-based and can be inflated via early present-clears — there is no independent front-counter clock, so the fixed standard removes benchmark pollution, but self-inflation is only auditable by observation or mystery shop. Gate: average postings below 30s are physically impossible and score a fixed penalty of <strong>0.85</strong>. Standard: <strong>75s</strong>.</p>
+
+    <p><strong>KVS Time / Item (up to 30%, net of Side-2 weight)</strong> — Kitchen production speed measured per item, not per order. A restaurant building larger, more complex orders is not penalized for the size of what it builds — only for how fast it builds each piece. The 30% total kitchen block is shared with Side-2: KVS speed weight = 30% − Side-2 weight. Gate: postings below 12s/item are physically impossible and score a fixed penalty of <strong>0.5</strong> — this indicates data manipulation, not a speed issue. No other gating applies. Standard: <strong>18.0 s/item</strong>.</p>
+
+    <p><strong>Side-2 (HUSS) Deployment (up to 10%, volume-conditional)</strong> — Measures consistent deployment of the second prep side, instated on queueing-theory grounds: opening Side-2 expedites throughput at consistently high sandwich demand. Weight is volume-conditional: <em>10% × MIN(1, weekly DT guest count / volume threshold)</em>. Low-volume stores that stay productive without Side-2 are barely touched. Underuse is a coaching issue, not a discipline issue — the index is <strong>floored at 0.90</strong> so underuse never drags a score much. Upside: strong deployment can reach 1.5× versus the standard. Standard: <strong>80% healthy usage</strong>.</p>
+
+    <p><strong>3PO Delivery Index (conditional, up to 15%)</strong> — Applies only to restaurants doing meaningful weekly delivery volume. Delivery weight scales with volume: <em>15% × MIN(1, weekly 3PO orders / volume threshold)</em>, scaling the four core KPIs down proportionally. Low-delivery stores are judged purely on the core four. The index measures the two things the restaurant controls: handoff time (60% weight) and order accuracy (40% weight, calculated as 1 − error items/orders). Courier delivery time and CSAT are excluded — not store-controlled. Standards: <strong>3.5 min handoff, 98.5% accuracy</strong>.</p>
+
+    <div style="background:#f7f6f2;border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-top:16px;margin-bottom:16px">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700;margin-bottom:10px">Fixed Standards at a Glance</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;font-size:12px">
+        <div><span style="font-weight:700;color:var(--accent)">Effective DT</span><br>130s</div>
+        <div><span style="font-weight:700;color:var(--accent)">R2P</span><br>75s</div>
+        <div><span style="font-weight:700;color:var(--accent)">KVS Speed</span><br>18.0 s/item</div>
+        <div><span style="font-weight:700;color:var(--accent)">Side-2 Usage</span><br>80%</div>
+        <div><span style="font-weight:700;color:var(--accent)">3PO Handoff</span><br>3.5 min</div>
+        <div><span style="font-weight:700;color:var(--accent)">3PO Accuracy</span><br>98.5%</div>
+      </div>
+    </div>
+
+    <div style="background:#fff8e0;border:1px solid #e0cc80;border-radius:10px;padding:14px 18px;margin-bottom:16px">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#8a6000;font-weight:700;margin-bottom:8px">Gate Rules</div>
+      <div style="font-size:12px;line-height:1.9;color:#444">
+        <div>⛔ <strong>R2P &lt; 30s</strong> — physically impossible → fixed penalty index <strong>0.85</strong> (discipline issue)</div>
+        <div>⛔ <strong>KVS &lt; 12s/item</strong> — physically impossible → fixed penalty index <strong>0.5</strong> (manipulation indicator)</div>
+        <div>🔶 <strong>Side-2 underuse</strong> — coaching issue, not penalty → index <strong>floored at 0.90</strong></div>
+      </div>
+    </div>
+
     <div class="score-legend">
-      <div class="legend-item"><div class="legend-dot" style="background:#d6f0e0"></div><span>≥ 1.10 — Excellent</span></div>
-      <div class="legend-item"><div class="legend-dot" style="background:#eaf7ee"></div><span>1.00 – 1.09 — Meets Standard</span></div>
-      <div class="legend-item"><div class="legend-dot" style="background:#fff8e0"></div><span>0.90 – 0.99 — Near Standard</span></div>
-      <div class="legend-item"><div class="legend-dot" style="background:#fff0e6"></div><span>0.80 – 0.89 — Below Standard</span></div>
-      <div class="legend-item"><div class="legend-dot" style="background:#ffeaea"></div><span>< 0.80 — Needs Attention</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#d6f0e0"></div><span>≥ 110% — Excellent</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#eaf7ee"></div><span>100% – 109% — Meets Standard</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#fff8e0"></div><span>90% – 99% — Near Standard</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#fff0e6"></div><span>80% – 89% — Below Standard</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ffeaea"></div><span>&lt; 80% — Needs Attention</span></div>
     </div>
   </div>
 </div>
