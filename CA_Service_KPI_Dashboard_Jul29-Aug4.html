@@ -101,17 +101,49 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .score-legend{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin-top:12px}
 .legend-item{display:flex;align-items:center;gap:8px;font-size:12px}
 .legend-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.sup-select{font-size:14px;padding:10px 16px;border:2px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);font-family:inherit;min-width:240px;cursor:pointer;transition:.2s}
+.sup-select:focus{outline:none;border-color:var(--accent)}
+.loc-action-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px;transition:.15s;cursor:pointer}
+.loc-action-card:hover{box-shadow:0 4px 16px #0001;transform:translateY(-1px)}
+.loc-action-header{display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid #f0eeea}
+.loc-action-score{font-family:'DM Mono',monospace;font-size:22px;font-weight:700;min-width:52px}
+.loc-action-name{flex:1}
+.loc-action-nsn{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)}
+.loc-action-gm{font-weight:700;font-size:14px}
+.loc-action-body{padding:16px 18px;display:none}
+.loc-action-body.open{display:block}
+.pillar-row{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #f8f6f0}
+.pillar-row:last-child{border-bottom:none}
+.pillar-score-sm{font-family:'DM Mono',monospace;font-weight:700;font-size:15px;min-width:44px;text-align:right}
+.pillar-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);min-width:60px}
+.pillar-action-text{font-size:12px;line-height:1.7;color:#444;flex:1}
+.sup-header-bar{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.sup-avg-badge{font-family:'DM Mono',monospace;font-size:28px;font-weight:700}
+.sup-rank-badge{background:var(--accent);color:#fff;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .4; transform: scale(.8); }
+}
 </style>
 </head>
 <body>
 
-<div class="nav">
-  <div class="nav-title">CA Service KPI Dashboard</div>
-  <div class="nav-week">WEEK OF JUL 29 – AUG 4, 2026</div>
-  <div class="tab active" onclick="window.showPage('page-rank', this)">Rankings</div>
+<div class="nav" style="flex-wrap:wrap;height:auto;padding:0 24px">
+  <div style="width:100%;padding:8px 0 2px;display:flex;align-items:center;justify-content:space-between">
+    <div class="nav-title" style="font-size:17px;letter-spacing:.01em">California Alia Corp Efficiency Dashboard</div>
+    <div class="nav-week">WEEK OF JUL 29 – AUG 4, 2026</div>
+  </div>
+  <div style="display:flex;width:100%;border-top:1px solid #ffffff18;padding-bottom:2px">
+    <div class="tab active" onclick="window.showPage('page-rank', this)">Rankings</div>
   <div class="tab" onclick="window.showPage('page-kpi', this)">KPI Detail</div>
   <div class="tab" onclick="window.showPage('page-detail', this)">Location Detail</div>
+  <div class="tab" onclick="window.showPage('page-sup-detail', this)">Supervisor View</div>
+  <div class="tab" onclick="window.showPage('page-weekday', this)">Weekday Detail</div>
+  <div class="tab" onclick="window.showPage('page-weekend', this)">Weekend Detail</div>
+  <div class="tab" onclick="window.showPage('page-trends', this)">Trends</div>
   <div class="tab" onclick="window.showPage('page-about', this)">How to Read</div>
+  </div>
 </div>
 
 <!-- ═══ RANKINGS PAGE ═══ -->
@@ -151,12 +183,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 
   <div class="weights-bar">
     <div class="w-lbl">Sort by KPI:</div>
-    <div class="w-chip w-clickable active-kpi" id="kpi-composite" onclick="sortByKPI('composite')" title="Overall composite score"><span class="wt">All</span><span class="wn">Composite</span></div>
-    <div class="w-chip w-clickable" id="kpi-k" onclick="sortByKPI('k')" title="Effective DT Time — 50% weight"><span class="wt">50%</span><span class="wn">Effective DT Time</span></div>
-    <div class="w-chip w-clickable" id="kpi-m" onclick="sortByKPI('m')" title="KVS Time/Item — 20% weight"><span class="wt">20%</span><span class="wn">KVS Time/Item</span></div>
-    <div class="w-chip w-clickable" id="kpi-l" onclick="sortByKPI('l')" title="R2P Front Counter — 15% weight"><span class="wt">15%</span><span class="wn">R2P Front Counter</span></div>
-    <div class="w-chip w-clickable" id="kpi-n" onclick="sortByKPI('n')" title="KVS Healthy Usage — 15% weight"><span class="wt">15%</span><span class="wn">HUSS</span></div>
-    <div class="w-chip w-clickable" id="kpi-3po" onclick="sortByKPI('del_idx')" title="3PO Delivery — conditional up to 15%"><span class="wt">≤15%</span><span class="wn">3PO Delivery</span></div>
+    <div class="w-chip w-clickable active-kpi" id="kpi-composite" onclick="window.sortByKPI('composite')" title="Overall composite score"><span class="wt">All</span><span class="wn">Composite</span></div>
+    <div class="w-chip w-clickable" id="kpi-k" onclick="window.sortByKPI('k')" title="Effective DT Time — 50% weight"><span class="wt">50%</span><span class="wn">Effective DT Time</span></div>
+    <div class="w-chip w-clickable" id="kpi-l" onclick="window.sortByKPI('l')" title="R2P Front Counter — 20% weight"><span class="wt">20%</span><span class="wn">R2P Front Counter</span></div>
+    <div class="w-chip w-clickable" id="kpi-m" onclick="window.sortByKPI('m')" title="KVS Time/Item — 30% weight"><span class="wt">30%</span><span class="wn">KVS Time/Item</span></div>
+    <div class="w-chip w-clickable" id="kpi-n" onclick="window.sortByKPI('n')" title="HUSS — variable weight by location volume"><span class="wt">variable</span><span class="wn">HUSS</span></div>
+    <div class="w-chip w-clickable" id="kpi-3po" onclick="window.sortByKPI('del_idx')" title="3PO Delivery — conditional up to 15%"><span class="wt">≤15%</span><span class="wn">3PO Delivery</span></div>
   </div>
 
   <div style="font-size:12px;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:6px">
@@ -179,7 +211,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   </div>
 
   <div style="margin-top:24px">
-    <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--accent);margin-bottom:14px">Supervisor Rankings</div>
+    <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--accent);margin-bottom:8px">Supervisor Rankings</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:6px">
+      <span style="font-size:14px">👆</span>
+      <span>Click a supervisor name to review their full patch results and location action items.</span>
+    </div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden">
       <table style="width:100%;border-collapse:collapse;font-size:13px">
         <thead>
@@ -216,55 +252,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
               <th style="padding:10px 14px;text-align:center;font-size:10px;text-transform:uppercase;letter-spacing:.07em;font-weight:600">Locs</th>
             </tr>
           </thead>
-          <tbody><tr>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;color:#888;text-align:center;width:28px">1</td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;font-size:16px;width:26px">🥇</td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea"><span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:#1a7a4a22;color:#1a7a4a;border:1px solid #1a7a4a44">Michelle</span></td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;font-size:16px;color:#1a9a5a;text-align:center">10.8</td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;text-align:center;color:#666">6</td>
-    </tr>
-<tr>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;color:#888;text-align:center;width:28px">2</td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;font-size:16px;width:26px">🥈</td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea"><span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:#2e7d3222;color:#2e7d32;border:1px solid #2e7d3244">Mike</span></td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;font-size:16px;color:#1a9a5a;text-align:center">12.6</td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;text-align:center;color:#666">5</td>
-    </tr>
-<tr>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;color:#888;text-align:center;width:28px">3</td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;font-size:16px;width:26px">🥉</td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea"><span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:#b87a0022;color:#b87a00;border:1px solid #b87a0044">Raymond</span></td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;font-size:16px;color:#1a9a5a;text-align:center">12.7</td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;text-align:center;color:#666">3</td>
-    </tr>
-<tr>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;color:#888;text-align:center;width:28px">4</td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;font-size:16px;width:26px"></td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea"><span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:#0097a722;color:#0097a7;border:1px solid #0097a744">Ray</span></td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;font-size:16px;color:#c07000;text-align:center">16.2</td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;text-align:center;color:#666">4</td>
-    </tr>
-<tr>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;color:#888;text-align:center;width:28px">5</td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;font-size:16px;width:26px"></td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea"><span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:#e6510022;color:#e65100;border:1px solid #e6510044">Sylvia</span></td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;font-size:16px;color:#d05800;text-align:center">20.5</td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;text-align:center;color:#666">6</td>
-    </tr>
-<tr>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;color:#888;text-align:center;width:28px">6</td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;font-size:16px;width:26px"></td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea"><span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:#7b3fa822;color:#7b3fa8;border:1px solid #7b3fa844">Mona</span></td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;font-size:16px;color:#d05800;text-align:center">21.5</td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;text-align:center;color:#666">6</td>
-    </tr>
-<tr>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;color:#888;text-align:center;width:28px">7</td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;font-size:16px;width:26px"></td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea"><span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:#c0392b22;color:#c0392b;border:1px solid #c0392b44">Elton</span></td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;font-size:16px;color:#b01010;text-align:center">27.0</td>
-      <td style="padding:10px 14px;border-bottom:1px solid #f0eeea;text-align:center;color:#666">4</td>
-    </tr></tbody>
+          <tbody id="sup-kpi-tbody"></tbody>
         </table>
       </div>
     </div>
@@ -287,7 +275,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
               <th style="padding:8px 10px;text-align:center;font-size:9px;text-transform:uppercase;letter-spacing:.07em;font-weight:600">3PO</th>
             </tr>
           </thead>
-          <tbody id="sup-kpi-tbody"></tbody>
+          <tbody id="kpi-scores-tbody"></tbody>
         </table>
       </div>
     </div>
@@ -304,15 +292,223 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   <div id="detail-content"></div>
 </div>
 
+<!-- ═══ SUPERVISOR VIEW PAGE ═══ -->
+<div class="page" id="page-sup-detail">
+  <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap">
+    <div style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--accent)">Supervisor View</div>
+    <select class="sup-select" id="sup-page-select" onchange="renderSupPage(this.value)"></select>
+  </div>
+
+  <div style="margin-bottom:20px">
+    <div style="display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;background:#f7f6f2;border:1px solid var(--border);border-radius:10px;padding:10px 16px;transition:.15s" onmouseover="this.style.background='#eeecea'" onmouseout="this.style.background='#f7f6f2'" onclick="toggleGuide()">
+      <span style="font-size:16px">📋</span>
+      <div style="font-family:'DM Serif Display',serif;font-size:18px;color:var(--accent)">Daily Execution Guide</div>
+      <span style="font-size:11px;color:var(--muted);font-weight:600;padding:2px 10px;background:#fff;border:1px solid var(--border);border-radius:20px">Supervisor Reference</span>
+      <span style="font-size:11px;color:var(--muted);font-style:italic">click to expand</span>
+      <span id="guide-chevron" style="color:#aaa;font-size:16px;margin-left:auto;transition:.2s">▼</span>
+    </div>
+    <div id="daily-guide" style="display:none;margin-top:14px">
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
+
+        <div style="background:#fff;border:1px solid var(--border);border-left:4px solid #1a3557;border-radius:0 12px 12px 0;padding:16px 18px">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#1a3557;font-weight:700;margin-bottom:8px">① Labor — Set Up to Win</div>
+          <div style="font-size:12px;line-height:1.8;color:#444">
+            Labor is not a day-of activity — it is a system built <strong>1–2 weeks in advance</strong>. If labor is wrong this week, the failure happened last week.<br><br>
+            <strong>Non-Negotiable Checks:</strong>
+            <ul style="margin:6px 0 0 16px;padding:0">
+              <li>No unassigned shifts — every shift is filled</li>
+              <li>Variable hours align to VLH guidelines</li>
+              <li>Scheduled TPPH matches target TPPH</li>
+              <li>Peak periods properly staffed and deployed</li>
+            </ul>
+            <div style="margin-top:8px;font-size:11px;color:#1a3557;font-style:italic">If the schedule does not align with VLH and TPPH targets, the operation is set up to fail before the week begins.</div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border:1px solid var(--border);border-left:4px solid #0a7a3a;border-radius:0 12px 12px 0;padding:16px 18px">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#0a7a3a;font-weight:700;margin-bottom:8px">② Evaluate Results — Daily Order</div>
+          <div style="font-size:12px;line-height:1.8;color:#444">
+            <strong>Review in this order:</strong>
+            <ol style="margin:6px 0 0 16px;padding:0">
+              <li><strong>Sales &amp; Transactions</strong> — QSRSoft / Daily Labor Sheet<br><span style="font-size:11px;color:#666">What happened — not why</span></li>
+              <li><strong>Labor Results</strong> — Hours vs Plan, TPPH vs Target<br><span style="font-size:11px;color:#666">Did labor create the capacity to win?</span></li>
+              <li><strong>Service KPIs</strong> — By daypart &amp; hour<br><span style="font-size:11px;color:#666">Service exposes execution</span></li>
+              <li><strong>Operations Metrics</strong> — Deployment, positions, breaks<br><span style="font-size:11px;color:#666">Operations reveal leadership</span></li>
+            </ol>
+          </div>
+        </div>
+
+        <div style="background:#fff;border:1px solid var(--border);border-left:4px solid #c07000;border-radius:0 12px 12px 0;padding:16px 18px">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#c07000;font-weight:700;margin-bottom:8px">③ Diagnose the System</div>
+          <div style="font-size:12px;line-height:1.8;color:#444">
+            <strong>Diagnose in reverse order:</strong><br>
+            <span style="font-family:'DM Mono',monospace;font-size:11px;background:#fff8e0;padding:2px 8px;border-radius:4px">Labor → Operations → Service → Sales</span><br><br>
+            <strong>Critical Question:</strong> Is this a <em>demand problem</em> or an <em>execution problem</em>?<br><br>
+            <div style="background:#fff8e0;border-radius:8px;padding:8px 12px;font-size:11px;color:#8a6000">
+              ❌ "Sales were down" / "Service was slow"<br>
+              ✅ "What decision created this outcome?"<br>
+              ✅ "Was this a planning failure or an execution failure?"
+            </div>
+            <div style="margin-top:8px;font-size:11px;color:#c07000;font-style:italic">If you did not identify the root cause, you did not solve the problem.</div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border:1px solid var(--border);border-left:4px solid #7b3fa8;border-radius:0 12px 12px 0;padding:16px 18px">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#7b3fa8;font-weight:700;margin-bottom:8px">④ Focus — Top 1–2 Problems</div>
+          <div style="font-size:12px;line-height:1.8;color:#444">
+            Not all problems matter equally. Identify the <strong>top 1–2 system problems</strong> and <strong>top 1–2 leadership gaps</strong>.<br><br>
+            You are not solving every problem — you are ensuring the <strong>right problems are owned</strong>.<br><br>
+            Ask: Is this complicated or complex? A complicated problem has a known fix. A complex problem requires a new approach.
+          </div>
+        </div>
+
+        <div style="background:#fff;border:1px solid var(--border);border-left:4px solid #c0392b;border-radius:0 12px 12px 0;padding:16px 18px">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#c0392b;font-weight:700;margin-bottom:8px">⑤ Develop the GM — Multiply Ownership</div>
+          <div style="font-size:12px;line-height:1.8;color:#444">
+            You do not solve the problem. You develop the person who will.<br><br>
+            <strong>Every conversation must drive 3 outcomes:</strong>
+            <ul style="margin:6px 0 0 16px;padding:0">
+              <li><strong>Clarity</strong> — Do they see the real problem?</li>
+              <li><strong>Ownership</strong> — Do they own the result?</li>
+              <li><strong>Adjustment</strong> — What will they do differently?</li>
+            </ul>
+            <div style="margin-top:8px;font-size:11px;color:#c0392b;font-style:italic">If the GM leaves without ownership, the problem remains yours.</div>
+          </div>
+        </div>
+
+        <div style="background:#1a3557;border-radius:12px;padding:16px 18px;color:#fff">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#a8c4e8;font-weight:700;margin-bottom:8px">The System Connection</div>
+          <div style="font-size:12px;line-height:1.8;color:#d0e4f8">
+            <span style="font-family:'DM Mono',monospace;font-size:11px">Last Week's Labor Plan</span><br>
+            <span style="color:#a8c4e8">↓</span><br>
+            <span style="font-family:'DM Mono',monospace;font-size:11px">Today's Operations</span><br>
+            <span style="color:#a8c4e8">↓</span><br>
+            <span style="font-family:'DM Mono',monospace;font-size:11px">Service Execution</span><br>
+            <span style="color:#a8c4e8">↓</span><br>
+            <span style="font-family:'DM Mono',monospace;font-size:11px">Sales Outcome</span>
+          </div>
+          <div style="margin-top:12px;font-size:11px;color:#a8c4e8;font-style:italic">Ownership is not centralized — it is multiplied. Performance improves when leaders at every level take responsibility.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div style="width:100%;height:1px;background:var(--border);margin-bottom:20px"></div>
+  <div id="sup-header-content"></div>
+  <div id="sup-loc-list"></div>
+</div>
+
+<!-- ═══ TRENDS PAGE ═══ -->
+<div class="page" id="page-trends">
+
+  <!-- Controls bar -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:20px">
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);min-width:70px">KPI:</div>
+      <div id="trend-kpi-pills" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);min-width:70px">Overlays:</div>
+      <button id="overlay-avg" onclick="toggleOverlay('avg')" style="padding:4px 14px;border-radius:20px;border:1px solid #1a7a4a;background:#1a7a4a;color:#fff;font-size:11px;font-weight:700;cursor:pointer">Portfolio Average</button>
+      <button id="overlay-std" onclick="toggleOverlay('std')" style="padding:4px 14px;border-radius:20px;border:1px solid #b87a00;background:#b87a00;color:#fff;font-size:11px;font-weight:700;cursor:pointer">Standard (1.00)</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);min-width:70px">Location:</div>
+      <select id="trend-loc-select" onchange="renderTrendChart(this.value)" style="font-size:13px;padding:6px 14px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);font-family:inherit;min-width:220px">
+        <option value="">— Select a location —</option>
+      </select>
+      <button onclick="document.getElementById('trend-loc-select').value='';renderTrendChart('')" style="padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);font-size:11px;cursor:pointer;color:var(--muted)">All Locations</button>
+    </div>
+  </div>
+
+  <!-- Chart area -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:20px;overflow:hidden">
+    <div id="trend-chart-wrap" style="padding:20px 24px;min-height:260px;display:flex;align-items:center;justify-content:center">
+      <div style="text-align:center;color:var(--muted)">
+        <div style="font-size:40px;margin-bottom:12px">📈</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--text);margin-bottom:8px">Select a Location to View Its Trend</div>
+        <div style="font-size:13px;line-height:1.7;max-width:380px">Choose a location from the dropdown above to see its week-over-week trend line for the selected KPI, with portfolio average and standard overlays.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Movement section -->
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)">Show Change:</div>
+    <button id="change-mode-first" onclick="setChangeMode('first')" style="padding:5px 16px;border-radius:20px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-size:11px;font-weight:700;cursor:pointer">First to Latest Week</button>
+    <button id="change-mode-wow"   onclick="setChangeMode('wow')"   style="padding:5px 16px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:11px;font-weight:600;cursor:pointer">Week over Week</button>
+    <button id="change-mode-streak" onclick="setChangeMode('streak')" style="padding:5px 16px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:11px;font-weight:600;cursor:pointer">Consecutive Streak</button>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div id="trend-improving" style="background:#f0faf4;border:1px solid #b8e0c8;border-radius:12px;overflow:hidden"></div>
+    <div id="trend-declining" style="background:#fff5f5;border:1px solid #f0b0b0;border-radius:12px;overflow:hidden"></div>
+  </div>
+
+</div>
+
+<!-- ═══ WEEKDAY DETAIL PAGE ═══ -->
+<div class="page" id="page-weekday">
+  <div style="position:relative;min-height:520px;background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 40px;text-align:center">
+
+    <!-- diagonal watermark -->
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;overflow:hidden">
+      <div style="font-size:clamp(48px,10vw,96px);font-weight:900;color:#1a3557;opacity:.04;white-space:nowrap;transform:rotate(-25deg);letter-spacing:.05em;user-select:none">COMING SOON</div>
+    </div>
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;overflow:hidden;transform:translateY(60px)">
+      <div style="font-size:clamp(48px,10vw,96px);font-weight:900;color:#1a3557;opacity:.025;white-space:nowrap;transform:rotate(-25deg);letter-spacing:.05em;user-select:none">COMING SOON</div>
+    </div>
+
+    <!-- content -->
+    <div style="position:relative;z-index:1">
+      <div style="font-size:56px;margin-bottom:16px">📅</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:28px;color:var(--accent);margin-bottom:10px">Weekday Detail</div>
+      <div style="font-size:14px;color:var(--muted);max-width:440px;line-height:1.8;margin-bottom:28px">Mon – Thu execution breakdown by location and daypart. OEPE, TPPH, labor efficiency, and service KPIs segmented for weekday-only performance — eliminating weekend volume from the weekday picture.</div>
+      <div style="display:inline-flex;align-items:center;gap:8px;background:#1a355718;border:1px solid #1a355744;border-radius:20px;padding:8px 20px">
+        <span style="width:8px;height:8px;border-radius:50%;background:#1a3557;animation:pulse 1.5s infinite"></span>
+        <span style="font-size:12px;font-weight:700;color:#1a3557;letter-spacing:.06em;text-transform:uppercase">In Development</span>
+      </div>
+      <div style="margin-top:24px;font-size:12px;color:#bbb">Data configuration in progress — page will populate automatically once the dataset is ready.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ WEEKEND DETAIL PAGE ═══ -->
+<div class="page" id="page-weekend">
+  <div style="position:relative;min-height:520px;background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 40px;text-align:center">
+
+    <!-- diagonal watermark -->
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;overflow:hidden">
+      <div style="font-size:clamp(48px,10vw,96px);font-weight:900;color:#1a3557;opacity:.04;white-space:nowrap;transform:rotate(-25deg);letter-spacing:.05em;user-select:none">COMING SOON</div>
+    </div>
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;overflow:hidden;transform:translateY(60px)">
+      <div style="font-size:clamp(48px,10vw,96px);font-weight:900;color:#1a3557;opacity:.025;white-space:nowrap;transform:rotate(-25deg);letter-spacing:.05em;user-select:none">COMING SOON</div>
+    </div>
+
+    <!-- content -->
+    <div style="position:relative;z-index:1">
+      <div style="font-size:56px;margin-bottom:16px">🗓️</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:28px;color:var(--accent);margin-bottom:10px">Weekend Detail</div>
+      <div style="font-size:14px;color:var(--muted);max-width:440px;line-height:1.8;margin-bottom:28px">Saturday and Sunday execution breakdown by location. Weekend volume profiles, crew deployment efficiency, and service KPIs isolated from weekday patterns — showing how locations perform when volume and crew composition shift.</div>
+      <div style="display:inline-flex;align-items:center;gap:8px;background:#b87a0018;border:1px solid #b87a0044;border-radius:20px;padding:8px 20px">
+        <span style="width:8px;height:8px;border-radius:50%;background:#b87a00;animation:pulse 1.5s infinite"></span>
+        <span style="font-size:12px;font-weight:700;color:#b87a00;letter-spacing:.06em;text-transform:uppercase">In Development</span>
+      </div>
+      <div style="margin-top:24px;font-size:12px;color:#bbb">Data configuration in progress — page will populate automatically once the dataset is ready.</div>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ ABOUT PAGE ═══ -->
 <div class="page" id="page-about">
   <div class="about-card">
     <h3>How to Read Your Score</h3>
     <p><strong>1.00 means you meet the standard on balance.</strong> Above 1.00, you're ahead. Below, you're behind. Scores are capped at 0.50–1.50 so no single extreme metric can dominate the composite.</p>
     <p><strong>Effective DT Time (50% weight)</strong> — Timer OEPE + Parked% × Parked Time. Uses the magnetic plate timer (ungameable) where coverage is ≥ 80%. Falls back to bump basis with a red flag when timer is unavailable. Standard: 130s.</p>
-    <p><strong>R2P Front Counter (15% weight)</strong> — Receipt-to-present time at front counter. Gated: below 30s scores 0.85 penalty (physically impossible — investigate receipt-timing practices). Standard: 45s.</p>
-    <p><strong>KVS Time/Item (20% weight)</strong> — Production speed per item, not per order. A restaurant building complex orders is not penalized. Gated: below 50% healthy usage scores neutral 1.00 (data unreliable); below 12s/item scores 0.85 penalty (impossible number — investigate bump practices). Standard: 18s/item.</p>
-    <p><strong>KVS Healthy Usage (15% weight)</strong> — Bump discipline integrity. Standard: 80%. Below 50% triggers the KVS trust gate above.</p>
+    <p><strong>R2P Front Counter (20% weight)</strong> — Receipt-to-present time at front counter. Gated: below 30s scores 0.85 penalty (physically impossible — investigate receipt-timing practices). Standard: 45s.</p>
+    <p><strong>KVS Time/Item (30% weight)</strong> — Production speed per item, not per order. A restaurant building complex orders is not penalized. Gated: below 50% healthy usage scores neutral 1.00 (data unreliable); below 12s/item scores 0.85 penalty (impossible number — investigate bump practices). Standard: 18s/item.</p>
+    <p><strong>HUSS / Side-2 Deployment (variable weight by location volume)</strong> — Bump discipline integrity. Standard: 80%. Below 50% triggers the KVS trust gate above.</p>
     <p><strong>3PO Delivery Index (conditional, up to 15% weight)</strong> — Only for restaurants doing meaningful weekly delivery volume. Measures restaurant handoff time (60% weight) and order accuracy (40% weight). Driver drive time and courier ratings are not counted against you. Standard: 3.0 min handoff, 98% accuracy.</p>
     <div class="score-legend">
       <div class="legend-item"><div class="legend-dot" style="background:#d6f0e0"></div><span>≥ 1.10 — Excellent</span></div>
@@ -324,43 +520,88 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   </div>
 </div>
 
+
 <script>
 const RANKED = [
-{"rank": 1, "nsn": "40959", "gm": "Jose Sanchez", "sup": "Raymond", "supColor": "#b87a00", "composite": 1.0032, "k": 1.0987, "l": 1.1538, "m": 1.0, "n": 0.5, "eff_dt": 118.3, "r2p": 39, "kvs_item": 19.5, "kvs_healthy": 0.0, "timer_oepe": 118.0, "gap": 0.0, "coverage": 0.99, "pct_120": 0.6066, "del_gc": 32, "del_time": 1.5, "del_acc": 0.9688, "del_idx": 1.2954, "del_wt": 0.0192, "action_dt": "DT time of 118s is at or below the 130s standard. Maintain discipline and use this as a benchmark conversation.", "action_r2p": "R2P of 39s meets the 45s standard. Maintain focus on order accuracy and receipt-handoff timing.", "action_kvs": "KVS healthy usage is — — below the 50% gate. KVS item times are unreliable for scoring at this healthy level. Coach on KVS adoption before addressing speed targets.", "action_healthy": "Healthy usage of — is below the 50% gate — KVS timing data is not trusted for scoring. Requires direct coaching on system engagement. Every order must go through KVS.", "action_3po": "3PO performance is strong — handoff time 1.5m, accuracy 96.9%. Delivery volume: 32 orders/week."},
-{"rank": 2, "nsn": "10865", "gm": "Maria Figueroa", "sup": "Raymond", "supColor": "#b87a00", "composite": 0.9576, "k": 0.9866, "l": 1.4062, "m": 0.85, "n": 0.5, "eff_dt": 131.8, "r2p": 32, "kvs_item": 11.0, "kvs_healthy": 0.108, "timer_oepe": 120.0, "gap": 7.0, "coverage": 0.97, "pct_120": 0.603, "del_gc": 114, "del_time": 2.7, "del_acc": 0.9912, "del_idx": 1.0712, "del_wt": 0.0684, "action_dt": "DT time of 132s is slightly above the 130s standard. Review positioning and presenter efficiency at peak.", "action_r2p": "R2P of 32s meets the 45s standard. Maintain focus on order accuracy and receipt-handoff timing.", "action_kvs": "KVS healthy usage is 10.8% (below 50% gate) AND item time is 11.0s — below the 12s physical floor. This receives a discipline penalty (0.85). KVS times are not reliable. Investigate bump practices immediately.", "action_healthy": "Healthy usage of 10.8% is below the 50% gate — KVS timing data is not trusted for scoring. Requires direct coaching on system engagement. Every order must go through KVS.", "action_3po": "3PO performance is strong — handoff time 2.7m, accuracy 99.1%. Delivery volume: 114 orders/week."},
-{"rank": 3, "nsn": "22694", "gm": "Juan Gomez", "sup": "Michelle", "supColor": "#1a7a4a", "composite": 0.9541, "k": 1.0967, "l": 1.0714, "m": 0.85, "n": 0.5, "eff_dt": 118.5, "r2p": 42, "kvs_item": 10.3, "kvs_healthy": 0.0, "timer_oepe": 117.0, "gap": 12.0, "coverage": 0.98, "pct_120": 0.6131, "del_gc": 0, "del_time": null, "del_acc": null, "del_idx": null, "del_wt": 0, "action_dt": "DT time of 118s is at or below the 130s standard. Maintain discipline and use this as a benchmark conversation.", "action_r2p": "R2P of 42s meets the 45s standard. Maintain focus on order accuracy and receipt-handoff timing.", "action_kvs": "KVS healthy usage is — (below 50% gate) AND item time is 10.3s — below the 12s physical floor. This receives a discipline penalty (0.85). KVS times are not reliable. Investigate bump practices immediately.", "action_healthy": "Healthy usage of — is below the 50% gate — KVS timing data is not trusted for scoring. Requires direct coaching on system engagement. Every order must go through KVS.", "action_3po": "Delivery volume is below the threshold for scoring. No 3PO action required this week."},
-{"rank": 4, "nsn": "7932", "gm": "Gloria Huizar", "sup": "Elton", "supColor": "#c0392b", "composite": 0.9361, "k": 0.7617, "l": 0.85, "m": 1.2857, "n": 1.1564, "eff_dt": 170.7, "r2p": 28, "kvs_item": 14.0, "kvs_healthy": 0.9251, "timer_oepe": 141.0, "gap": -2.0, "coverage": 0.98, "pct_120": 0.5019, "del_gc": 188, "del_time": 3.5, "del_acc": 0.9787, "del_idx": 0.9138, "del_wt": 0.1128, "action_dt": "Effective DT time is 171s including parked cars. Focus on order accuracy to reduce parked frequency, and grill-to-window handoff speed.", "action_r2p": "R2P of 28s is below the 30s plausibility floor — this score receives a discipline penalty (0.85). Investigate receipt-timing practices at front counter. This is a discipline issue, not a speed issue.", "action_kvs": "KVS item time of 14.0s meets the 18s standard. Healthy usage at 92.5% — maintain bump discipline.", "action_healthy": "Healthy usage of 92.5% meets the 80% standard. Continue reinforcing KVS engagement with all crew members, especially during high-volume periods.", "action_3po": "3PO performance is strong — handoff time 3.5m, accuracy 97.9%. Delivery volume: 188 orders/week."},
-{"rank": 5, "nsn": "37958", "gm": "Martha Perez", "sup": "Raymond", "supColor": "#b87a00", "composite": 0.9359, "k": 0.9381, "l": 0.85, "m": 0.9424, "n": 0.951, "eff_dt": 138.6, "r2p": 21, "kvs_item": 19.1, "kvs_healthy": 0.7608, "timer_oepe": 136.0, "gap": -3.0, "coverage": 0.98, "pct_120": 0.476, "del_gc": 36, "del_time": 1.3, "del_acc": 1.0, "del_idx": 1.3082, "del_wt": 0.0216, "action_dt": "DT time of 139s is slightly above the 130s standard. Review positioning and presenter efficiency at peak.", "action_r2p": "R2P of 21s is below the 30s plausibility floor — this score receives a discipline penalty (0.85). Investigate receipt-timing practices at front counter. This is a discipline issue, not a speed issue.", "action_kvs": "KVS item time is 19.1s — slightly above the 18s standard. Small improvements in item assembly sequencing and pre-positioning would close the gap.", "action_healthy": "Healthy usage of 76.1% is below the 80% standard. Work with the GM to identify which dayparts or crew members are bypassing KVS and build corrective habits.", "action_3po": "3PO performance is strong — handoff time 1.3m, accuracy 100.0%. Delivery volume: 36 orders/week."},
-{"rank": 6, "nsn": "36285", "gm": "Salma Chavez - Interim", "sup": "Sylvia", "supColor": "#e65100", "composite": 0.9309, "k": 0.7268, "l": 1.125, "m": 1.1688, "n": 1.0421, "eff_dt": 178.9, "r2p": 40, "kvs_item": 15.4, "kvs_healthy": 0.8337, "timer_oepe": 167.0, "gap": 20.0, "coverage": 0.97, "pct_120": 0.3989, "del_gc": 86, "del_time": 2.6, "del_acc": 0.9767, "del_idx": 1.091, "del_wt": 0.0516, "action_dt": "Gap between timer and bump OEPE is 20s — investigate bump-discipline. Early bumping may be masking true drive-thru time. Effective DT time is 179s including parked cars. Focus on order accuracy to reduce parked frequency, and grill-to-window handoff speed.", "action_r2p": "R2P of 40s meets the 45s standard. Maintain focus on order accuracy and receipt-handoff timing.", "action_kvs": "KVS item time of 15.4s meets the 18s standard. Healthy usage at 83.4% — maintain bump discipline.", "action_healthy": "Healthy usage of 83.4% meets the 80% standard. Continue reinforcing KVS engagement with all crew members, especially during high-volume periods.", "action_3po": "3PO performance is strong — handoff time 2.6m, accuracy 97.7%. Delivery volume: 86 orders/week."},
-{"rank": 7, "nsn": "6891", "gm": "Soran Meyers", "sup": "Elton", "supColor": "#c0392b", "composite": 0.9204, "k": 0.8764, "l": 0.8333, "m": 1.0465, "n": 0.8853, "eff_dt": 148.3, "r2p": 54, "kvs_item": 17.2, "kvs_healthy": 0.7082, "timer_oepe": 138.0, "gap": -2.0, "coverage": 1.0, "pct_120": 0.4754, "del_gc": 153, "del_time": 2.7, "del_acc": 0.9869, "del_idx": 1.0695, "del_wt": 0.0918, "action_dt": "Effective DT time is 148s including parked cars. Focus on order accuracy to reduce parked frequency, and grill-to-window handoff speed.", "action_r2p": "R2P of 54s is above the 45s standard. Small improvement at front-counter staging and order readiness would bring this to target.", "action_kvs": "KVS item time of 17.2s meets the 18s standard. Healthy usage at 70.8% — maintain bump discipline.", "action_healthy": "Healthy usage of 70.8% is below the 80% standard. Work with the GM to identify which dayparts or crew members are bypassing KVS and build corrective habits.", "action_3po": "3PO performance is strong — handoff time 2.7m, accuracy 98.7%. Delivery volume: 153 orders/week."},
-{"rank": 8, "nsn": "16753", "gm": "Monica Garcia", "sup": "Raymond", "supColor": "#b87a00", "composite": 0.914, "k": 1.053, "l": 0.75, "m": 1.0, "n": 0.5, "eff_dt": 123.5, "r2p": 60, "kvs_item": 23.9, "kvs_healthy": 0.0859, "timer_oepe": 122.0, "gap": 5.0, "coverage": 1.02, "pct_120": 0.5696, "del_gc": 0, "del_time": null, "del_acc": null, "del_idx": null, "del_wt": 0, "action_dt": "DT time of 124s is at or below the 130s standard. Maintain discipline and use this as a benchmark conversation.", "action_r2p": "R2P of 60s is above the 45s standard. Small improvement at front-counter staging and order readiness would bring this to target.", "action_kvs": "KVS healthy usage is 8.6% — below the 50% gate. KVS item times are unreliable for scoring at this healthy level. Coach on KVS adoption before addressing speed targets.", "action_healthy": "Healthy usage of 8.6% is below the 50% gate — KVS timing data is not trusted for scoring. Requires direct coaching on system engagement. Every order must go through KVS.", "action_3po": "Delivery volume is below the threshold for scoring. No 3PO action required this week."},
-{"rank": 9, "nsn": "24135", "gm": "Ashley Andujar", "sup": "Michelle", "supColor": "#1a7a4a", "composite": 0.9137, "k": 0.9827, "l": 0.8824, "m": 1.0, "n": 0.5, "eff_dt": 132.3, "r2p": 51, "kvs_item": 17.1, "kvs_healthy": 0.1741, "timer_oepe": 123.0, "gap": 4.0, "coverage": 0.93, "pct_120": 0.5511, "del_gc": 240, "del_time": 3.0, "del_acc": 0.9875, "del_idx": 1.0031, "del_wt": 0.144, "action_dt": "DT time of 132s is slightly above the 130s standard. Review positioning and presenter efficiency at peak.", "action_r2p": "R2P of 51s is above the 45s standard. Small improvement at front-counter staging and order readiness would bring this to target.", "action_kvs": "KVS healthy usage is 17.4% — below the 50% gate. KVS item times are unreliable for scoring at this healthy level. Coach on KVS adoption before addressing speed targets.", "action_healthy": "Healthy usage of 17.4% is below the 50% gate — KVS timing data is not trusted for scoring. Requires direct coaching on system engagement. Every order must go through KVS.", "action_3po": "3PO performance is strong — handoff time 3.0m, accuracy 98.8%. Delivery volume: 240 orders/week."},
-{"rank": 10, "nsn": "21383", "gm": "Janeth Alvarez", "sup": "Elton", "supColor": "#c0392b", "composite": 0.9095, "k": 0.8739, "l": 1.0714, "m": 0.9, "n": 0.8571, "eff_dt": 148.8, "r2p": 42, "kvs_item": 20.0, "kvs_healthy": 0.6857, "timer_oepe": 143.0, "gap": 27.0, "coverage": 0.97, "pct_120": 0.4306, "del_gc": 105, "del_time": 3.2, "del_acc": 0.9714, "del_idx": 0.959, "del_wt": 0.063, "action_dt": "Gap between timer and bump OEPE is 27s — investigate bump-discipline. Early bumping may be masking true drive-thru time. Effective DT time is 149s including parked cars. Focus on order accuracy to reduce parked frequency, and grill-to-window handoff speed.", "action_r2p": "R2P of 42s meets the 45s standard. Maintain focus on order accuracy and receipt-handoff timing.", "action_kvs": "KVS item time is 20.0s — slightly above the 18s standard. Small improvements in item assembly sequencing and pre-positioning would close the gap.", "action_healthy": "Healthy usage of 68.6% is below the 80% standard. Work with the GM to identify which dayparts or crew members are bypassing KVS and build corrective habits.", "action_3po": "3PO performance is strong — handoff time 3.2m, accuracy 97.1%. Delivery volume: 105 orders/week."},
-{"rank": 11, "nsn": "6853", "gm": "Eloina Lopez", "sup": "Mona", "supColor": "#7b3fa8", "composite": 0.9073, "k": 1.0096, "l": 0.85, "m": 1.0, "n": 0.5, "eff_dt": 128.8, "r2p": 19, "kvs_item": 17.8, "kvs_healthy": 0.1506, "timer_oepe": 122.0, "gap": 14.0, "coverage": 1.0, "pct_120": 0.6035, "del_gc": 0, "del_time": null, "del_acc": null, "del_idx": null, "del_wt": 0, "action_dt": "DT time of 129s is at or below the 130s standard. Maintain discipline and use this as a benchmark conversation.", "action_r2p": "R2P of 19s is below the 30s plausibility floor — this score receives a discipline penalty (0.85). Investigate receipt-timing practices at front counter. This is a discipline issue, not a speed issue.", "action_kvs": "KVS healthy usage is 15.1% — below the 50% gate. KVS item times are unreliable for scoring at this healthy level. Coach on KVS adoption before addressing speed targets.", "action_healthy": "Healthy usage of 15.1% is below the 50% gate — KVS timing data is not trusted for scoring. Requires direct coaching on system engagement. Every order must go through KVS.", "action_3po": "Delivery volume is below the threshold for scoring. No 3PO action required this week."},
-{"rank": 12, "nsn": "7013", "gm": "Luis Yepez", "sup": "Ray", "supColor": "#0097a7", "composite": 0.9035, "k": 0.8503, "l": 1.3636, "m": 1.0, "n": 0.5, "eff_dt": 152.9, "r2p": 33, "kvs_item": 29.0, "kvs_healthy": 0.0067, "timer_oepe": 151.0, "gap": 9.0, "coverage": 0.98, "pct_120": 0.4737, "del_gc": 112, "del_time": 3.6, "del_acc": 0.9464, "del_idx": 0.8863, "del_wt": 0.0672, "action_dt": "Effective DT time is 153s including parked cars. Focus on order accuracy to reduce parked frequency, and grill-to-window handoff speed.", "action_r2p": "R2P of 33s meets the 45s standard. Maintain focus on order accuracy and receipt-handoff timing.", "action_kvs": "KVS healthy usage is 0.7% — below the 50% gate. KVS item times are unreliable for scoring at this healthy level. Coach on KVS adoption before addressing speed targets.", "action_healthy": "Healthy usage of 0.7% is below the 50% gate — KVS timing data is not trusted for scoring. Requires direct coaching on system engagement. Every order must go through KVS.", "action_3po": "Restaurant handoff time is 3.6m — above the 3.0 min standard. Prioritize delivery order staging and ensure DT and delivery don't compete for the same crew. Order accuracy is 94.6% — below the 98% standard. Focus on order verification before handoff to driver."},
-{"rank": 13, "nsn": "17470", "gm": "Tammy Martin", "sup": "Sylvia", "supColor": "#e65100", "composite": 0.8951, "k": 0.9124, "l": 1.0227, "m": 1.0, "n": 0.5325, "eff_dt": 142.5, "r2p": 44, "kvs_item": 20.1, "kvs_healthy": 0.426, "timer_oepe": 136.0, "gap": 27.0, "coverage": 0.96, "pct_120": 0.5088, "del_gc": 39, "del_time": 2.5, "del_acc": 1.0, "del_idx": 1.1282, "del_wt": 0.0234, "action_dt": "Gap between timer and bump OEPE is 27s — investigate bump-discipline. Early bumping may be masking true drive-thru time. DT time of 142s is slightly above the 130s standard. Review positioning and presenter efficiency at peak.", "action_r2p": "R2P of 44s meets the 45s standard. Maintain focus on order accuracy and receipt-handoff timing.", "action_kvs": "KVS healthy usage is 42.6% — below the 50% gate. KVS item times are unreliable for scoring at this healthy level. Coach on KVS adoption before addressing speed targets.", "action_healthy": "Healthy usage of 42.6% is below the 50% gate — KVS timing data is not trusted for scoring. Requires direct coaching on system engagement. Every order must go through KVS.", "action_3po": "3PO performance is strong — handoff time 2.5m, accuracy 100.0%. Delivery volume: 39 orders/week."},
-{"rank": 14, "nsn": "38349", "gm": "Evelyn Gonzalez", "sup": "Sylvia", "supColor": "#e65100", "composite": 0.8865, "k": 0.8226, "l": 1.0, "m": 1.0651, "n": 0.6929, "eff_dt": 158.0, "r2p": 45, "kvs_item": 16.9, "kvs_healthy": 0.5543, "timer_oepe": 145.0, "gap": 27.0, "coverage": 0.96, "pct_120": 0.4394, "del_gc": 131, "del_time": 3.1, "del_acc": 0.9847, "del_idx": 0.9826, "del_wt": 0.0786, "action_dt": "Gap between timer and bump OEPE is 27s — investigate bump-discipline. Early bumping may be masking true drive-thru time. Effective DT time is 158s including parked cars. Focus on order accuracy to reduce parked frequency, and grill-to-window handoff speed.", "action_r2p": "R2P of 45s meets the 45s standard. Maintain focus on order accuracy and receipt-handoff timing.", "action_kvs": "KVS item time of 16.9s meets the 18s standard. Healthy usage at 55.4% — maintain bump discipline.", "action_healthy": "Healthy usage of 55.4% is below the 80% standard. Work with the GM to identify which dayparts or crew members are bypassing KVS and build corrective habits.", "action_3po": "3PO performance is strong — handoff time 3.1m, accuracy 98.5%. Delivery volume: 131 orders/week."},
-{"rank": 15, "nsn": "25117", "gm": "Ana Godinez", "sup": "Sylvia", "supColor": "#e65100", "composite": 0.8862, "k": 0.8811, "l": 0.8333, "m": 0.8182, "n": 1.0053, "eff_dt": 147.6, "r2p": 54, "kvs_item": 22.0, "kvs_healthy": 0.8042, "timer_oepe": 129.0, "gap": -1.0, "coverage": 0.97, "pct_120": 0.5294, "del_gc": 147, "del_time": 3.3, "del_acc": 0.9932, "del_idx": 0.9508, "del_wt": 0.0882, "action_dt": "Effective DT time is 148s including parked cars. Focus on order accuracy to reduce parked frequency, and grill-to-window handoff speed.", "action_r2p": "R2P of 54s is above the 45s standard. Small improvement at front-counter staging and order readiness would bring this to target.", "action_kvs": "KVS item time is 22.0s — slightly above the 18s standard. Small improvements in item assembly sequencing and pre-positioning would close the gap.", "action_healthy": "Healthy usage of 80.4% meets the 80% standard. Continue reinforcing KVS engagement with all crew members, especially during high-volume periods.", "action_3po": "3PO performance is strong — handoff time 3.3m, accuracy 99.3%. Delivery volume: 147 orders/week."},
-{"rank": 16, "nsn": "26499", "gm": "Itzel Negrete", "sup": "Mike", "supColor": "#2e7d32", "composite": 0.8789, "k": 0.9077, "l": 1.0, "m": 1.0, "n": 0.5, "eff_dt": 143.2, "r2p": 45, "kvs_item": 18.8, "kvs_healthy": 0.0822, "timer_oepe": 162.0, "gap": 23.0, "coverage": 0.32, "pct_120": 0.3947, "del_gc": 0, "del_time": null, "del_acc": null, "del_idx": null, "del_wt": 0, "action_dt": "⚠ Timer coverage 32.0% — below 80% threshold. Check magnetic plate for damage or dead zones. Scores fall back to bump basis until repaired. Gap between timer and bump OEPE is 23s — investigate bump-discipline. Early bumping may be masking true drive-thru time. DT time of 143s is slightly above the 130s standard. Review positioning and presenter efficiency at peak.", "action_r2p": "R2P of 45s meets the 45s standard. Maintain focus on order accuracy and receipt-handoff timing.", "action_kvs": "KVS healthy usage is 8.2% — below the 50% gate. KVS item times are unreliable for scoring at this healthy level. Coach on KVS adoption before addressing speed targets.", "action_healthy": "Healthy usage of 8.2% is below the 50% gate — KVS timing data is not trusted for scoring. Requires direct coaching on system engagement. Every order must go through KVS.", "action_3po": "Delivery volume is below the threshold for scoring. No 3PO action required this week."},
-{"rank": 17, "nsn": "32107", "gm": "Jennifer Lagace", "sup": "Mona", "supColor": "#7b3fa8", "composite": 0.8731, "k": 0.8227, "l": 0.9783, "m": 0.878, "n": 0.8956, "eff_dt": 158.0, "r2p": 46, "kvs_item": 20.5, "kvs_healthy": 0.7164, "timer_oepe": 155.0, "gap": -13.0, "coverage": 0.96, "pct_120": 0.4669, "del_gc": 80, "del_time": 3.1, "del_acc": 0.9625, "del_idx": 0.9735, "del_wt": 0.048, "action_dt": "Effective DT time is 158s including parked cars. Focus on order accuracy to reduce parked frequency, and grill-to-window handoff speed.", "action_r2p": "R2P of 46s is above the 45s standard. Small improvement at front-counter staging and order readiness would bring this to target.", "action_kvs": "KVS item time is 20.5s — slightly above the 18s standard. Small improvements in item assembly sequencing and pre-positioning would close the gap.", "action_healthy": "Healthy usage of 71.6% is below the 80% standard. Work with the GM to identify which dayparts or crew members are bypassing KVS and build corrective habits.", "action_3po": "3PO performance is strong — handoff time 3.1m, accuracy 96.2%. Delivery volume: 80 orders/week."},
-{"rank": 18, "nsn": "1313", "gm": "Destiny Baker", "sup": "Frances", "supColor": "#1a5fa8", "composite": 0.8692, "k": 0.8911, "l": 0.6429, "m": 0.7059, "n": 1.151, "eff_dt": 145.9, "r2p": 70, "kvs_item": 25.5, "kvs_healthy": 0.9208, "timer_oepe": 143.0, "gap": 11.0, "coverage": 0.95, "pct_120": 0.4928, "del_gc": 582, "del_time": 3.3, "del_acc": 0.9794, "del_idx": 0.9452, "del_wt": 0.15, "action_dt": "Effective DT time is 146s including parked cars. Focus on order accuracy to reduce parked frequency, and grill-to-window handoff speed.", "action_r2p": "R2P of 70s is significantly above the 45s standard. Review front-counter presenter staging and expeditor effectiveness. Ensure orders are ready before the customer reaches the counter.", "action_kvs": "KVS item time is 25.5s against the 18s standard. Review production flow and item assembly sequences. Higher complexity orders may need pre-staging strategy.", "action_healthy": "Healthy usage of 92.1% meets the 80% standard. Continue reinforcing KVS engagement with all crew members, especially during high-volume periods.", "action_3po": "3PO performance is strong — handoff time 3.3m, accuracy 97.9%. Delivery volume: 582 orders/week."},
-{"rank": 19, "nsn": "11124", "gm": "Cassandra Campbell", "sup": "Elton", "supColor": "#c0392b", "composite": 0.8641, "k": 0.8967, "l": 0.8654, "m": 1.0, "n": 0.5019, "eff_dt": 145.0, "r2p": 52, "kvs_item": 18.6, "kvs_healthy": 0.4015, "timer_oepe": 143.0, "gap": 23.0, "coverage": 0.97, "pct_120": 0.485, "del_gc": 168, "del_time": 3.1, "del_acc": 0.9286, "del_idx": 0.9597, "del_wt": 0.1008, "action_dt": "Gap between timer and bump OEPE is 23s — investigate bump-discipline. Early bumping may be masking true drive-thru time. DT time of 145s is slightly above the 130s standard. Review positioning and presenter efficiency at peak.", "action_r2p": "R2P of 52s is above the 45s standard. Small improvement at front-counter staging and order readiness would bring this to target.", "action_kvs": "KVS healthy usage is 40.2% — below the 50% gate. KVS item times are unreliable for scoring at this healthy level. Coach on KVS adoption before addressing speed targets.", "action_healthy": "Healthy usage of 40.2% is below the 50% gate — KVS timing data is not trusted for scoring. Requires direct coaching on system engagement. Every order must go through KVS.", "action_3po": "Order accuracy is 92.9% — below the 98% standard. Focus on order verification before handoff to driver."},
-{"rank": 20, "nsn": "11744", "gm": "Sabrina Rocha", "sup": "Sylvia", "supColor": "#e65100", "composite": 0.8636, "k": 0.7088, "l": 0.6338, "m": 1.3139, "n": 1.0307, "eff_dt": 183.4, "r2p": 71, "kvs_item": 13.7, "kvs_healthy": 0.8245, "timer_oepe": 169.0, "gap": 5.0, "coverage": 0.79, "pct_120": 0.3363, "del_gc": 351, "del_time": 4.0, "del_acc": 0.9687, "del_idx": 0.8454, "del_wt": 0.15, "action_dt": "⚠ Timer coverage 79.0% — below 80% threshold. Check magnetic plate for damage or dead zones. Scores fall back to bump basis until repaired. Effective DT time is 183s including parked cars. Focus on order accuracy to reduce parked frequency, and grill-to-window handoff speed.", "action_r2p": "R2P of 71s is significantly above the 45s standard. Review front-counter presenter staging and expeditor effectiveness. Ensure orders are ready before the customer reaches the counter.", "action_kvs": "KVS item time of 13.7s meets the 18s standard. Healthy usage at 82.5% — maintain bump discipline.", "action_healthy": "Healthy usage of 82.5% meets the 80% standard. Continue reinforcing KVS engagement with all crew members, especially during high-volume periods.", "action_3po": "Restaurant handoff time is 4.0m — above the 3.0 min standard. Prioritize delivery order staging and ensure DT and delivery don't compete for the same crew."},
-{"rank": 21, "nsn": "11529", "gm": "Soran Meyers", "sup": "Sylvia", "supColor": "#e65100", "composite": 0.8616, "k": 0.9301, "l": 0.5, "m": 0.793, "n": 0.8951, "eff_dt": 139.8, "r2p": 93, "kvs_item": 22.7, "kvs_healthy": 0.7161, "timer_oepe": 125.0, "gap": 1.0, "coverage": 0.92, "pct_120": 0.5529, "del_gc": 185, "del_time": 2.6, "del_acc": 0.9784, "del_idx": 1.0916, "del_wt": 0.111, "action_dt": "DT time of 140s is slightly above the 130s standard. Review positioning and presenter efficiency at peak.", "action_r2p": "R2P of 93s is significantly above the 45s standard. Review front-counter presenter staging and expeditor effectiveness. Ensure orders are ready before the customer reaches the counter.", "action_kvs": "KVS item time is 22.7s against the 18s standard. Review production flow and item assembly sequences. Higher complexity orders may need pre-staging strategy.", "action_healthy": "Healthy usage of 71.6% is below the 80% standard. Work with the GM to identify which dayparts or crew members are bypassing KVS and build corrective habits.", "action_3po": "3PO performance is strong — handoff time 2.6m, accuracy 97.8%. Delivery volume: 185 orders/week."},
-{"rank": 22, "nsn": "24497", "gm": "Paola Martinez", "sup": "Elton", "supColor": "#c0392b", "composite": 0.8539, "k": 0.8862, "l": 0.85, "m": 1.0, "n": 0.5, "eff_dt": 146.7, "r2p": 28, "kvs_item": 17.9, "kvs_healthy": 0.0984, "timer_oepe": 145.0, "gap": 20.0, "coverage": 0.99, "pct_120": 0.4373, "del_gc": 85, "del_time": 3.0, "del_acc": 1.0, "del_idx": 1.0082, "del_wt": 0.051, "action_dt": "Gap between timer and bump OEPE is 20s — investigate bump-discipline. Early bumping may be masking true drive-thru time. Effective DT time is 147s including parked cars. Focus on order accuracy to reduce parked frequency, and grill-to-window handoff speed.", "action_r2p": "R2P of 28s is below the 30s plausibility floor — this score receives a discipline penalty (0.85). Investigate receipt-timing practices at front counter. This is a discipline issue, not a speed issue.", "action_kvs": "KVS healthy usage is 9.8% — below the 50% gate. KVS item times are unreliable for scoring at this healthy level. Coach on KVS adoption before addressing speed targets.", "action_healthy": "Healthy usage of 9.8% is below the 50% gate — KVS timing data is not trusted for scoring. Requires direct coaching on system engagement. Every order must go through KVS.", "action_3po": "3PO performance is strong — handoff time 3.0m, accuracy 100.0%. Delivery volume: 85 orders/week."},
-{"rank": 23, "nsn": "7433", "gm": "Imelda Cortez", "sup": "Ray", "supColor": "#0097a7", "composite": 0.8439, "k": 0.8086, "l": 1.0976, "m": 1.0, "n": 0.5, "eff_dt": 160.8, "r2p": 41, "kvs_item": 29.0, "kvs_healthy": 0.1093, "timer_oepe": 153.0, "gap": 5.0, "coverage": 0.94, "pct_120": 0.4202, "del_gc": 0, "del_time": null, "del_acc": null, "del_idx": null, "del_wt": 0, "action_dt": "Effective DT time is 161s including parked cars. Focus on order accuracy to reduce parked frequency, and grill-to-window handoff speed.", "action_r2p": "R2P of 41s meets the 45s standard. Maintain focus on order accuracy and receipt-handoff timing.", "action_kvs": "KVS healthy usage is 10.9% — below the 50% gate. KVS item times are unreliable for scoring at this healthy level. Coach on KVS adoption before addressing speed targets.", "action_healthy": "Healthy usage of 10.9% is below the 50% gate — KVS timing data is not trusted for scoring. Requires direct coaching on system engagement. Every order must go through KVS.", "action_3po": "Delivery volume is below the threshold for scoring. No 3PO action required this week."},
-{"rank": 24, "nsn": "4235", "gm": "Emilia Lezama", "sup": "Elton", "supColor": "#c0392b", "composite": 0.8435, "k": 0.7759, "l": 0.8182, "m": 1.0778, "n": 0.7996, "eff_dt": 167.5, "r2p": 55, "kvs_item": 16.7, "kvs_healthy": 0.6397, "timer_oepe": 166.0, "gap": 11.0, "coverage": 0.95, "pct_120": 0.3889, "del_gc": 209, "del_time": 4.2, "del_acc": 0.9713, "del_idx": 0.825, "del_wt": 0.1254, "action_dt": "Effective DT time is 168s including parked cars. Focus on order accuracy to reduce parked frequency, and grill-to-window handoff speed.", "action_r2p": "R2P of 55s is above the 45s standard. Small improvement at front-counter staging and order readiness would bring this to target.", "action_kvs": "KVS item time of 16.7s meets the 18s standard. Healthy usage at 64.0% — maintain bump discipline.", "action_healthy": "Healthy usage of 64.0% is below the 80% standard. Work with the GM to identify which dayparts or crew members are bypassing KVS and build corrective habits.", "action_3po": "Restaurant handoff time is 4.2m — above the 3.0 min standard. Prioritize delivery order staging and ensure DT and delivery don't compete for the same crew."},
-{"rank": 25, "nsn": "22228", "gm": "Monique Castro", "sup": "Mona", "supColor": "#7b3fa8", "composite": 0.8315, "k": 0.8585, "l": 0.6618, "m": 0.7725, "n": 0.9522, "eff_dt": 151.4, "r2p": 68, "kvs_item": 23.3, "kvs_healthy": 0.7617, "timer_oepe": 144.0, "gap": 5.0, "coverage": 0.96, "pct_120": 0.4876, "del_gc": 47, "del_time": 2.8, "del_acc": 0.9362, "del_idx": 1.025, "del_wt": 0.0282, "action_dt": "Effective DT time is 151s including parked cars. Focus on order accuracy to reduce parked frequency, and grill-to-window handoff speed.", "action_r2p": "R2P of 68s is significantly above the 45s standard. Review front-counter presenter staging and expeditor effectiveness. Ensure orders are ready before the customer reaches the counter.", "action_kvs": "KVS item time is 23.3s against the 18s standard. Review production flow and item assembly sequences. Higher complexity orders may need pre-staging strategy.", "action_healthy": "Healthy usage of 76.2% is below the 80% standard. Work with the GM to identify which dayparts or crew members are bypassing KVS and build corrective habits.", "action_3po": "Order accuracy is 93.6% — below the 98% standard. Focus on order verification before handoff to driver."},
-{"rank": 26, "nsn": "7703", "gm": "Cris Reeves", "sup": "Ray", "supColor": "#0097a7", "composite": 0.8276, "k": 0.7821, "l": 1.0714, "m": 0.8411, "n": 0.6744, "eff_dt": 166.2, "r2p": 42, "kvs_item": 21.4, "kvs_healthy": 0.5395, "timer_oepe": 150.0, "gap": 9.0, "coverage": 0.97, "pct_120": 0.4312, "del_gc": 245, "del_time": 3.8, "del_acc": 0.9592, "del_idx": 0.8652, "del_wt": 0.147, "action_dt": "Effective DT time is 166s including parked cars. Focus on order accuracy to reduce parked frequency, and grill-to-window handoff speed.", "action_r2p": "R2P of 42s meets the 45s standard. Maintain focus on order accuracy and receipt-handoff timing.", "action_kvs": "KVS item time is 21.4s — slightly above the 18s standard. Small improvements in item assembly sequencing and pre-positioning would close the gap.", "action_healthy": "Healthy usage of 53.9% is below the 80% standard. Work with the GM to identify which dayparts or crew members are bypassing KVS and build corrective habits.", "action_3po": "Restaurant handoff time is 3.8m — above the 3.0 min standard. Prioritize delivery order staging and ensure DT and delivery don't compete for the same crew."},
-{"rank": 27, "nsn": "13669", "gm": "Bree Alvidrez", "sup": "Michelle", "supColor": "#1a7a4a", "composite": 0.8171, "k": 0.8123, "l": 0.8036, "m": 1.0, "n": 0.5, "eff_dt": 160.0, "r2p": 56, "kvs_item": 15.7, "kvs_healthy": 0.059, "timer_oepe": 151.0, "gap": 4.0, "coverage": 0.94, "pct_120": 0.38, "del_gc": 128, "del_time": 3.0, "del_acc": 0.9844, "del_idx": 1.0018, "del_wt": 0.0768, "action_dt": "Effective DT time is 160s including parked cars. Focus on order accuracy to reduce parked frequency, and grill-to-window handoff speed.", "action_r2p": "R2P of 56s is above the 45s standard. Small improvement at front-counter staging and order readiness would bring this to target.", "action_kvs": "KVS healthy usage is 5.9% — below the 50% gate. KVS item times are unreliable for scoring at this healthy level. Coach on KVS adoption before addressing speed targets.", "action_healthy": "Healthy usage of 5.9% is below the 50% gate — KVS timing data is not trusted for scoring. Requires direct coaching on system engagement. Every order must go through KVS.", "action_3po": "3PO performance is strong — handoff time 3.0m, accuracy 98.4%. Delivery volume: 128 orders/week."},
-{"rank": 28, "nsn": "39954", "gm": "Angela Cruz", "sup": "Mike", "supColor": "#2e7d32", "composite": 0.8165, "k": 0.8272, "l": 0.7627, "m": 1.0, "n": 0.5, "eff_dt": 157.2, "r2p": 59, "kvs_item": 14.9, "kvs_healthy": 0.0, "timer_oepe": 142.0, "gap": 30.0, "coverage": 0.96, "pct_120": 0.4723, "del_gc": 54, "del_time": 2.2, "del_acc": 0.9815, "del_idx": 1.2188, "del_wt": 0.0324, "action_dt": "Gap between timer and bump OEPE is 30s — investigate bump-discipline. Early bumping may be masking true drive-thru time. Effective DT time is 157s including parked cars. Focus on order accuracy to reduce parked frequency, and grill-to-window handoff speed.", "action_r2p": "R2P of 59s is above the 45s standard. Small improvement at front-counter staging and order readiness would bring this to target.", "action_kvs": "KVS healthy usage is — — below the 50% gate. KVS item times are unreliable for scoring at this healthy level. Coach on KVS adoption before addressing speed targets.", "action_healthy": "Healthy usage of — is below the 50% gate — KVS timing data is not trusted for scoring. Requires direct coaching on system engagement. Every order must go through KVS.", "action_3po": "3PO performance is strong — handoff time 2.2m, accuracy 98.2%. Delivery volume: 54 orders/week."},
-{"rank": 29, "nsn": "10150", "gm": "Reyes Charnin", "sup": "Raymond", "supColor": "#b87a00", "composite": 0.7882, "k": 0.7484, "l": 0.8333, "m": 0.6897, "n": 0.8866, "eff_dt": 173.7, "r2p": 54, "kvs_item": 26.1, "kvs_healthy": 0.7093, "timer_oepe": 166.0, "gap": 15.0, "coverage": 0.96, "pct_120": 0.4098, "del_gc": 104, "del_time": 2.7, "del_acc": 0.9615, "del_idx": 1.0591, "del_wt": 0.0624, "action_dt": "Effective DT time is 174s including parked cars. Focus on order accuracy to reduce parked frequency, and grill-to-window handoff speed.", "action_r2p": "R2P of 54s is above the 45s standard. Small improvement at front-counter staging and order readiness would bring this to target.", "action_kvs": "KVS item time is 26.1s against the 18s standard. Review production flow and item assembly sequences. Higher complexity orders may need pre-staging strategy.", "action_healthy": "Healthy usage of 70.9% is below the 80% standard. Work with the GM to identify which dayparts or crew members are bypassing KVS and build corrective habits.", "action_3po": "3PO performance is strong — handoff time 2.7m, accuracy 96.2%. Delivery volume: 104 orders/week."},
-{"rank": 30, "nsn": "2327", "gm": "Alex Beltran", "sup": "Michelle", "supColor": "#1a7a4a", "composite": 0.7874, "k": 0.8404, "l": 0.6081, "m": 1.0, "n": 0.5, "eff_dt": 154.7, "r2p": 74, "kvs_item": 26.2, "kvs_healthy": 0.1149, "timer_oepe": 149.0, "gap": 5.0, "coverage": 1.0, "pct_120": 0.4062, "del_gc": 97, "del_time": 4.5, "del_acc": 0.9897, "del_idx": 0.804, "del_wt": 0.0582, "action_dt": "Effective DT time is 155s including parked cars. Focus on order accuracy to reduce parked frequency, and grill-to-window handoff speed.", "action_r2p": "R2P of 74s is significantly above the 45s standard. Review front-counter presenter staging and expeditor effectiveness. Ensure orders are ready before the customer reaches the counter.", "action_kvs": "KVS healthy usage is 11.5% — below the 50% gate. KVS item times are unreliable for scoring at this healthy level. Coach on KVS adoption before addressing speed targets.", "action_healthy": "Healthy usage of 11.5% is below the 50% gate — KVS timing data is not trusted for scoring. Requires direct coaching on system engagement. Every order must go through KVS.", "action_3po": "Restaurant handoff time is 4.5m — above the 3.0 min standard. Prioritize delivery order staging and ensure DT and delivery don't compete for the same crew."},
-{"rank": 31, "nsn": "24797", "gm": "Ariana Cervantes", "sup": "Michelle", "supColor": "#1a7a4a", "composite": 0.7865, "k": 0.8632, "l": 0.5, "m": 1.0, "n": 0.5, "eff_dt": 150.6, "r2p": 100, "kvs_item": 21.0, "kvs_healthy": 0.2861, "timer_oepe": null, "gap": null, "coverage": 0.0, "pct_120": null, "del_gc": 116, "del_time": 3.9, "del_acc": 0.9569, "del_idx": 0.8521, "del_wt": 0.0696, "action_dt": "Effective DT time is 151s including parked cars. Focus on order accuracy to reduce parked frequency, and grill-to-window handoff speed.", "action_r2p": "R2P of 100s is significantly above the 45s standard. Review front-counter presenter staging and expeditor effectiveness. Ensure orders are ready before the customer reaches the counter.", "action_kvs": "KVS healthy usage is 28.6% — below the 50% gate. KVS item times are unreliable for scoring at this healthy level. Coach on KVS adoption before addressing speed targets.", "action_healthy": "Healthy usage of 28.6% is below the 50% gate — KVS timing data is not trusted for scoring. Requires direct coaching on system engagement. Every order must go through KVS.", "action_3po": "Restaurant handoff time is 3.9m — above the 3.0 min standard. Prioritize delivery order staging and ensure DT and delivery don't compete for the same crew."},
-{"rank": 32, "nsn": "12566", "gm": "Reyes Charnin", "sup": "Raymond", "supColor": "#b87a00", "composite": 0.7817, "k": 0.7584, "l": 0.85, "m": 1.0, "n": 0.5, "eff_dt": 171.4, "r2p": 29, "kvs_item": 23.6, "kvs_healthy": 0.0156, "timer_oepe": 169.0, "gap": 35.0, "coverage": 0.84, "pct_120": 0.3374, "del_gc": 0, "del_time": null, "del_acc": null, "del_idx": null, "del_wt": 0, "action_dt": "Gap between timer and bump OEPE is 35s — investigate bump-discipline. Early bumping may be masking true drive-thru time. Effective DT time is 171s including parked cars. Focus on order accuracy to reduce parked frequency, and grill-to-window handoff speed.", "action_r2p": "R2P of 29s is below the 30s plausibility floor — this score receives a discipline penalty (0.85). Investigate receipt-timing practices at front counter. This is a discipline issue, not a speed issue.", "action_kvs": "KVS healthy usage is 1.6% — below the 50% gate. KVS item times are unreliable for scoring at this healthy level. Coach on KVS adoption before addressing speed targets.", "action_healthy": "Healthy usage of 1.6% is below the 50% gate — KVS timing data is not trusted for scoring. Requires direct coaching on system engagement. Every order must go through KVS.", "action_3po": "Delivery volume is below the threshold for scoring. No 3PO action required this week."},
-{"rank": 33, "nsn": "27493", "gm": "Ana Hernandez", "sup": "Mona", "supColor": "#7b3fa8", "composite": 0.7812, "k": 0.7691, "l": 0.5, "m": 0.8219, "n": 0.9104, "eff_dt": 169.0, "r2p": 106, "kvs_item": 21.9, "kvs_healthy": 0.7283, "timer_oepe": 160.0, "gap": 4.0, "coverage": 0.96, "pct_120": 0.4106, "del_gc": 226, "del_time": 3.5, "del_acc": 0.9779, "del_idx": 0.9134, "del_wt": 0.1356, "action_dt": "Effective DT time is 169s including parked cars. Focus on order accuracy to reduce parked frequency, and grill-to-window handoff speed.", "action_r2p": "R2P of 106s is significantly above the 45s standard. Review front-counter presenter staging and expeditor effectiveness. Ensure orders are ready before the customer reaches the counter.", "action_kvs": "KVS item time is 21.9s — slightly above the 18s standard. Small improvements in item assembly sequencing and pre-positioning would close the gap.", "action_healthy": "Healthy usage of 72.8% is below the 80% standard. Work with the GM to identify which dayparts or crew members are bypassing KVS and build corrective habits.", "action_3po": "3PO performance is strong — handoff time 3.5m, accuracy 97.8%. Delivery volume: 226 orders/week."},
-{"rank": 34, "nsn": "38616", "gm": "Brenda Ramos", "sup": "Mona", "supColor": "#7b3fa8", "composite": 0.7615, "k": 0.7725, "l": 0.6081, "m": 1.0, "n": 0.5, "eff_dt": 168.3, "r2p": 74, "kvs_item": 23.3, "kvs_healthy": 0.1485, "timer_oepe": 163.0, "gap": 20.0, "coverage": 0.96, "pct_120": 0.4203, "del_gc": 40, "del_time": 2.5, "del_acc": 1.0, "del_idx": 1.1282, "del_wt": 0.024, "action_dt": "Gap between timer and bump OEPE is 20s — investigate bump-discipline. Early bumping may be masking true drive-thru time. Effective DT time is 168s including parked cars. Focus on order accuracy to reduce parked frequency, and grill-to-window handoff speed.", "action_r2p": "R2P of 74s is significantly above the 45s standard. Review front-counter presenter staging and expeditor effectiveness. Ensure orders are ready before the customer reaches the counter.", "action_kvs": "KVS healthy usage is 14.8% — below the 50% gate. KVS item times are unreliable for scoring at this healthy level. Coach on KVS adoption before addressing speed targets.", "action_healthy": "Healthy usage of 14.8% is below the 50% gate — KVS timing data is not trusted for scoring. Requires direct coaching on system engagement. Every order must go through KVS.", "action_3po": "3PO performance is strong — handoff time 2.5m, accuracy 100.0%. Delivery volume: 40 orders/week."}
+{"rank": 1, "nsn": "24135", "gm": "Lenny Becerra", "sup": "Michelle", "supColor": "#1a7a4a", "composite": 1.0804, "k": 0.9827, "l": 1.4706, "m": 1.0526, "n": 0.8, "huss_wt": 0.0964, "eff_dt": 132.3, "r2p": 51, "kvs_item": 17.1, "kvs_healthy": 0.1741, "timer_oepe": 123.0, "gap": 4.0, "coverage": 0.93, "pct_120": 0.5511, "del_gc": 240, "del_time": 3.0, "del_acc": 0.9875, "del_idx": 1.101, "del_wt": 0.144, "action_dt": "DT of 132s is slightly above standard. Coach positioning and presenter efficiency at peak.", "action_r2p": "R2P of 51s is slightly above standard. Ask what they anticipate changing, not what you want them to change.", "action_kvs": "KVS healthy 17.4% — below 50% trust gate. Adoption is the problem, not speed.", "action_healthy": "Healthy usage 17.4% triggers the trust gate. Rebuild system adoption before coaching anything else. Side-2 weight for this location: 9.6%.", "action_3po": "3PO handoff 3.0m and accuracy 98.8% both meet standard. 240 orders this week.", "missed_steps": [{"step": 2, "area": "Service KPIs — 2nd Side Utilization", "detail": "KVS healthy usage of 17.4% means 2nd side utilization is not in the daily service KPI review. This pattern does not happen overnight — it was missed across multiple days."}]},
+{"rank": 2, "nsn": "26499", "gm": "Itzel Negrete", "sup": "Mike", "supColor": "#2e7d32", "composite": 1.0352, "k": 0.9077, "l": 1.5, "m": 0.9574, "n": 0.8, "huss_wt": 0.0376, "eff_dt": 143.2, "r2p": 45, "kvs_item": 18.8, "kvs_healthy": 0.0822, "timer_oepe": 162.0, "gap": 23.0, "coverage": 0.32, "pct_120": 0.3947, "del_gc": 0, "del_time": null, "del_acc": null, "del_idx": null, "del_wt": 0, "action_dt": "Timer coverage is 32.0% — below 80%. Score falls back to bump basis. Check magnetic plate. Until restored, you cannot distinguish owned performance from performed performance. The 23s timer-to-bump gap suggests early bumping. Reset the why before coaching the number. DT of 143s is slightly above standard. Coach positioning and presenter efficiency at peak.", "action_r2p": "R2P of 45s meets standard. Frequency maintains this — same day, ten minutes, no skips.", "action_kvs": "KVS healthy 8.2% — below 50% trust gate. Adoption is the problem, not speed.", "action_healthy": "Healthy usage 8.2% triggers the trust gate. Rebuild system adoption before coaching anything else. Side-2 weight for this location: 3.8%.", "action_3po": "Delivery volume below threshold. No 3PO coaching required this week.", "missed_steps": [{"step": 2, "area": "Operations Metrics", "detail": "Timer coverage 32.0% was not flagged during the daily operations review. Shift managers must report equipment status daily — a timer plate issue at this level does not appear overnight."}, {"step": 3, "area": "Diagnose — Bump Discipline", "detail": "Timer-to-bump gap of 23s indicates early bumping. The surface read is good OEPE — the real problem is discipline masking the number. Root cause was not diagnosed."}, {"step": 2, "area": "Service KPIs — 2nd Side Utilization", "detail": "KVS healthy usage of 8.2% means 2nd side utilization is not in the daily service KPI review. This pattern does not happen overnight — it was missed across multiple days."}, {"step": 4, "area": "Focus — Production Flow", "detail": "KVS item time of 18.8s is above standard. Has production flow been identified as one of the top 1–2 problems this week? If not, it is being deprioritized while smaller issues consume coaching time."}]},
+{"rank": 3, "nsn": "6891", "gm": "Soran Meyers", "sup": "Elton", "supColor": "#c0392b", "composite": 1.0289, "k": 0.8764, "l": 1.3889, "m": 1.0465, "n": 0.8853, "huss_wt": 0.1, "eff_dt": 148.3, "r2p": 54, "kvs_item": 17.2, "kvs_healthy": 0.7082, "timer_oepe": 138.0, "gap": -2.0, "coverage": 1.0, "pct_120": 0.4754, "del_gc": 153, "del_time": 2.7, "del_acc": 0.9869, "del_idx": 1.1786, "del_wt": 0.0918, "action_dt": "Effective DT of 148s is above 130s. Fix lives in order accuracy and grill-to-window handoff. Name one shift-leader owner for each.", "action_r2p": "R2P of 54s is slightly above standard. Ask what they anticipate changing, not what you want them to change.", "action_kvs": "KVS item time 17.2s meets standard at 70.8% healthy. This store is owned — study the method.", "action_healthy": "Healthy usage 70.8% below 80%. Name one shift leader to own it per shift. Side-2 weight: 10.0%.", "action_3po": "3PO handoff 2.7m and accuracy 98.7% both meet standard. 153 orders this week.", "missed_steps": [{"step": 1, "area": "Labor Setup — DT Deployment", "detail": "Effective DT of 148s suggests peak DT positioning was not built to handle volume. This is a labor planning decision that should have been made a week ahead."}, {"step": 5, "area": "Develop GM — HUSS Ownership", "detail": "Healthy usage of 70.8% is below standard. The GM knows the expectation but has not named a shift-leader owner per shift. Without Reach, the pattern will not hold."}]},
+{"rank": 4, "nsn": "17470", "gm": "Tammy Martin", "sup": "Sylvia", "supColor": "#e65100", "composite": 1.0232, "k": 0.9124, "l": 1.5, "m": 0.8955, "n": 0.8, "huss_wt": 0.0731, "eff_dt": 142.5, "r2p": 44, "kvs_item": 20.1, "kvs_healthy": 0.426, "timer_oepe": 136.0, "gap": 27.0, "coverage": 0.96, "pct_120": 0.5088, "del_gc": 39, "del_time": 2.5, "del_acc": 1.0, "del_idx": 1.2461, "del_wt": 0.0234, "action_dt": "The 27s timer-to-bump gap suggests early bumping. Reset the why before coaching the number. DT of 142s is slightly above standard. Coach positioning and presenter efficiency at peak.", "action_r2p": "R2P of 44s meets standard. Frequency maintains this — same day, ten minutes, no skips.", "action_kvs": "KVS healthy 42.6% — below 50% trust gate. Adoption is the problem, not speed.", "action_healthy": "Healthy usage 42.6% triggers the trust gate. Rebuild system adoption before coaching anything else. Side-2 weight for this location: 7.3%.", "action_3po": "3PO handoff 2.5m and accuracy 100.0% both meet standard. 39 orders this week.", "missed_steps": [{"step": 3, "area": "Diagnose — Bump Discipline", "detail": "Timer-to-bump gap of 27s indicates early bumping. The surface read is good OEPE — the real problem is discipline masking the number. Root cause was not diagnosed."}, {"step": 2, "area": "Service KPIs — 2nd Side Utilization", "detail": "KVS healthy usage of 42.6% means 2nd side utilization is not in the daily service KPI review. This pattern does not happen overnight — it was missed across multiple days."}, {"step": 4, "area": "Focus — Production Flow", "detail": "KVS item time of 20.1s is above standard. Has production flow been identified as one of the top 1–2 problems this week? If not, it is being deprioritized while smaller issues consume coaching time."}]},
+{"rank": 5, "nsn": "11124", "gm": "Adam Martinez - Interim GM", "sup": "Raymond", "supColor": "#b87a00", "composite": 1.0161, "k": 0.8967, "l": 1.4423, "m": 0.9677, "n": 0.8, "huss_wt": 0.0914, "eff_dt": 145.0, "r2p": 52, "kvs_item": 18.6, "kvs_healthy": 0.4015, "timer_oepe": 143.0, "gap": 23.0, "coverage": 0.97, "pct_120": 0.485, "del_gc": 168, "del_time": 3.1, "del_acc": 0.9286, "del_idx": 1.0545, "del_wt": 0.1008, "action_dt": "The 23s timer-to-bump gap suggests early bumping. Reset the why before coaching the number. DT of 145s is slightly above standard. Coach positioning and presenter efficiency at peak.", "action_r2p": "R2P of 52s is slightly above standard. Ask what they anticipate changing, not what you want them to change.", "action_kvs": "KVS healthy 40.2% — below 50% trust gate. Adoption is the problem, not speed.", "action_healthy": "Healthy usage 40.2% triggers the trust gate. Rebuild system adoption before coaching anything else. Side-2 weight for this location: 9.1%.", "action_3po": "Accuracy 92.9% below 98%. Verification at handoff is your number.", "missed_steps": [{"step": 3, "area": "Diagnose — Bump Discipline", "detail": "Timer-to-bump gap of 23s indicates early bumping. The surface read is good OEPE — the real problem is discipline masking the number. Root cause was not diagnosed."}, {"step": 5, "area": "Develop GM — DT Coaching", "detail": "DT time of 145s is above standard. The coaching conversation on presenter staging has not transferred ownership to the GM — they have not yet made this their problem to solve."}, {"step": 2, "area": "Service KPIs — 2nd Side Utilization", "detail": "KVS healthy usage of 40.2% means 2nd side utilization is not in the daily service KPI review. This pattern does not happen overnight — it was missed across multiple days."}, {"step": 4, "area": "Focus — Production Flow", "detail": "KVS item time of 18.6s is above standard. Has production flow been identified as one of the top 1–2 problems this week? If not, it is being deprioritized while smaller issues consume coaching time."}, {"step": 2, "area": "Service KPIs — Delivery Accuracy", "detail": "3PO accuracy of 92.9% should surface in the daily service KPI review. Order verification before handoff is a shift-manager discipline — if not in daily review, it will not be coached."}]},
+{"rank": 6, "nsn": "22694", "gm": "Juan Gomez", "sup": "Michelle", "supColor": "#1a7a4a", "composite": 1.0134, "k": 1.0967, "l": 1.5, "m": 0.5, "n": 0.8, "huss_wt": 0.0501, "eff_dt": 118.5, "r2p": 42, "kvs_item": 10.3, "kvs_healthy": 0.0, "timer_oepe": 117.0, "gap": 12.0, "coverage": 0.98, "pct_120": 0.6131, "del_gc": 0, "del_time": null, "del_acc": null, "del_idx": null, "del_wt": 0, "action_dt": "DT of 118s meets the 130s standard. Protect and multiply this.", "action_r2p": "R2P of 42s meets standard. Frequency maintains this — same day, ten minutes, no skips.", "action_kvs": "KVS healthy 0.0% and item time 10.3s — both gates fire. Rebuild the why first.", "action_healthy": "Healthy usage 0.0% triggers the trust gate. Rebuild system adoption before coaching anything else. Side-2 weight for this location: 5.0%.", "action_3po": "Delivery volume below threshold. No 3PO coaching required this week.", "missed_steps": [{"step": 2, "area": "Service KPIs — 2nd Side Utilization", "detail": "KVS healthy usage of 0% means 2nd side utilization is not in the daily service KPI review. This pattern does not happen overnight — it was missed across multiple days."}]},
+{"rank": 7, "nsn": "36285", "gm": "Salma Chavez - Interim GM", "sup": "Sylvia", "supColor": "#e65100", "composite": 1.013, "k": 0.7268, "l": 1.5, "m": 1.1688, "n": 1.0421, "huss_wt": 0.0906, "eff_dt": 178.9, "r2p": 40, "kvs_item": 15.4, "kvs_healthy": 0.8337, "timer_oepe": 167.0, "gap": 20.0, "coverage": 0.97, "pct_120": 0.3989, "del_gc": 86, "del_time": 2.6, "del_acc": 0.9767, "del_idx": 1.2043, "del_wt": 0.0516, "action_dt": "The 20s timer-to-bump gap suggests early bumping. Reset the why before coaching the number. Effective DT of 179s is above 130s. Fix lives in order accuracy and grill-to-window handoff. Name one shift-leader owner for each.", "action_r2p": "R2P of 40s meets standard. Frequency maintains this — same day, ten minutes, no skips.", "action_kvs": "KVS item time 15.4s meets standard at 83.4% healthy. This store is owned — study the method.", "action_healthy": "Healthy usage 83.4% meets standard. Side-2 weight: 9.1%. Does this hold when nobody is watching?", "action_3po": "3PO handoff 2.6m and accuracy 97.7% both meet standard. 86 orders this week.", "missed_steps": [{"step": 3, "area": "Diagnose — Bump Discipline", "detail": "Timer-to-bump gap of 20s indicates early bumping. The surface read is good OEPE — the real problem is discipline masking the number. Root cause was not diagnosed."}, {"step": 1, "area": "Labor Setup — DT Deployment", "detail": "Effective DT of 179s suggests peak DT positioning was not built to handle volume. This is a labor planning decision that should have been made a week ahead."}]},
+{"rank": 8, "nsn": "39954", "gm": "Angela Cruz", "sup": "Mike", "supColor": "#2e7d32", "composite": 1.0123, "k": 0.8272, "l": 1.2712, "m": 1.2081, "n": 0.8, "huss_wt": 0.0674, "eff_dt": 157.2, "r2p": 59, "kvs_item": 14.9, "kvs_healthy": 0.0, "timer_oepe": 142.0, "gap": 30.0, "coverage": 0.96, "pct_120": 0.4723, "del_gc": 54, "del_time": 2.2, "del_acc": 0.9815, "del_idx": 1.2986, "del_wt": 0.0324, "action_dt": "The 30s timer-to-bump gap suggests early bumping. Reset the why before coaching the number. Effective DT of 157s is above 130s. Fix lives in order accuracy and grill-to-window handoff. Name one shift-leader owner for each.", "action_r2p": "R2P of 59s is slightly above standard. Ask what they anticipate changing, not what you want them to change.", "action_kvs": "KVS healthy 0.0% — below 50% trust gate. Adoption is the problem, not speed.", "action_healthy": "Healthy usage 0.0% triggers the trust gate. Rebuild system adoption before coaching anything else. Side-2 weight for this location: 6.7%.", "action_3po": "3PO handoff 2.2m and accuracy 98.2% both meet standard. 54 orders this week.", "missed_steps": [{"step": 3, "area": "Diagnose — Bump Discipline", "detail": "Timer-to-bump gap of 30s indicates early bumping. The surface read is good OEPE — the real problem is discipline masking the number. Root cause was not diagnosed."}, {"step": 1, "area": "Labor Setup — DT Deployment", "detail": "Effective DT of 157s suggests peak DT positioning was not built to handle volume. This is a labor planning decision that should have been made a week ahead."}, {"step": 2, "area": "Service KPIs — 2nd Side Utilization", "detail": "KVS healthy usage of 0% means 2nd side utilization is not in the daily service KPI review. This pattern does not happen overnight — it was missed across multiple days."}]},
+{"rank": 9, "nsn": "38349", "gm": "Maria Martinez", "sup": "Sylvia", "supColor": "#e65100", "composite": 1.0116, "k": 0.8226, "l": 1.5, "m": 1.0651, "n": 0.8, "huss_wt": 0.0938, "eff_dt": 158.0, "r2p": 45, "kvs_item": 16.9, "kvs_healthy": 0.5543, "timer_oepe": 145.0, "gap": 27.0, "coverage": 0.96, "pct_120": 0.4394, "del_gc": 131, "del_time": 3.1, "del_acc": 0.9847, "del_idx": 1.0773, "del_wt": 0.0786, "action_dt": "The 27s timer-to-bump gap suggests early bumping. Reset the why before coaching the number. Effective DT of 158s is above 130s. Fix lives in order accuracy and grill-to-window handoff. Name one shift-leader owner for each.", "action_r2p": "R2P of 45s meets standard. Frequency maintains this — same day, ten minutes, no skips.", "action_kvs": "KVS item time 16.9s meets standard at 55.4% healthy. This store is owned — study the method.", "action_healthy": "Healthy usage 55.4% below 80%. Name one shift leader to own it per shift. Side-2 weight: 9.4%.", "action_3po": "3PO handoff 3.1m and accuracy 98.5% both meet standard. 131 orders this week.", "missed_steps": [{"step": 3, "area": "Diagnose — Bump Discipline", "detail": "Timer-to-bump gap of 27s indicates early bumping. The surface read is good OEPE — the real problem is discipline masking the number. Root cause was not diagnosed."}, {"step": 1, "area": "Labor Setup — DT Deployment", "detail": "Effective DT of 158s suggests peak DT positioning was not built to handle volume. This is a labor planning decision that should have been made a week ahead."}, {"step": 5, "area": "Develop GM — HUSS Ownership", "detail": "Healthy usage of 55.4% is below standard. The GM knows the expectation but has not named a shift-leader owner per shift. Without Reach, the pattern will not hold."}]},
+{"rank": 10, "nsn": "21383", "gm": "Janeth Alvarez", "sup": "Elton", "supColor": "#c0392b", "composite": 1.0057, "k": 0.8739, "l": 1.5, "m": 0.9, "n": 0.8571, "huss_wt": 0.1, "eff_dt": 148.8, "r2p": 42, "kvs_item": 20.0, "kvs_healthy": 0.6857, "timer_oepe": 143.0, "gap": 27.0, "coverage": 0.97, "pct_120": 0.4306, "del_gc": 105, "del_time": 3.2, "del_acc": 0.9714, "del_idx": 1.0507, "del_wt": 0.063, "action_dt": "The 27s timer-to-bump gap suggests early bumping. Reset the why before coaching the number. Effective DT of 149s is above 130s. Fix lives in order accuracy and grill-to-window handoff. Name one shift-leader owner for each.", "action_r2p": "R2P of 42s meets standard. Frequency maintains this — same day, ten minutes, no skips.", "action_kvs": "KVS item time 20.0s slightly above standard. Ask: what would you do differently?", "action_healthy": "Healthy usage 68.6% below 80%. Name one shift leader to own it per shift. Side-2 weight: 10.0%.", "action_3po": "3PO handoff 3.2m and accuracy 97.1% both meet standard. 105 orders this week.", "missed_steps": [{"step": 3, "area": "Diagnose — Bump Discipline", "detail": "Timer-to-bump gap of 27s indicates early bumping. The surface read is good OEPE — the real problem is discipline masking the number. Root cause was not diagnosed."}, {"step": 1, "area": "Labor Setup — DT Deployment", "detail": "Effective DT of 149s suggests peak DT positioning was not built to handle volume. This is a labor planning decision that should have been made a week ahead."}, {"step": 5, "area": "Develop GM — HUSS Ownership", "detail": "Healthy usage of 68.6% is below standard. The GM knows the expectation but has not named a shift-leader owner per shift. Without Reach, the pattern will not hold."}, {"step": 4, "area": "Focus — Production Flow", "detail": "KVS item time of 20.0s is above standard. Has production flow been identified as one of the top 1–2 problems this week? If not, it is being deprioritized while smaller issues consume coaching time."}]},
+{"rank": 11, "nsn": "16753", "gm": "Monica Garcia", "sup": "Michelle", "supColor": "#1a7a4a", "composite": 1.0039, "k": 1.053, "l": 1.25, "m": 0.7531, "n": 0.8, "huss_wt": 0.0313, "eff_dt": 123.5, "r2p": 60, "kvs_item": 23.9, "kvs_healthy": 0.0859, "timer_oepe": 122.0, "gap": 5.0, "coverage": 1.02, "pct_120": 0.5696, "del_gc": 0, "del_time": null, "del_acc": null, "del_idx": null, "del_wt": 0, "action_dt": "DT of 124s meets the 130s standard. Protect and multiply this.", "action_r2p": "R2P of 60s is slightly above standard. Ask what they anticipate changing, not what you want them to change.", "action_kvs": "KVS healthy 8.6% — below 50% trust gate. Adoption is the problem, not speed.", "action_healthy": "Healthy usage 8.6% triggers the trust gate. Rebuild system adoption before coaching anything else. Side-2 weight for this location: 3.1%.", "action_3po": "Delivery volume below threshold. No 3PO coaching required this week.", "missed_steps": [{"step": 2, "area": "Service KPIs — 2nd Side Utilization", "detail": "KVS healthy usage of 8.6% means 2nd side utilization is not in the daily service KPI review. This pattern does not happen overnight — it was missed across multiple days."}, {"step": 1, "area": "Labor Setup — Production Deployment", "detail": "KVS item time of 23.9s suggests production is under-deployed at peak. The position map for grill and assembly was not aligned to volume in the weekly labor plan."}]},
+{"rank": 12, "nsn": "13669", "gm": "Bree Alvidrez", "sup": "Mike", "supColor": "#2e7d32", "composite": 1.001, "k": 0.8123, "l": 1.3393, "m": 1.1465, "n": 0.8, "huss_wt": 0.0725, "eff_dt": 160.0, "r2p": 56, "kvs_item": 15.7, "kvs_healthy": 0.059, "timer_oepe": 151.0, "gap": 4.0, "coverage": 0.94, "pct_120": 0.38, "del_gc": 128, "del_time": 3.0, "del_acc": 0.9844, "del_idx": 1.0997, "del_wt": 0.0768, "action_dt": "Effective DT of 160s is above 130s. Fix lives in order accuracy and grill-to-window handoff. Name one shift-leader owner for each.", "action_r2p": "R2P of 56s is slightly above standard. Ask what they anticipate changing, not what you want them to change.", "action_kvs": "KVS healthy 5.9% — below 50% trust gate. Adoption is the problem, not speed.", "action_healthy": "Healthy usage 5.9% triggers the trust gate. Rebuild system adoption before coaching anything else. Side-2 weight for this location: 7.2%.", "action_3po": "3PO handoff 3.0m and accuracy 98.4% both meet standard. 128 orders this week.", "missed_steps": [{"step": 1, "area": "Labor Setup — DT Deployment", "detail": "Effective DT of 160s suggests peak DT positioning was not built to handle volume. This is a labor planning decision that should have been made a week ahead."}, {"step": 2, "area": "Service KPIs — 2nd Side Utilization", "detail": "KVS healthy usage of 5.9% means 2nd side utilization is not in the daily service KPI review. This pattern does not happen overnight — it was missed across multiple days."}]},
+{"rank": 13, "nsn": "25117", "gm": "Ana Godinez", "sup": "Elton", "supColor": "#c0392b", "composite": 0.9875, "k": 0.8811, "l": 1.3889, "m": 0.8182, "n": 1.0053, "huss_wt": 0.1, "eff_dt": 147.6, "r2p": 54, "kvs_item": 22.0, "kvs_healthy": 0.8042, "timer_oepe": 129.0, "gap": -1.0, "coverage": 0.97, "pct_120": 0.5294, "del_gc": 147, "del_time": 3.3, "del_acc": 0.9932, "del_idx": 1.0397, "del_wt": 0.0882, "action_dt": "Effective DT of 148s is above 130s. Fix lives in order accuracy and grill-to-window handoff. Name one shift-leader owner for each.", "action_r2p": "R2P of 54s is slightly above standard. Ask what they anticipate changing, not what you want them to change.", "action_kvs": "KVS item time 22.0s slightly above standard. Ask: what would you do differently?", "action_healthy": "Healthy usage 80.4% meets standard. Side-2 weight: 10.0%. Does this hold when nobody is watching?", "action_3po": "3PO handoff 3.3m and accuracy 99.3% both meet standard. 147 orders this week.", "missed_steps": [{"step": 1, "area": "Labor Setup — DT Deployment", "detail": "Effective DT of 148s suggests peak DT positioning was not built to handle volume. This is a labor planning decision that should have been made a week ahead."}, {"step": 4, "area": "Focus — Production Flow", "detail": "KVS item time of 22.0s is above standard. Has production flow been identified as one of the top 1–2 problems this week? If not, it is being deprioritized while smaller issues consume coaching time."}]},
+{"rank": 14, "nsn": "32107", "gm": "Jennifer Lagace", "sup": "Mona", "supColor": "#7b3fa8", "composite": 0.9809, "k": 0.8227, "l": 1.5, "m": 0.878, "n": 0.8956, "huss_wt": 0.1, "eff_dt": 158.0, "r2p": 46, "kvs_item": 20.5, "kvs_healthy": 0.7164, "timer_oepe": 155.0, "gap": -13.0, "coverage": 0.96, "pct_120": 0.4669, "del_gc": 80, "del_time": 3.1, "del_acc": 0.9625, "del_idx": 1.0683, "del_wt": 0.048, "action_dt": "Effective DT of 158s is above 130s. Fix lives in order accuracy and grill-to-window handoff. Name one shift-leader owner for each.", "action_r2p": "R2P of 46s is slightly above standard. Ask what they anticipate changing, not what you want them to change.", "action_kvs": "KVS item time 20.5s slightly above standard. Ask: what would you do differently?", "action_healthy": "Healthy usage 71.6% below 80%. Name one shift leader to own it per shift. Side-2 weight: 10.0%.", "action_3po": "3PO handoff 3.1m and accuracy 96.2% both meet standard. 80 orders this week.", "missed_steps": [{"step": 1, "area": "Labor Setup — DT Deployment", "detail": "Effective DT of 158s suggests peak DT positioning was not built to handle volume. This is a labor planning decision that should have been made a week ahead."}, {"step": 5, "area": "Develop GM — HUSS Ownership", "detail": "Healthy usage of 71.6% is below standard. The GM knows the expectation but has not named a shift-leader owner per shift. Without Reach, the pattern will not hold."}, {"step": 4, "area": "Focus — Production Flow", "detail": "KVS item time of 20.5s is above standard. Has production flow been identified as one of the top 1–2 problems this week? If not, it is being deprioritized while smaller issues consume coaching time."}]},
+{"rank": 15, "nsn": "4235", "gm": "Emilia Lezama", "sup": "Mona", "supColor": "#7b3fa8", "composite": 0.9491, "k": 0.7759, "l": 1.3636, "m": 1.0778, "n": 0.8, "huss_wt": 0.0976, "eff_dt": 167.5, "r2p": 55, "kvs_item": 16.7, "kvs_healthy": 0.6397, "timer_oepe": 166.0, "gap": 11.0, "coverage": 0.95, "pct_120": 0.3889, "del_gc": 209, "del_time": 4.2, "del_acc": 0.9713, "del_idx": 0.8944, "del_wt": 0.1254, "action_dt": "Effective DT of 168s is above 130s. Fix lives in order accuracy and grill-to-window handoff. Name one shift-leader owner for each.", "action_r2p": "R2P of 55s is slightly above standard. Ask what they anticipate changing, not what you want them to change.", "action_kvs": "KVS item time 16.7s meets standard at 64.0% healthy. This store is owned — study the method.", "action_healthy": "Healthy usage 64.0% below 80%. Name one shift leader to own it per shift. Side-2 weight: 9.8%.", "action_3po": "Handoff time 4.2m above 3.0m. Delivery staging and crew position separation from DT are the levers.", "missed_steps": [{"step": 1, "area": "Labor Setup — DT Deployment", "detail": "Effective DT of 168s suggests peak DT positioning was not built to handle volume. This is a labor planning decision that should have been made a week ahead."}, {"step": 5, "area": "Develop GM — HUSS Ownership", "detail": "Healthy usage of 64.0% is below standard. The GM knows the expectation but has not named a shift-leader owner per shift. Without Reach, the pattern will not hold."}, {"step": 1, "area": "Labor Setup — Delivery Deployment", "detail": "Handoff time of 4.2m means delivery was not planned into the deployment. Delivery volume must be treated as a separate demand stream in the weekly labor plan."}]},
+{"rank": 16, "nsn": "7703", "gm": "Ashley Andujar - Sr. GM", "sup": "Michelle", "supColor": "#1a7a4a", "composite": 0.9398, "k": 0.7821, "l": 1.5, "m": 0.8411, "n": 0.8, "huss_wt": 0.0968, "eff_dt": 166.2, "r2p": 42, "kvs_item": 21.4, "kvs_healthy": 0.5395, "timer_oepe": 150.0, "gap": 9.0, "coverage": 0.97, "pct_120": 0.4312, "del_gc": 245, "del_time": 3.8, "del_acc": 0.9592, "del_idx": 0.9421, "del_wt": 0.147, "action_dt": "Effective DT of 166s is above 130s. Fix lives in order accuracy and grill-to-window handoff. Name one shift-leader owner for each.", "action_r2p": "R2P of 42s meets standard. Frequency maintains this — same day, ten minutes, no skips.", "action_kvs": "KVS item time 21.4s slightly above standard. Ask: what would you do differently?", "action_healthy": "Healthy usage 53.9% below 80%. Name one shift leader to own it per shift. Side-2 weight: 9.7%.", "action_3po": "Handoff time 3.8m above 3.0m. Delivery staging and crew position separation from DT are the levers.", "missed_steps": [{"step": 1, "area": "Labor Setup — DT Deployment", "detail": "Effective DT of 166s suggests peak DT positioning was not built to handle volume. This is a labor planning decision that should have been made a week ahead."}, {"step": 5, "area": "Develop GM — HUSS Ownership", "detail": "Healthy usage of 53.9% is below standard. The GM knows the expectation but has not named a shift-leader owner per shift. Without Reach, the pattern will not hold."}, {"step": 4, "area": "Focus — Production Flow", "detail": "KVS item time of 21.4s is above standard. Has production flow been identified as one of the top 1–2 problems this week? If not, it is being deprioritized while smaller issues consume coaching time."}, {"step": 1, "area": "Labor Setup — Delivery Deployment", "detail": "Handoff time of 3.8m means delivery was not planned into the deployment. Delivery volume must be treated as a separate demand stream in the weekly labor plan."}]},
+{"rank": 17, "nsn": "1313", "gm": "Destiny Baker", "sup": "Sylvia", "supColor": "#e65100", "composite": 0.9338, "k": 0.8911, "l": 1.0714, "m": 0.7059, "n": 1.151, "huss_wt": 0.1, "eff_dt": 145.9, "r2p": 70, "kvs_item": 25.5, "kvs_healthy": 0.9208, "timer_oepe": 143.0, "gap": 11.0, "coverage": 0.95, "pct_120": 0.4928, "del_gc": 582, "del_time": 3.3, "del_acc": 0.9794, "del_idx": 1.0341, "del_wt": 0.15, "action_dt": "Effective DT of 146s is above 130s. Fix lives in order accuracy and grill-to-window handoff. Name one shift-leader owner for each.", "action_r2p": "R2P of 70s is well above 45s. Coach staging and order readiness. Ask: what decision created this?", "action_kvs": "KVS item time 25.5s against 18s standard. Coach production flow. Name one shift-leader owner.", "action_healthy": "Healthy usage 92.1% meets standard. Side-2 weight: 10.0%. Does this hold when nobody is watching?", "action_3po": "3PO handoff 3.3m and accuracy 97.9% both meet standard. 582 orders this week.", "missed_steps": [{"step": 1, "area": "Labor Setup — DT Deployment", "detail": "Effective DT of 146s suggests peak DT positioning was not built to handle volume. This is a labor planning decision that should have been made a week ahead."}, {"step": 1, "area": "Labor Setup — Production Deployment", "detail": "KVS item time of 25.5s suggests production is under-deployed at peak. The position map for grill and assembly was not aligned to volume in the weekly labor plan."}]},
+{"rank": 18, "nsn": "11744", "gm": "Sabrina Rocha", "sup": "Sylvia", "supColor": "#e65100", "composite": 0.9295, "k": 0.7088, "l": 1.0563, "m": 1.3139, "n": 1.0307, "huss_wt": 0.1, "eff_dt": 183.4, "r2p": 71, "kvs_item": 13.7, "kvs_healthy": 0.8245, "timer_oepe": 169.0, "gap": 5.0, "coverage": 0.79, "pct_120": 0.3363, "del_gc": 351, "del_time": 4.0, "del_acc": 0.9687, "del_idx": 0.9184, "del_wt": 0.15, "action_dt": "Timer coverage is 79.0% — below 80%. Score falls back to bump basis. Check magnetic plate. Until restored, you cannot distinguish owned performance from performed performance. Effective DT of 183s is above 130s. Fix lives in order accuracy and grill-to-window handoff. Name one shift-leader owner for each.", "action_r2p": "R2P of 71s is well above 45s. Coach staging and order readiness. Ask: what decision created this?", "action_kvs": "KVS item time 13.7s meets standard at 82.5% healthy. This store is owned — study the method.", "action_healthy": "Healthy usage 82.5% meets standard. Side-2 weight: 10.0%. Does this hold when nobody is watching?", "action_3po": "Handoff time 4.0m above 3.0m. Delivery staging and crew position separation from DT are the levers.", "missed_steps": [{"step": 2, "area": "Operations Metrics", "detail": "Timer coverage 79.0% was not flagged during the daily operations review. Shift managers must report equipment status daily — a timer plate issue at this level does not appear overnight."}, {"step": 1, "area": "Labor Setup — DT Deployment", "detail": "Effective DT of 183s suggests peak DT positioning was not built to handle volume. This is a labor planning decision that should have been made a week ahead."}, {"step": 1, "area": "Labor Setup — Delivery Deployment", "detail": "Handoff time of 4.0m means delivery was not planned into the deployment. Delivery volume must be treated as a separate demand stream in the weekly labor plan."}]},
+{"rank": 19, "nsn": "40959", "gm": "Jose Sanchez - Interim GM", "sup": "Raymond", "supColor": "#b87a00", "composite": 0.9275, "k": 1.0987, "l": 0.5, "m": 0.9231, "n": 0.8, "huss_wt": 0.0486, "eff_dt": 118.3, "r2p": 39, "kvs_item": 19.5, "kvs_healthy": 0.0, "timer_oepe": 118.0, "gap": 0.0, "coverage": 0.99, "pct_120": 0.6066, "del_gc": 32, "del_time": 1.5, "del_acc": 0.9688, "del_idx": 1.2934, "del_wt": 0.0192, "action_dt": "DT of 118s meets the 130s standard. Protect and multiply this.", "action_r2p": "R2P of 39s meets standard. Frequency maintains this — same day, ten minutes, no skips.", "action_kvs": "KVS healthy 0.0% — below 50% trust gate. Adoption is the problem, not speed.", "action_healthy": "Healthy usage 0.0% triggers the trust gate. Rebuild system adoption before coaching anything else. Side-2 weight for this location: 4.9%.", "action_3po": "3PO handoff 1.5m and accuracy 96.9% both meet standard. 32 orders this week.", "missed_steps": [{"step": 2, "area": "Service KPIs — 2nd Side Utilization", "detail": "KVS healthy usage of 0% means 2nd side utilization is not in the daily service KPI review. This pattern does not happen overnight — it was missed across multiple days."}, {"step": 4, "area": "Focus — Production Flow", "detail": "KVS item time of 19.5s is above standard. Has production flow been identified as one of the top 1–2 problems this week? If not, it is being deprioritized while smaller issues consume coaching time."}]},
+{"rank": 20, "nsn": "11529", "gm": "Fanny Gonzalez", "sup": "Sylvia", "supColor": "#e65100", "composite": 0.9104, "k": 0.9301, "l": 0.8065, "m": 0.793, "n": 0.8951, "huss_wt": 0.0917, "eff_dt": 139.8, "r2p": 93, "kvs_item": 22.7, "kvs_healthy": 0.7161, "timer_oepe": 125.0, "gap": 1.0, "coverage": 0.92, "pct_120": 0.5529, "del_gc": 185, "del_time": 2.6, "del_acc": 0.9784, "del_idx": 1.205, "del_wt": 0.111, "action_dt": "DT of 140s is slightly above standard. Coach positioning and presenter efficiency at peak.", "action_r2p": "R2P of 93s is well above 45s. Coach staging and order readiness. Ask: what decision created this?", "action_kvs": "KVS item time 22.7s against 18s standard. Coach production flow. Name one shift-leader owner.", "action_healthy": "Healthy usage 71.6% below 80%. Name one shift leader to own it per shift. Side-2 weight: 9.2%.", "action_3po": "3PO handoff 2.6m and accuracy 97.8% both meet standard. 185 orders this week.", "missed_steps": [{"step": 2, "area": "Service KPIs — Front Counter", "detail": "R2P of 93s should have surfaced in the daily service KPI review by daypart. Front counter slowness shows in hourly data — if it was reviewed, the pattern was not acted on."}, {"step": 5, "area": "Develop GM — HUSS Ownership", "detail": "Healthy usage of 71.6% is below standard. The GM knows the expectation but has not named a shift-leader owner per shift. Without Reach, the pattern will not hold."}, {"step": 1, "area": "Labor Setup — Production Deployment", "detail": "KVS item time of 22.7s suggests production is under-deployed at peak. The position map for grill and assembly was not aligned to volume in the weekly labor plan."}]},
+{"rank": 21, "nsn": "22228", "gm": "Monique Castro", "sup": "Mona", "supColor": "#7b3fa8", "composite": 0.9023, "k": 0.8585, "l": 1.1029, "m": 0.7725, "n": 0.9522, "huss_wt": 0.0785, "eff_dt": 151.4, "r2p": 68, "kvs_item": 23.3, "kvs_healthy": 0.7617, "timer_oepe": 144.0, "gap": 5.0, "coverage": 0.96, "pct_120": 0.4876, "del_gc": 47, "del_time": 2.8, "del_acc": 0.9362, "del_idx": 1.1302, "del_wt": 0.0282, "action_dt": "Effective DT of 151s is above 130s. Fix lives in order accuracy and grill-to-window handoff. Name one shift-leader owner for each.", "action_r2p": "R2P of 68s is well above 45s. Coach staging and order readiness. Ask: what decision created this?", "action_kvs": "KVS item time 23.3s against 18s standard. Coach production flow. Name one shift-leader owner.", "action_healthy": "Healthy usage 76.2% below 80%. Name one shift leader to own it per shift. Side-2 weight: 7.8%.", "action_3po": "Accuracy 93.6% below 98%. Verification at handoff is your number.", "missed_steps": [{"step": 1, "area": "Labor Setup — DT Deployment", "detail": "Effective DT of 151s suggests peak DT positioning was not built to handle volume. This is a labor planning decision that should have been made a week ahead."}, {"step": 1, "area": "Labor Setup — Production Deployment", "detail": "KVS item time of 23.3s suggests production is under-deployed at peak. The position map for grill and assembly was not aligned to volume in the weekly labor plan."}, {"step": 2, "area": "Service KPIs — Delivery Accuracy", "detail": "3PO accuracy of 93.6% should surface in the daily service KPI review. Order verification before handoff is a shift-manager discipline — if not in daily review, it will not be coached."}]},
+{"rank": 22, "nsn": "7433", "gm": "Cris Reeves", "sup": "Ray", "supColor": "#0097a7", "composite": 0.9009, "k": 0.8086, "l": 1.5, "m": 0.6207, "n": 0.8, "huss_wt": 0.0578, "eff_dt": 160.8, "r2p": 41, "kvs_item": 29.0, "kvs_healthy": 0.1093, "timer_oepe": 153.0, "gap": 5.0, "coverage": 0.94, "pct_120": 0.4202, "del_gc": 0, "del_time": null, "del_acc": null, "del_idx": null, "del_wt": 0, "action_dt": "Effective DT of 161s is above 130s. Fix lives in order accuracy and grill-to-window handoff. Name one shift-leader owner for each.", "action_r2p": "R2P of 41s meets standard. Frequency maintains this — same day, ten minutes, no skips.", "action_kvs": "KVS healthy 10.9% — below 50% trust gate. Adoption is the problem, not speed.", "action_healthy": "Healthy usage 10.9% triggers the trust gate. Rebuild system adoption before coaching anything else. Side-2 weight for this location: 5.8%.", "action_3po": "Delivery volume below threshold. No 3PO coaching required this week.", "missed_steps": [{"step": 1, "area": "Labor Setup — DT Deployment", "detail": "Effective DT of 161s suggests peak DT positioning was not built to handle volume. This is a labor planning decision that should have been made a week ahead."}, {"step": 2, "area": "Service KPIs — 2nd Side Utilization", "detail": "KVS healthy usage of 10.9% means 2nd side utilization is not in the daily service KPI review. This pattern does not happen overnight — it was missed across multiple days."}, {"step": 1, "area": "Labor Setup — Production Deployment", "detail": "KVS item time of 29.0s suggests production is under-deployed at peak. The position map for grill and assembly was not aligned to volume in the weekly labor plan."}]},
+{"rank": 23, "nsn": "10150", "gm": "Kelsi Bratcher", "sup": "Mona", "supColor": "#7b3fa8", "composite": 0.8955, "k": 0.7484, "l": 1.3889, "m": 0.6897, "n": 0.8866, "huss_wt": 0.0935, "eff_dt": 173.7, "r2p": 54, "kvs_item": 26.1, "kvs_healthy": 0.7093, "timer_oepe": 166.0, "gap": 15.0, "coverage": 0.96, "pct_120": 0.4098, "del_gc": 104, "del_time": 2.7, "del_acc": 0.9615, "del_idx": 1.1683, "del_wt": 0.0624, "action_dt": "Effective DT of 174s is above 130s. Fix lives in order accuracy and grill-to-window handoff. Name one shift-leader owner for each.", "action_r2p": "R2P of 54s is slightly above standard. Ask what they anticipate changing, not what you want them to change.", "action_kvs": "KVS item time 26.1s against 18s standard. Coach production flow. Name one shift-leader owner.", "action_healthy": "Healthy usage 70.9% below 80%. Name one shift leader to own it per shift. Side-2 weight: 9.3%.", "action_3po": "3PO handoff 2.7m and accuracy 96.2% both meet standard. 104 orders this week.", "missed_steps": [{"step": 1, "area": "Labor Setup — DT Deployment", "detail": "Effective DT of 174s suggests peak DT positioning was not built to handle volume. This is a labor planning decision that should have been made a week ahead."}, {"step": 5, "area": "Develop GM — HUSS Ownership", "detail": "Healthy usage of 70.9% is below standard. The GM knows the expectation but has not named a shift-leader owner per shift. Without Reach, the pattern will not hold."}, {"step": 1, "area": "Labor Setup — Production Deployment", "detail": "KVS item time of 26.1s suggests production is under-deployed at peak. The position map for grill and assembly was not aligned to volume in the weekly labor plan."}]},
+{"rank": 24, "nsn": "6853", "gm": "Eloina Lopez", "sup": "Mona", "supColor": "#7b3fa8", "composite": 0.8943, "k": 1.0096, "l": 0.5, "m": 1.0112, "n": 0.8, "huss_wt": 0.0657, "eff_dt": 128.8, "r2p": 19, "kvs_item": 17.8, "kvs_healthy": 0.1506, "timer_oepe": 122.0, "gap": 14.0, "coverage": 1.0, "pct_120": 0.6035, "del_gc": 0, "del_time": null, "del_acc": null, "del_idx": null, "del_wt": 0, "action_dt": "DT of 129s meets the 130s standard. Protect and multiply this.", "action_r2p": "R2P of 19s is below the physical floor — motion masquerading as performance. Reset the why, investigate receipt-timing. Credibility failure before discipline failure.", "action_kvs": "KVS healthy 15.1% — below 50% trust gate. Adoption is the problem, not speed.", "action_healthy": "Healthy usage 15.1% triggers the trust gate. Rebuild system adoption before coaching anything else. Side-2 weight for this location: 6.6%.", "action_3po": "Delivery volume below threshold. No 3PO coaching required this week.", "missed_steps": [{"step": 3, "area": "Diagnose — Implausible Number", "detail": "R2P of 19s is physically impossible. The daily review accepted a number that cannot be real. Diagnosing the system requires rejecting implausible numbers — this is a step 3 failure."}, {"step": 2, "area": "Service KPIs — 2nd Side Utilization", "detail": "KVS healthy usage of 15.1% means 2nd side utilization is not in the daily service KPI review. This pattern does not happen overnight — it was missed across multiple days."}]},
+{"rank": 25, "nsn": "7932", "gm": "Gloria Huizar", "sup": "Raymond", "supColor": "#b87a00", "composite": 0.8698, "k": 0.7617, "l": 0.5, "m": 1.2857, "n": 1.1564, "huss_wt": 0.1, "eff_dt": 170.7, "r2p": 28, "kvs_item": 14.0, "kvs_healthy": 0.9251, "timer_oepe": 141.0, "gap": -2.0, "coverage": 0.98, "pct_120": 0.5019, "del_gc": 188, "del_time": 3.5, "del_acc": 0.9787, "del_idx": 0.9975, "del_wt": 0.1128, "action_dt": "Effective DT of 171s is above 130s. Fix lives in order accuracy and grill-to-window handoff. Name one shift-leader owner for each.", "action_r2p": "R2P of 28s is below the physical floor — motion masquerading as performance. Reset the why, investigate receipt-timing. Credibility failure before discipline failure.", "action_kvs": "KVS item time 14.0s meets standard at 92.5% healthy. This store is owned — study the method.", "action_healthy": "Healthy usage 92.5% meets standard. Side-2 weight: 10.0%. Does this hold when nobody is watching?", "action_3po": "3PO handoff 3.5m and accuracy 97.9% both meet standard. 188 orders this week.", "missed_steps": [{"step": 1, "area": "Labor Setup — DT Deployment", "detail": "Effective DT of 171s suggests peak DT positioning was not built to handle volume. This is a labor planning decision that should have been made a week ahead."}, {"step": 3, "area": "Diagnose — Implausible Number", "detail": "R2P of 28s is physically impossible. The daily review accepted a number that cannot be real. Diagnosing the system requires rejecting implausible numbers — this is a step 3 failure."}]},
+{"rank": 26, "nsn": "37958", "gm": "Martha Perez", "sup": "Ray", "supColor": "#0097a7", "composite": 0.8622, "k": 0.9381, "l": 0.5, "m": 0.9424, "n": 0.951, "huss_wt": 0.0697, "eff_dt": 138.6, "r2p": 21, "kvs_item": 19.1, "kvs_healthy": 0.7608, "timer_oepe": 136.0, "gap": -3.0, "coverage": 0.98, "pct_120": 0.476, "del_gc": 36, "del_time": 1.3, "del_acc": 1.0, "del_idx": 1.3061, "del_wt": 0.0216, "action_dt": "DT of 139s is slightly above standard. Coach positioning and presenter efficiency at peak.", "action_r2p": "R2P of 21s is below the physical floor — motion masquerading as performance. Reset the why, investigate receipt-timing. Credibility failure before discipline failure.", "action_kvs": "KVS item time 19.1s slightly above standard. Ask: what would you do differently?", "action_healthy": "Healthy usage 76.1% below 80%. Name one shift leader to own it per shift. Side-2 weight: 7.0%.", "action_3po": "3PO handoff 1.3m and accuracy 100.0% both meet standard. 36 orders this week.", "missed_steps": [{"step": 3, "area": "Diagnose — Implausible Number", "detail": "R2P of 21s is physically impossible. The daily review accepted a number that cannot be real. Diagnosing the system requires rejecting implausible numbers — this is a step 3 failure."}, {"step": 4, "area": "Focus — Production Flow", "detail": "KVS item time of 19.1s is above standard. Has production flow been identified as one of the top 1–2 problems this week? If not, it is being deprioritized while smaller issues consume coaching time."}]},
+{"rank": 27, "nsn": "2327", "gm": "Alex Beltran", "sup": "Ray", "supColor": "#0097a7", "composite": 0.8403, "k": 0.8404, "l": 1.0135, "m": 0.687, "n": 0.8, "huss_wt": 0.0845, "eff_dt": 154.7, "r2p": 74, "kvs_item": 26.2, "kvs_healthy": 0.1149, "timer_oepe": 149.0, "gap": 5.0, "coverage": 1.0, "pct_120": 0.4062, "del_gc": 97, "del_time": 4.5, "del_acc": 0.9897, "del_idx": 0.8686, "del_wt": 0.0582, "action_dt": "Effective DT of 155s is above 130s. Fix lives in order accuracy and grill-to-window handoff. Name one shift-leader owner for each.", "action_r2p": "R2P of 74s is well above 45s. Coach staging and order readiness. Ask: what decision created this?", "action_kvs": "KVS healthy 11.5% — below 50% trust gate. Adoption is the problem, not speed.", "action_healthy": "Healthy usage 11.5% triggers the trust gate. Rebuild system adoption before coaching anything else. Side-2 weight for this location: 8.5%.", "action_3po": "Handoff time 4.5m above 3.0m. Delivery staging and crew position separation from DT are the levers.", "missed_steps": [{"step": 1, "area": "Labor Setup — DT Deployment", "detail": "Effective DT of 155s suggests peak DT positioning was not built to handle volume. This is a labor planning decision that should have been made a week ahead."}, {"step": 2, "area": "Service KPIs — 2nd Side Utilization", "detail": "KVS healthy usage of 11.5% means 2nd side utilization is not in the daily service KPI review. This pattern does not happen overnight — it was missed across multiple days."}, {"step": 1, "area": "Labor Setup — Production Deployment", "detail": "KVS item time of 26.2s suggests production is under-deployed at peak. The position map for grill and assembly was not aligned to volume in the weekly labor plan."}, {"step": 1, "area": "Labor Setup — Delivery Deployment", "detail": "Handoff time of 4.5m means delivery was not planned into the deployment. Delivery volume must be treated as a separate demand stream in the weekly labor plan."}]},
+{"rank": 28, "nsn": "24797", "gm": "Ariana Cervantes - Interim GM", "sup": "Michelle", "supColor": "#1a7a4a", "composite": 0.8396, "k": 0.8632, "l": 0.75, "m": 0.8571, "n": 0.8, "huss_wt": 0.1, "eff_dt": 150.6, "r2p": 100, "kvs_item": 21.0, "kvs_healthy": 0.2861, "timer_oepe": null, "gap": null, "coverage": 0.0, "pct_120": null, "del_gc": 116, "del_time": 3.9, "del_acc": 0.9569, "del_idx": 0.927, "del_wt": 0.0696, "action_dt": "Effective DT of 151s is above 130s. Fix lives in order accuracy and grill-to-window handoff. Name one shift-leader owner for each.", "action_r2p": "R2P of 100s is well above 45s. Coach staging and order readiness. Ask: what decision created this?", "action_kvs": "KVS healthy 28.6% — below 50% trust gate. Adoption is the problem, not speed.", "action_healthy": "Healthy usage 28.6% triggers the trust gate. Rebuild system adoption before coaching anything else. Side-2 weight for this location: 10.0%.", "action_3po": "Handoff time 3.9m above 3.0m. Delivery staging and crew position separation from DT are the levers.", "missed_steps": [{"step": 1, "area": "Labor Setup — DT Deployment", "detail": "Effective DT of 151s suggests peak DT positioning was not built to handle volume. This is a labor planning decision that should have been made a week ahead."}, {"step": 2, "area": "Service KPIs — Front Counter", "detail": "R2P of 100s should have surfaced in the daily service KPI review by daypart. Front counter slowness shows in hourly data — if it was reviewed, the pattern was not acted on."}, {"step": 2, "area": "Service KPIs — 2nd Side Utilization", "detail": "KVS healthy usage of 28.6% means 2nd side utilization is not in the daily service KPI review. This pattern does not happen overnight — it was missed across multiple days."}, {"step": 4, "area": "Focus — Production Flow", "detail": "KVS item time of 21.0s is above standard. Has production flow been identified as one of the top 1–2 problems this week? If not, it is being deprioritized while smaller issues consume coaching time."}, {"step": 1, "area": "Labor Setup — Delivery Deployment", "detail": "Handoff time of 3.9m means delivery was not planned into the deployment. Delivery volume must be treated as a separate demand stream in the weekly labor plan."}]},
+{"rank": 29, "nsn": "24497", "gm": "Paola Martinez", "sup": "Mike", "supColor": "#2e7d32", "composite": 0.8395, "k": 0.8862, "l": 0.5, "m": 1.0056, "n": 0.8, "huss_wt": 0.0952, "eff_dt": 146.7, "r2p": 28, "kvs_item": 17.9, "kvs_healthy": 0.0984, "timer_oepe": 145.0, "gap": 20.0, "coverage": 0.99, "pct_120": 0.4373, "del_gc": 85, "del_time": 3.0, "del_acc": 1.0, "del_idx": 1.1061, "del_wt": 0.051, "action_dt": "The 20s timer-to-bump gap suggests early bumping. Reset the why before coaching the number. Effective DT of 147s is above 130s. Fix lives in order accuracy and grill-to-window handoff. Name one shift-leader owner for each.", "action_r2p": "R2P of 28s is below the physical floor — motion masquerading as performance. Reset the why, investigate receipt-timing. Credibility failure before discipline failure.", "action_kvs": "KVS healthy 9.8% — below 50% trust gate. Adoption is the problem, not speed.", "action_healthy": "Healthy usage 9.8% triggers the trust gate. Rebuild system adoption before coaching anything else. Side-2 weight for this location: 9.5%.", "action_3po": "3PO handoff 3.0m and accuracy 100.0% both meet standard. 85 orders this week.", "missed_steps": [{"step": 3, "area": "Diagnose — Bump Discipline", "detail": "Timer-to-bump gap of 20s indicates early bumping. The surface read is good OEPE — the real problem is discipline masking the number. Root cause was not diagnosed."}, {"step": 1, "area": "Labor Setup — DT Deployment", "detail": "Effective DT of 147s suggests peak DT positioning was not built to handle volume. This is a labor planning decision that should have been made a week ahead."}, {"step": 3, "area": "Diagnose — Implausible Number", "detail": "R2P of 28s is physically impossible. The daily review accepted a number that cannot be real. Diagnosing the system requires rejecting implausible numbers — this is a step 3 failure."}, {"step": 2, "area": "Service KPIs — 2nd Side Utilization", "detail": "KVS healthy usage of 9.8% means 2nd side utilization is not in the daily service KPI review. This pattern does not happen overnight — it was missed across multiple days."}]},
+{"rank": 30, "nsn": "38616", "gm": "Esther Bagdasarian", "sup": "Elton", "supColor": "#c0392b", "composite": 0.8329, "k": 0.7725, "l": 1.0135, "m": 0.7725, "n": 0.8, "huss_wt": 0.0722, "eff_dt": 168.3, "r2p": 74, "kvs_item": 23.3, "kvs_healthy": 0.1485, "timer_oepe": 163.0, "gap": 20.0, "coverage": 0.96, "pct_120": 0.4203, "del_gc": 40, "del_time": 2.5, "del_acc": 1.0, "del_idx": 1.2461, "del_wt": 0.024, "action_dt": "The 20s timer-to-bump gap suggests early bumping. Reset the why before coaching the number. Effective DT of 168s is above 130s. Fix lives in order accuracy and grill-to-window handoff. Name one shift-leader owner for each.", "action_r2p": "R2P of 74s is well above 45s. Coach staging and order readiness. Ask: what decision created this?", "action_kvs": "KVS healthy 14.8% — below 50% trust gate. Adoption is the problem, not speed.", "action_healthy": "Healthy usage 14.8% triggers the trust gate. Rebuild system adoption before coaching anything else. Side-2 weight for this location: 7.2%.", "action_3po": "3PO handoff 2.5m and accuracy 100.0% both meet standard. 40 orders this week.", "missed_steps": [{"step": 3, "area": "Diagnose — Bump Discipline", "detail": "Timer-to-bump gap of 20s indicates early bumping. The surface read is good OEPE — the real problem is discipline masking the number. Root cause was not diagnosed."}, {"step": 1, "area": "Labor Setup — DT Deployment", "detail": "Effective DT of 168s suggests peak DT positioning was not built to handle volume. This is a labor planning decision that should have been made a week ahead."}, {"step": 2, "area": "Service KPIs — 2nd Side Utilization", "detail": "KVS healthy usage of 14.8% means 2nd side utilization is not in the daily service KPI review. This pattern does not happen overnight — it was missed across multiple days."}, {"step": 1, "area": "Labor Setup — Production Deployment", "detail": "KVS item time of 23.3s suggests production is under-deployed at peak. The position map for grill and assembly was not aligned to volume in the weekly labor plan."}]},
+{"rank": 31, "nsn": "27493", "gm": "Ana Hernandez - Sr GM", "sup": "Mona", "supColor": "#7b3fa8", "composite": 0.8107, "k": 0.7691, "l": 0.7075, "m": 0.8219, "n": 0.9104, "huss_wt": 0.1, "eff_dt": 169.0, "r2p": 106, "kvs_item": 21.9, "kvs_healthy": 0.7283, "timer_oepe": 160.0, "gap": 4.0, "coverage": 0.96, "pct_120": 0.4106, "del_gc": 226, "del_time": 3.5, "del_acc": 0.9779, "del_idx": 0.9971, "del_wt": 0.1356, "action_dt": "Effective DT of 169s is above 130s. Fix lives in order accuracy and grill-to-window handoff. Name one shift-leader owner for each.", "action_r2p": "R2P of 106s is well above 45s. Coach staging and order readiness. Ask: what decision created this?", "action_kvs": "KVS item time 21.9s slightly above standard. Ask: what would you do differently?", "action_healthy": "Healthy usage 72.8% below 80%. Name one shift leader to own it per shift. Side-2 weight: 10.0%.", "action_3po": "3PO handoff 3.5m and accuracy 97.8% both meet standard. 226 orders this week.", "missed_steps": [{"step": 1, "area": "Labor Setup — DT Deployment", "detail": "Effective DT of 169s suggests peak DT positioning was not built to handle volume. This is a labor planning decision that should have been made a week ahead."}, {"step": 2, "area": "Service KPIs — Front Counter", "detail": "R2P of 106s should have surfaced in the daily service KPI review by daypart. Front counter slowness shows in hourly data — if it was reviewed, the pattern was not acted on."}, {"step": 4, "area": "Focus — Production Flow", "detail": "KVS item time of 21.9s is above standard. Has production flow been identified as one of the top 1–2 problems this week? If not, it is being deprioritized while smaller issues consume coaching time."}]},
+{"rank": 32, "nsn": "10865", "gm": "Maria Figueroa", "sup": "Mike", "supColor": "#2e7d32", "composite": 0.7965, "k": 0.9866, "l": 0.5, "m": 0.5, "n": 0.8, "huss_wt": 0.0835, "eff_dt": 131.8, "r2p": 32, "kvs_item": 11.0, "kvs_healthy": 0.108, "timer_oepe": 120.0, "gap": 7.0, "coverage": 0.97, "pct_120": 0.603, "del_gc": 114, "del_time": 2.7, "del_acc": 0.9912, "del_idx": 1.1803, "del_wt": 0.0684, "action_dt": "DT of 132s is slightly above standard. Coach positioning and presenter efficiency at peak.", "action_r2p": "R2P of 32s meets standard. Frequency maintains this — same day, ten minutes, no skips.", "action_kvs": "KVS healthy 10.8% and item time 11.0s — both gates fire. Rebuild the why first.", "action_healthy": "Healthy usage 10.8% triggers the trust gate. Rebuild system adoption before coaching anything else. Side-2 weight for this location: 8.3%.", "action_3po": "3PO handoff 2.7m and accuracy 99.1% both meet standard. 114 orders this week.", "missed_steps": [{"step": 2, "area": "Service KPIs — 2nd Side Utilization", "detail": "KVS healthy usage of 10.8% means 2nd side utilization is not in the daily service KPI review. This pattern does not happen overnight — it was missed across multiple days."}]},
+{"rank": 33, "nsn": "7013", "gm": "Luis Yepez", "sup": "Ray", "supColor": "#0097a7", "composite": 0.7406, "k": 0.8503, "l": 0.5, "m": 0.6207, "n": 0.8, "huss_wt": 0.072, "eff_dt": 152.9, "r2p": 33, "kvs_item": 29.0, "kvs_healthy": 0.0067, "timer_oepe": 151.0, "gap": 9.0, "coverage": 0.98, "pct_120": 0.4737, "del_gc": 112, "del_time": 3.6, "del_acc": 0.9464, "del_idx": 0.9677, "del_wt": 0.0672, "action_dt": "Effective DT of 153s is above 130s. Fix lives in order accuracy and grill-to-window handoff. Name one shift-leader owner for each.", "action_r2p": "R2P of 33s meets standard. Frequency maintains this — same day, ten minutes, no skips.", "action_kvs": "KVS healthy 0.7% — below 50% trust gate. Adoption is the problem, not speed.", "action_healthy": "Healthy usage 0.7% triggers the trust gate. Rebuild system adoption before coaching anything else. Side-2 weight for this location: 7.2%.", "action_3po": "Handoff time 3.6m above 3.0m. Delivery staging and crew position separation from DT are the levers. Accuracy 94.6% below 98%. Verification at handoff is your number.", "missed_steps": [{"step": 1, "area": "Labor Setup — DT Deployment", "detail": "Effective DT of 153s suggests peak DT positioning was not built to handle volume. This is a labor planning decision that should have been made a week ahead."}, {"step": 2, "area": "Service KPIs — 2nd Side Utilization", "detail": "KVS healthy usage of 0.7% means 2nd side utilization is not in the daily service KPI review. This pattern does not happen overnight — it was missed across multiple days."}, {"step": 1, "area": "Labor Setup — Production Deployment", "detail": "KVS item time of 29.0s suggests production is under-deployed at peak. The position map for grill and assembly was not aligned to volume in the weekly labor plan."}, {"step": 1, "area": "Labor Setup — Delivery Deployment", "detail": "Handoff time of 3.6m means delivery was not planned into the deployment. Delivery volume must be treated as a separate demand stream in the weekly labor plan."}, {"step": 2, "area": "Service KPIs — Delivery Accuracy", "detail": "3PO accuracy of 94.6% should surface in the daily service KPI review. Order verification before handoff is a shift-manager discipline — if not in daily review, it will not be coached."}]},
+{"rank": 34, "nsn": "12566", "gm": "Jose Mendoza", "sup": "Michelle", "supColor": "#1a7a4a", "composite": 0.7097, "k": 0.7584, "l": 0.5, "m": 0.7627, "n": 0.8, "huss_wt": 0.0462, "eff_dt": 171.4, "r2p": 29, "kvs_item": 23.6, "kvs_healthy": 0.0156, "timer_oepe": 169.0, "gap": 35.0, "coverage": 0.84, "pct_120": 0.3374, "del_gc": 0, "del_time": null, "del_acc": null, "del_idx": null, "del_wt": 0, "action_dt": "The 35s timer-to-bump gap suggests early bumping. Reset the why before coaching the number. Effective DT of 171s is above 130s. Fix lives in order accuracy and grill-to-window handoff. Name one shift-leader owner for each.", "action_r2p": "R2P of 29s is below the physical floor — motion masquerading as performance. Reset the why, investigate receipt-timing. Credibility failure before discipline failure.", "action_kvs": "KVS healthy 1.6% — below 50% trust gate. Adoption is the problem, not speed.", "action_healthy": "Healthy usage 1.6% triggers the trust gate. Rebuild system adoption before coaching anything else. Side-2 weight for this location: 4.6%.", "action_3po": "Delivery volume below threshold. No 3PO coaching required this week.", "missed_steps": [{"step": 3, "area": "Diagnose — Bump Discipline", "detail": "Timer-to-bump gap of 35s indicates early bumping. The surface read is good OEPE — the real problem is discipline masking the number. Root cause was not diagnosed."}, {"step": 1, "area": "Labor Setup — DT Deployment", "detail": "Effective DT of 171s suggests peak DT positioning was not built to handle volume. This is a labor planning decision that should have been made a week ahead."}, {"step": 3, "area": "Diagnose — Implausible Number", "detail": "R2P of 29s is physically impossible. The daily review accepted a number that cannot be real. Diagnosing the system requires rejecting implausible numbers — this is a step 3 failure."}, {"step": 2, "area": "Service KPIs — 2nd Side Utilization", "detail": "KVS healthy usage of 1.6% means 2nd side utilization is not in the daily service KPI review. This pattern does not happen overnight — it was missed across multiple days."}, {"step": 1, "area": "Labor Setup — Production Deployment", "detail": "KVS item time of 23.6s suggests production is under-deployed at peak. The position map for grill and assembly was not aligned to volume in the weekly labor plan."}]}
 ];
+
+var HISTORY = [
+  {week:'Jul 29-Aug 4',data:{
+  '1313':{rank:17,composite:0.9338,k:0.8911,l:1.0714,m:0.7059,n:1.151},
+  '2327':{rank:27,composite:0.8403,k:0.8404,l:1.0135,m:0.687,n:0.8},
+  '4235':{rank:15,composite:0.9491,k:0.7759,l:1.3636,m:1.0778,n:0.8},
+  '6853':{rank:24,composite:0.8943,k:1.0096,l:0.5,m:1.0112,n:0.8},
+  '6891':{rank:3,composite:1.0289,k:0.8764,l:1.3889,m:1.0465,n:0.8853},
+  '7013':{rank:33,composite:0.7406,k:0.8503,l:0.5,m:0.6207,n:0.8},
+  '7433':{rank:22,composite:0.9009,k:0.8086,l:1.5,m:0.6207,n:0.8},
+  '7703':{rank:16,composite:0.9398,k:0.7821,l:1.5,m:0.8411,n:0.8},
+  '7932':{rank:25,composite:0.8698,k:0.7617,l:0.5,m:1.2857,n:1.1564},
+  '10150':{rank:23,composite:0.8955,k:0.7484,l:1.3889,m:0.6897,n:0.8866},
+  '10865':{rank:32,composite:0.7965,k:0.9866,l:0.5,m:0.5,n:0.8},
+  '11124':{rank:5,composite:1.0161,k:0.8967,l:1.4423,m:0.9677,n:0.8},
+  '11529':{rank:20,composite:0.9104,k:0.9301,l:0.8065,m:0.793,n:0.8951},
+  '11744':{rank:18,composite:0.9295,k:0.7088,l:1.0563,m:1.3139,n:1.0307},
+  '12566':{rank:34,composite:0.7097,k:0.7584,l:0.5,m:0.7627,n:0.8},
+  '13669':{rank:12,composite:1.001,k:0.8123,l:1.3393,m:1.1465,n:0.8},
+  '16753':{rank:11,composite:1.0039,k:1.053,l:1.25,m:0.7531,n:0.8},
+  '17470':{rank:4,composite:1.0232,k:0.9124,l:1.5,m:0.8955,n:0.8},
+  '21383':{rank:10,composite:1.0057,k:0.8739,l:1.5,m:0.9,n:0.8571},
+  '22228':{rank:21,composite:0.9023,k:0.8585,l:1.1029,m:0.7725,n:0.9522},
+  '22694':{rank:6,composite:1.0134,k:1.0967,l:1.5,m:0.5,n:0.8},
+  '24135':{rank:1,composite:1.0804,k:0.9827,l:1.4706,m:1.0526,n:0.8},
+  '24497':{rank:29,composite:0.8395,k:0.8862,l:0.5,m:1.0056,n:0.8},
+  '24797':{rank:28,composite:0.8396,k:0.8632,l:0.75,m:0.8571,n:0.8},
+  '25117':{rank:13,composite:0.9875,k:0.8811,l:1.3889,m:0.8182,n:1.0053},
+  '26499':{rank:2,composite:1.0352,k:0.9077,l:1.5,m:0.9574,n:0.8},
+  '27493':{rank:31,composite:0.8107,k:0.7691,l:0.7075,m:0.8219,n:0.9104},
+  '32107':{rank:14,composite:0.9809,k:0.8227,l:1.5,m:0.878,n:0.8956},
+  '36285':{rank:7,composite:1.013,k:0.7268,l:1.5,m:1.1688,n:1.0421},
+  '37958':{rank:26,composite:0.8622,k:0.9381,l:0.5,m:0.9424,n:0.951},
+  '38349':{rank:9,composite:1.0116,k:0.8226,l:1.5,m:1.0651,n:0.8},
+  '38616':{rank:30,composite:0.8329,k:0.7725,l:1.0135,m:0.7725,n:0.8},
+  '39954':{rank:8,composite:1.0123,k:0.8272,l:1.2712,m:1.2081,n:0.8},
+  '40959':{rank:19,composite:0.9275,k:1.0987,l:0.5,m:0.9231,n:0.8}
+  }}
+];
+
+
+
+
+
 
 const SUPS = [{"sup": "Raymond", "color": "#b87a00", "avg_comp": 0.8968, "avg_rank": 12.8, "locs": [1, 2, 5, 8, 29, 32], "count": 6}, {"sup": "Elton", "color": "#c0392b", "avg_comp": 0.8879, "avg_rank": 14.3, "locs": [4, 7, 10, 19, 22, 24], "count": 6}, {"sup": "Sylvia", "color": "#e65100", "avg_comp": 0.8873, "avg_rank": 14.8, "locs": [6, 13, 14, 15, 20, 21], "count": 6}, {"sup": "Frances", "color": "#1a5fa8", "avg_comp": 0.8692, "avg_rank": 18.0, "locs": [18], "count": 1}, {"sup": "Ray", "color": "#0097a7", "avg_comp": 0.8583, "avg_rank": 20.3, "locs": [12, 23, 26], "count": 3}, {"sup": "Michelle", "color": "#1a7a4a", "avg_comp": 0.8518, "avg_rank": 20.0, "locs": [3, 9, 27, 30, 31], "count": 5}, {"sup": "Mike", "color": "#2e7d32", "avg_comp": 0.8477, "avg_rank": 22.0, "locs": [16, 28], "count": 2}, {"sup": "Mona", "color": "#7b3fa8", "avg_comp": 0.8309, "avg_rank": 24.0, "locs": [11, 17, 25, 33, 34], "count": 5}];
 
@@ -441,7 +682,7 @@ function renderSupTables() {
       tr.innerHTML = `
         <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;color:#888;text-align:center;width:28px">${i+1}</td>
         <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea;font-size:${isRankTable?'15':'16'}px;width:${isRankTable?28:26}px">${medal}</td>
-        <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea"><span style="display:inline-block;padding:${isRankTable?'2':'3'}px 10px;border-radius:20px;font-size:11px;font-weight:700;background:${s.color}22;color:${s.color};border:1px solid ${s.color}44">${s.sup}</span></td>
+        <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea"><span style="display:inline-block;padding:${isRankTable?'2':'3'}px 10px;border-radius:20px;font-size:11px;font-weight:700;background:${s.color}22;color:${s.color};border:1px solid ${s.color}44;cursor:pointer" onclick="window.showSupPage('${s.sup}')">${s.sup}</span></td>
         <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;font-size:${isRankTable?'15':'16'}px;color:${rc};text-align:center">${fmtScore(s.avg_comp)}</td>
         <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea;text-align:center;color:#${isRankTable?'888':'666'};font-size:${isRankTable?'12':'13'}px">${s.count}</td>
         ${isRankTable ? `<td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;color:#aaa;font-size:11px">${locs.join(', ')}</td>` : ''}
@@ -450,7 +691,355 @@ function renderSupTables() {
     });
   });
 }
+
+
+
 renderSupTables();
+
+// Populate KPI
+
+
+// ── Trends Page ─────────────────────────────────────────────────────
+// ── Trends Page ──────────────────────────────────────────────────────
+var trendKPI = 'composite';
+var trendChangeMode = 'first';
+var trendOverlays = {avg: true, std: true};
+
+var trendKPIs = [
+  {key:'composite', label:'Overall Rank'},
+  {key:'k',  label:'DT Time'},
+  {key:'l',  label:'R2P'},
+  {key:'m',  label:'KVS'},
+  {key:'n',  label:'HUSS'},
+  {key:'del_idx', label:'3PO'},
+];
+
+function initTrends() {
+  // KPI pills
+  var pillWrap = document.getElementById('trend-kpi-pills');
+  if (!pillWrap) return;
+  trendKPIs.forEach(function(k) {
+    var btn = document.createElement('button');
+    btn.id = 'tkpi-' + k.key;
+    btn.textContent = k.label;
+    btn.onclick = function() { setTrendKPI(k.key); };
+    btn.style.cssText = 'padding:4px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:11px;font-weight:600;cursor:pointer;transition:.15s';
+    pillWrap.appendChild(btn);
+  });
+  setTrendKPI('composite');
+
+  // Location dropdown
+  var sel = document.getElementById('trend-loc-select');
+  RANKED.forEach(function(r) {
+    var opt = document.createElement('option');
+    opt.value = r.nsn;
+    opt.textContent = '#' + r.rank + ' — ' + r.nsn + ' ' + r.gm;
+    sel.appendChild(opt);
+  });
+
+  renderMovement();
+}
+
+function setTrendKPI(key) {
+  trendKPI = key;
+  document.querySelectorAll('[id^="tkpi-"]').forEach(function(el) {
+    el.style.background = 'var(--surface)';
+    el.style.color = 'var(--muted)';
+    el.style.borderColor = 'var(--border)';
+  });
+  var active = document.getElementById('tkpi-' + key);
+  if (active) {
+    active.style.background = 'var(--accent)';
+    active.style.color = '#fff';
+    active.style.borderColor = 'var(--accent)';
+  }
+  var sel = document.getElementById('trend-loc-select');
+  if (sel && sel.value) renderTrendChart(sel.value);
+  renderMovement();
+}
+
+window.toggleOverlay = function(which) {
+  trendOverlays[which] = !trendOverlays[which];
+  var btn = document.getElementById('overlay-' + which);
+  if (btn) {
+    var color = which === 'avg' ? '#1a7a4a' : '#b87a00';
+    btn.style.background = trendOverlays[which] ? color : 'var(--surface)';
+    btn.style.color = trendOverlays[which] ? '#fff' : 'var(--muted)';
+    btn.style.borderColor = trendOverlays[which] ? color : 'var(--border)';
+  }
+  var sel = document.getElementById('trend-loc-select');
+  if (sel && sel.value) renderTrendChart(sel.value);
+};
+
+window.setChangeMode = function(mode) {
+  trendChangeMode = mode;
+  ['first','wow','streak'].forEach(function(m) {
+    var btn = document.getElementById('change-mode-' + m);
+    if (!btn) return;
+    btn.style.background = m === mode ? 'var(--accent)' : 'var(--surface)';
+    btn.style.color = m === mode ? '#fff' : 'var(--muted)';
+    btn.style.borderColor = m === mode ? 'var(--accent)' : 'var(--border)';
+    btn.style.fontWeight = m === mode ? '700' : '600';
+  });
+  renderMovement();
+};
+
+window.renderTrendChart = function(nsn) {
+  var wrap = document.getElementById('trend-chart-wrap');
+  if (!wrap) return;
+  if (!nsn) {
+    wrap.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted)"><div style="font-size:40px;margin-bottom:12px">📈</div><div style="font-family:\'DM Serif Display\',serif;font-size:20px;color:var(--text);margin-bottom:8px">Select a Location to View Its Trend</div><div style="font-size:13px;line-height:1.7;max-width:380px">Choose a location from the dropdown above to see its week-over-week trend line with portfolio average and top-half overlays.</div></div>';
+    return;
+  }
+  var r = RANKED.find(function(x) { return x.nsn === nsn; });
+  if (!r) return;
+
+  var kpiLabel = (trendKPIs.find(function(k){return k.key===trendKPI;}) || {label:'Score'}).label;
+  var isRank = (trendKPI === 'composite');
+
+  // Data series — for rank view use rank position; for KPI use score
+  var weeks = HISTORY.map(function(w){return w.week;});
+  var vals  = HISTORY.map(function(w) {
+    var d = w.data[nsn];
+    if (!d) return null;
+    return isRank ? d.rank : (d[trendKPI] !== undefined ? d[trendKPI] : null);
+  });
+
+  // Portfolio avg per week
+  var portAvgs = HISTORY.map(function(w) {
+    var vs = RANKED.map(function(rx) {
+      var d = w.data[rx.nsn];
+      return d ? (isRank ? d.rank : (d[trendKPI]||null)) : null;
+    }).filter(function(v){return v!==null;});
+    return vs.length ? vs.reduce(function(a,b){return a+b;},0)/vs.length : null;
+  });
+
+  // Top-half threshold (rank 17 out of 34, or 1.00 for scores)
+  var halfLine = isRank ? Math.ceil(RANKED.length / 2) : 1.00;
+
+  var allVals = vals.concat(portAvgs).filter(function(v){return v!==null;}).concat([halfLine]);
+  var minV, maxV;
+  if (isRank) {
+    // Inverted: best rank = 1 at TOP, worst at bottom
+    minV = 1;
+    maxV = Math.max.apply(null, allVals) + 1;
+  } else {
+    minV = Math.min.apply(null, allVals) * 0.95;
+    maxV = Math.max.apply(null, allVals) * 1.03;
+  }
+  var range = maxV - minV || 1;
+
+  var W = 680; var H = 220; var PAD_L = 52; var PAD_R = 30; var PAD_T = 30; var PAD_B = 30;
+  var cW = W - PAD_L - PAD_R;
+  var cH = H - PAD_T - PAD_B;
+
+  function xPos(i) {
+    return PAD_L + (weeks.length === 1 ? cW/2 : (i/(weeks.length-1))*cW);
+  }
+  function yPos(v) {
+    if (isRank) {
+      // invert: rank 1 at top
+      return PAD_T + ((v - minV)/(range)) * cH;
+    }
+    return PAD_T + cH - ((v - minV)/range) * cH;
+  }
+
+  var svg = '<svg viewBox="0 0 ' + (W+60) + ' ' + (H+50) + '" style="width:100%;max-height:280px">';
+
+  // Y-axis grid lines + labels
+  var gridCount = 5;
+  for (var gi = 0; gi <= gridCount; gi++) {
+    var gv = isRank ? (minV + (gi/gridCount)*range) : (maxV - (gi/gridCount)*range);
+    var gy = isRank ? PAD_T + (gi/gridCount)*cH : PAD_T + (gi/gridCount)*cH;
+    svg += '<line x1="' + PAD_L + '" y1="' + gy.toFixed(1) + '" x2="' + (PAD_L+cW) + '" y2="' + gy.toFixed(1) + '" stroke="#f0eeea" stroke-width="1"/>';
+    var lbl = isRank ? '#' + Math.round(gv) : Math.round(gv*100) + '%';
+    svg += '<text x="' + (PAD_L-6) + '" y="' + (gy+4).toFixed(1) + '" text-anchor="end" font-size="9" fill="#c0bdb8">' + lbl + '</text>';
+  }
+
+  // X-axis tick marks
+  weeks.forEach(function(w, i) {
+    var x = xPos(i);
+    svg += '<line x1="' + x.toFixed(1) + '" y1="' + (PAD_T+cH) + '" x2="' + x.toFixed(1) + '" y2="' + (PAD_T+cH+4) + '" stroke="#ddd" stroke-width="1"/>';
+    svg += '<text x="' + x.toFixed(1) + '" y="' + (PAD_T+cH+14) + '" text-anchor="middle" font-size="8" fill="#b0adb8">' + w + '</text>';
+  });
+
+  // Top-half / Standard overlay
+  if (trendOverlays.std) {
+    var hy = yPos(halfLine);
+    var halfLabel = isRank ? 'Top Half of Portfolio' : 'Standard (100%)';
+    svg += '<line x1="' + PAD_L + '" y1="' + hy.toFixed(1) + '" x2="' + (PAD_L+cW) + '" y2="' + hy.toFixed(1) + '" stroke="#b87a00" stroke-width="1.5" stroke-dasharray="6,3" opacity="0.8"/>';
+    svg += '<text x="' + (PAD_L+cW+4) + '" y="' + (hy+4).toFixed(1) + '" font-size="8" fill="#b87a00">' + halfLabel + '</text>';
+  }
+
+  // Portfolio avg overlay
+  if (trendOverlays.avg) {
+    var avgValidPts = [];
+    portAvgs.forEach(function(v,i){ if(v!==null) avgValidPts.push(xPos(i).toFixed(1)+','+yPos(v).toFixed(1)); });
+    if (avgValidPts.length > 1) {
+      svg += '<polyline points="' + avgValidPts.join(' ') + '" fill="none" stroke="#3a7bd5" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.7"/>';
+    }
+    // Avg label at last point
+    var lastAvg = portAvgs[portAvgs.length-1];
+    if (lastAvg !== null) {
+      svg += '<text x="' + (PAD_L+cW+4) + '" y="' + (yPos(lastAvg)+4).toFixed(1) + '" font-size="8" fill="#3a7bd5">Avg ' + (isRank ? '#'+Math.round(lastAvg) : Math.round(lastAvg*100)+'%') + '</text>';
+    }
+  }
+
+  // Location line
+  var validPts = [];
+  vals.forEach(function(v,i){ if(v!==null) validPts.push(xPos(i).toFixed(1)+','+yPos(v).toFixed(1)); });
+  if (validPts.length > 1) {
+    svg += '<polyline points="' + validPts.join(' ') + '" fill="none" stroke="#1a3557" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
+  }
+
+  // Dots + labels
+  vals.forEach(function(v,i) {
+    if (v===null) return;
+    var cx = xPos(i); var cy = yPos(v);
+    var lbl = isRank ? '#'+Math.round(v) : Math.round(v*100)+'%';
+    svg += '<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="5" fill="#1a3557" stroke="#fff" stroke-width="2"/>';
+    // label above dot (for rank chart, "above" means smaller y)
+    var lblY = isRank ? cy - 9 : cy - 9;
+    svg += '<text x="'+cx.toFixed(1)+'" y="'+lblY.toFixed(1)+'" text-anchor="middle" font-size="9" font-weight="700" fill="#1a3557">'+lbl+'</text>';
+  });
+
+  // Weeks of data note (top right)
+  svg += '<text x="'+(PAD_L+cW)+'" y="'+PAD_T+'" text-anchor="end" font-size="9" fill="#c0bdb8">'+weeks.length+' week'+(weeks.length!==1?'s':'')+' of data</text>';
+
+  svg += '</svg>';
+
+  // Legend
+  var legend = '<div style="display:flex;gap:20px;font-size:11px;color:#888;margin-top:6px;flex-wrap:wrap">';
+  if (trendOverlays.avg) legend += '<span><span style="display:inline-block;width:20px;border-top:2px dashed #3a7bd5;vertical-align:middle;margin-right:4px"></span>Portfolio Average</span>';
+  if (trendOverlays.std) legend += '<span><span style="display:inline-block;width:20px;border-top:2px dashed #b87a00;vertical-align:middle;margin-right:4px"></span>' + (isRank ? 'Top Half of Portfolio' : 'Standard') + '</span>';
+  legend += '<span><span style="display:inline-block;width:20px;border-top:2.5px solid #1a3557;vertical-align:middle;margin-right:4px"></span>' + nsn + '</span>';
+  legend += '</div>';
+
+  wrap.innerHTML =
+    '<div style="padding:4px 0 10px;display:flex;justify-content:space-between;align-items:flex-end">' +
+      '<div>' +
+        '<div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">' + r.nsn + ' — ' + r.gm + ' &nbsp;·&nbsp; ' + r.sup + '</div>' +
+        '<div style="font-family:\'DM Serif Display\',serif;font-size:17px;color:var(--accent)">' + kpiLabel + ' — Week over Week</div>' +
+      '</div>' +
+    '</div>' +
+    '<div style="overflow-x:auto">' + svg + '</div>' +
+    legend;
+};
+
+
+function renderMovement() {
+  var impEl = document.getElementById('trend-improving');
+  var decEl = document.getElementById('trend-declining');
+  if (!impEl || !decEl) return;
+
+  var kpiLabel = (trendKPIs.find(function(k){return k.key===trendKPI;}) || {label:'Score'}).label;
+
+  // Compute movement per location
+  var movements = RANKED.map(function(r) {
+    var series = HISTORY.map(function(w) {
+      var d = w.data[r.nsn];
+      return d ? {week: w.week, rank: d.rank, val: trendKPI === 'composite' ? d.composite : (d[trendKPI]||null)} : null;
+    }).filter(function(d){return d!==null;});
+
+    if (series.length < 1) return null;
+    var first = series[0]; var last = series[series.length-1];
+    var wow = series.length > 1 ? (last.val - series[series.length-2].val) : 0;
+    var streak = 0;
+    if (trendChangeMode === 'streak') {
+      for (var si = series.length-1; si > 0; si--) {
+        var diff = series[si].val - series[si-1].val;
+        if (streak === 0) { streak = diff > 0 ? 1 : diff < 0 ? -1 : 0; }
+        else if ((streak > 0 && diff > 0) || (streak < 0 && diff < 0)) {
+          streak += streak > 0 ? 1 : -1;
+        } else { break; }
+      }
+    }
+    var change = trendChangeMode === 'first' ? (last.val - first.val) :
+                 trendChangeMode === 'wow'   ? wow : streak;
+    var rankFirst = first.rank; var rankLast = last.rank;
+    var rankChange = rankFirst - rankLast; // positive = improved rank
+
+    return {r: r, change: change, rankFirst: rankFirst, rankLast: rankLast,
+            rankChange: rankChange, firstWeek: first.week, lastWeek: last.week,
+            series: series};
+  }).filter(function(m){return m!==null;});
+
+  var improving = movements.filter(function(m){return trendChangeMode==='streak' ? m.change>0 : m.change>0.001;})
+                           .sort(function(a,b){return b.change-a.change;});
+  var declining = movements.filter(function(m){return trendChangeMode==='streak' ? m.change<0 : m.change<-0.001;})
+                           .sort(function(a,b){return a.change-b.change;});
+
+  function buildPanel(el, items, isImproving) {
+    var bg    = isImproving ? '#f0faf4' : '#fff5f5';
+    var hdrBg = isImproving ? '#b8e0c8' : '#f0b0b0';
+    var hdrTx = isImproving ? '#0a5c28' : '#8b1a1a';
+    var arrowTx = isImproving ? '▲' : '▼';
+    var label = isImproving ? 'IMPROVING' : 'DECLINING';
+    var suffix = trendChangeMode === 'first' ? '(FIRST TO LATEST)' :
+                 trendChangeMode === 'wow'   ? '(WEEK OVER WEEK)' : '(CONSECUTIVE STREAK)';
+
+    var html = '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:' + hdrBg + '">' +
+      '<div style="font-size:11px;font-weight:700;color:' + hdrTx + '">' + arrowTx + '  ' + label + ' ' + suffix + '</div>' +
+      '<div style="font-size:10px;font-weight:700;padding:2px 10px;border-radius:20px;background:' + hdrTx + '22;color:' + hdrTx + '">' + kpiLabel + '</div>' +
+    '</div>';
+
+    if (items.length === 0) {
+      html += '<div style="padding:20px;text-align:center;font-size:12px;color:#bbb">No locations ' + (isImproving?'improving':'declining') + ' this period</div>';
+    } else {
+      items.forEach(function(m) {
+        var rankStr = m.series.length > 1
+          ? '<span style="font-size:11px;color:#aaa">' + m.firstWeek + '</span> <span style="font-weight:700">#' + m.rankFirst + '</span> → <span style="font-weight:700;color:' + (isImproving?'#0a7a3a':'#b01010') + '">#' + m.rankLast + '</span> <span style="font-size:10px;font-weight:700;color:' + (isImproving?'#0a7a3a':'#b01010') + '">' + (isImproving?'▲':'▼') + Math.abs(m.rankChange) + '</span> <span style="font-size:11px;color:#aaa">' + m.lastWeek + '</span>'
+          : '<span style="font-size:11px;color:#bbb">baseline week</span>';
+        html += '<div onclick="document.getElementById(\'trend-loc-select\').value=\'' + m.r.nsn + '\';renderTrendChart(\'' + m.r.nsn + '\')" style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid ' + (isImproving?'#d0eedd':'#f5c0c0') + ';cursor:pointer;transition:.1s" onmouseover="this.style.background=\'' + (isImproving?'#e8f7ee':'#fff0f0') + '\'" onmouseout="this.style.background=\'transparent\'">' +
+          '<div style="font-family:\'DM Mono\',monospace;font-size:13px;font-weight:700;color:var(--text)">' + m.r.nsn + '</div>' +
+          '<div style="font-size:12px">' + rankStr + '</div>' +
+        '</div>';
+      });
+    }
+    el.innerHTML = html;
+  }
+
+  buildPanel(impEl, improving, true);
+  buildPanel(decEl, declining, false);
+}
+
+initTrends();
+
+
+// Populate KPI Scores by Location table
+(function() {
+  const tb = document.getElementById('kpi-scores-tbody');
+  if (!tb) return;
+  tb.innerHTML = '';
+  RANKED.forEach(r => {
+    const c = r.composite;
+    const bg = c >= 1.00 ? (RANKED.indexOf(r) < Math.ceil(RANKED.length/3) ? '#f0faf4' : '#eaf7ee')
+               : c >= 0.80 ? '#fffdf0' : '#fff5f5';
+    const delCell = r.del_wt > 0
+      ? `<span style="color:${scoreColor(r.del_idx)}">${fmtScore(r.del_idx)}</span>`
+      : '<span style="color:#ccc">—</span>';
+    const tr = document.createElement('tr');
+    tr.style.cursor = 'pointer';
+    tr.onclick = () => window.showDetail(r.nsn);
+    tr.innerHTML = `
+      <td style="padding:7px 10px;border-bottom:1px solid #f0eeea;background:inherit">
+        <div style="font-size:10px;color:#aaa;font-family:'DM Mono',monospace">${r.nsn}</div>
+        <div style="font-weight:600;font-size:11px">${r.gm}</div>
+      </td>
+      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:${scoreColor(r.k)};font-weight:600">${fmtScore(r.k)}</td>
+      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:${scoreColor(r.l)};font-weight:600">${fmtScore(r.l)}</td>
+      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:${scoreColor(r.m)};font-weight:600">${fmtScore(r.m)}</td>
+      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:${scoreColor(r.n)};font-weight:600">${fmtScore(r.n)}</td>
+      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea">${delCell}</td>
+    `;
+    // apply tier background to all cells
+    [...tr.children].forEach(td => td.style.background = 
+      r.rank <= Math.ceil(RANKED.length/3) ? (r.rank % 2 === 0 ? '#e8f7ee' : '#f0faf4')
+      : r.rank <= Math.ceil(RANKED.length/3)*2 ? (r.rank % 2 === 0 ? '#fff8e0' : '#fffdf0')
+      : (r.rank % 2 === 0 ? '#ffeaea' : '#fff5f5'));
+    tb.appendChild(tr);
+  });
+})();
 document.getElementById('at-std').textContent = RANKED.filter(r=>r.composite>=1.00).length + ' / 34';
 const topGM = RANKED[0];
 document.getElementById('top-gm-name').textContent = topGM.gm;
@@ -460,7 +1049,7 @@ document.getElementById('top-gm-sub').innerHTML = '<span style="display:inline-b
 const tbody = document.getElementById('rank-tbody');
 let currentKPI = 'composite';
 
-function sortByKPI(kpi) {
+window.sortByKPI = function(kpi) {
   currentKPI = kpi;
   // Update active pill
   document.querySelectorAll('.w-clickable').forEach(el => el.classList.remove('active-kpi'));
@@ -514,10 +1103,10 @@ function sortByKPI(kpi) {
     `;
     tbody.appendChild(tr);
   });
-}
+};
 
 // Initial render
-sortByKPI('composite');
+window.sortByKPI('composite');
 renderSupTables();
 
 
@@ -530,8 +1119,17 @@ RANKED.forEach(r => {
   opt.textContent = '#'+r.rank+' — '+r.nsn+' '+r.gm+' ('+r.sup+')';
   sel.appendChild(opt);
 });
-renderDetail(RANKED[0].nsn);
 
+// Populate supervisor dropdown
+const supPageSel = document.getElementById('sup-page-select');
+const supNames = [...new Set(RANKED.map(r => r.sup))].sort();
+supNames.forEach(s => {
+  const opt = document.createElement('option');
+  opt.value = s;
+  opt.textContent = s + ' (' + RANKED.filter(r=>r.sup===s).length + ' locs)';
+  supPageSel.appendChild(opt);
+});
+renderSupPage(supNames[0]);
 function renderDetail(nsn) {
   const r = RANKED.find(x=>x.nsn===nsn);
   if(!r) return;
@@ -604,6 +1202,114 @@ window.showPage = function(id, tabEl) {
   document.getElementById(id).classList.add('active');
   event.target.classList.add('active');
 }
+
+
+renderDetail(RANKED[0].nsn);
+
+window.toggleGuide = function() {
+  const guide = document.getElementById('daily-guide');
+  const chev  = document.getElementById('guide-chevron');
+  const isOpen = guide.style.display !== 'none';
+  guide.style.display = isOpen ? 'none' : 'block';
+  chev.style.transform = isOpen ? '' : 'rotate(180deg)';
+};
+
+// ── Supervisor Page ──────────────────────────────────────────────────
+window.showSupPage = function(supName) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach((t,i) => { t.classList.remove('active'); if(i===3) t.classList.add('active'); });
+  document.getElementById('page-sup-detail').classList.add('active');
+  document.getElementById('sup-page-select').value = supName;
+  renderSupPage(supName);
+};
+
+function renderSupPage(supName) {
+  const locs = RANKED.filter(r => r.sup === supName);
+  const supColor = locs.length ? locs[0].supColor : '#1a3557';
+  const avgScore = locs.reduce((a,r) => a + (r.composite||0), 0) / locs.length;
+  const avgRank  = (locs.reduce((a,r) => a + r.rank, 0) / locs.length).toFixed(1);
+
+  // Header bar
+  document.getElementById('sup-header-content').innerHTML = `
+    <div class="sup-header-bar" style="border-left:4px solid ${supColor}">
+      <div>
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:${supColor};font-weight:700;margin-bottom:2px">${supName}</div>
+        <div style="font-size:12px;color:var(--muted)">${locs.length} location${locs.length!==1?'s':''} &nbsp;·&nbsp; avg rank #${avgRank}</div>
+      </div>
+      <div class="sup-avg-badge" style="color:${scoreColor(avgScore)}">${fmtScore(avgScore)}</div>
+      <div style="font-size:11px;color:var(--muted)">avg composite score</div>
+      <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap">
+        ${locs.map(r=>`<span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;background:${scoreBg(r.composite)};color:${scoreColor(r.composite)};border:1px solid ${scoreColor(r.composite)}33;cursor:pointer" onclick="toggleLocCard('card-${r.nsn}')">#${r.rank} ${r.gm.split(' ')[0]}</span>`).join('')}
+      </div>
+    </div>`;
+
+  // Location cards
+  const container = document.getElementById('sup-loc-list');
+  container.innerHTML = '';
+  locs.forEach(r => {
+    const pillars = [
+      {key:'k', label:'DT Time',   score:r.k, action:r.action_dt,      raw:`${r.eff_dt?Math.round(r.eff_dt)+'s eff / '+(r.timer_oepe?Math.round(r.timer_oepe)+'s timer':'no timer'):'—'}`},
+      {key:'l', label:'R2P',       score:r.l, action:r.action_r2p,     raw:`${r.r2p?Math.round(r.r2p)+'s':' —'}`},
+      {key:'m', label:'KVS/Item',  score:r.m, action:r.action_kvs,     raw:`${r.kvs_item?r.kvs_item.toFixed(1)+'s/item':'—'}`},
+      {key:'n', label:'HUSS',      score:r.n, action:r.action_healthy, raw:`${r.kvs_healthy?(r.kvs_healthy*100).toFixed(1)+'%':'—'}`},
+    ];
+    if(r.del_wt > 0) pillars.push(
+      {key:'3po', label:'3PO', score:r.del_idx, action:r.action_3po, raw:`${r.del_gc} orders`}
+    );
+
+    const pillarsHtml = pillars.map(p => `
+      <div class="pillar-row">
+        <div class="pillar-label">${p.label}</div>
+        <div class="pillar-score-sm" style="color:${scoreColor(p.score)}">${fmtScore(p.score)}</div>
+        <div style="font-size:11px;color:#aaa;min-width:80px;text-align:right;padding:0 10px">${p.raw}</div>
+        <div class="pillar-action-text">${p.action}</div>
+      </div>`).join('');
+
+    // Missed steps from daily guide
+    const stepColors = {'1':'#1a3557','2':'#0a7a3a','3':'#c07000','4':'#7b3fa8','5':'#c0392b'};
+    const stepBgs    = {'1':'#eef2f7','2':'#eaf7ee','3':'#fff8e0','4':'#f4eeff','5':'#ffeaea'};
+    const missedHtml = r.missed_steps && r.missed_steps.length ? `
+      <div style="margin-top:14px;border-top:2px dashed #f0eeea;padding-top:14px">
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#888;font-weight:700;margin-bottom:10px">📋 Daily Guide — What May Have Been Missed</div>
+        ${r.missed_steps.map(g => `
+          <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px">
+            <span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;background:${stepBgs[g.step]};color:${stepColors[g.step]};border:1px solid ${stepColors[g.step]}33;white-space:nowrap;cursor:pointer" onclick="toggleGuide();document.getElementById('daily-guide').scrollIntoView({behavior:'smooth'})">${['','① Labor','② Review','③ Diagnose','④ Focus','⑤ Develop GM'][g.step]}</span>
+            <div>
+              <div style="font-size:10px;font-weight:700;color:#666;margin-bottom:2px">${g.area}</div>
+              <div style="font-size:12px;line-height:1.7;color:#444">${g.detail}</div>
+            </div>
+          </div>`).join('')}
+      </div>` : '<div style="margin-top:14px;border-top:2px dashed #f0eeea;padding-top:10px;font-size:12px;color:#0a7a3a">✅ No daily guide gaps identified for this location this week.</div>';
+
+    const card = document.createElement('div');
+    card.className = 'loc-action-card';
+    card.id = `card-${r.nsn}`;
+    card.innerHTML = `
+      <div class="loc-action-header" style="background:${scoreBg(r.composite)}" onclick="toggleLocCard('card-${r.nsn}')">
+        <div class="loc-action-score" style="color:${scoreColor(r.composite)}">${fmtScore(r.composite)}</div>
+        <div class="loc-action-name">
+          <div class="loc-action-nsn">#${r.rank} of 34 &nbsp;·&nbsp; ${r.nsn}</div>
+          <div class="loc-action-gm">${r.gm}</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          ${pillars.map(p=>`<span style="padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;background:${scoreColor(p.score)}22;color:${scoreColor(p.score)};border:1px solid ${scoreColor(p.score)}33">${p.label} ${fmtScore(p.score)}</span>`).join('')}
+        </div>
+        ${r.missed_steps && r.missed_steps.length ? `<span style="padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;background:#fff8e0;color:#c07000;border:1px solid #e0cc80">${r.missed_steps.length} guide gap${r.missed_steps.length!==1?'s':''}</span>` : ''}
+        <div style="font-size:18px;color:#ccc;margin-left:8px;transition:.2s" id="chevron-${r.nsn}">▼</div>
+      </div>
+      <div class="loc-action-body" id="body-${r.nsn}">${pillarsHtml}${missedHtml}</div>`;
+    container.appendChild(card);
+  });
+}
+
+window.toggleLocCard = function(cardId) {
+  const nsn = cardId.replace('card-','');
+  const body = document.getElementById('body-'+nsn);
+  const chev = document.getElementById('chevron-'+nsn);
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chev.style.transform = isOpen ? '' : 'rotate(180deg)';
+};
 
 window.showDetail = function(nsn) {
   showPage('page-detail');
