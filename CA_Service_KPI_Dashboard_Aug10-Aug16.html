@@ -178,6 +178,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   <div style="padding:8px 16px 4px;display:flex;align-items:center;justify-content:space-between;gap:12px">
     <div class="nav-title" style="font-size:15px;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">California Alia Corp Efficiency Dashboard</div>
     <div class="nav-week" style="white-space:nowrap;flex-shrink:0">WEEK OF AUG 10 – AUG 16, 2026</div>
+  <button onclick="downloadDashboard()" style="margin-left:8px;padding:4px 12px;border-radius:20px;border:1px solid #a8c4e8;background:transparent;color:#a8c4e8;font-size:10px;font-weight:600;cursor:pointer;white-space:nowrap;letter-spacing:.04em" title="Download as HTML file">⬇ HTML</button>
   </div>
   <div style="display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;border-top:1px solid #ffffff18;padding-bottom:2px">
     <div class="tab active" onclick="window.showPage('page-rank', this)">Rankings</div>
@@ -1545,7 +1546,7 @@ function renderDetail(nsn) {
   const timerFlag = (rd.coverage!==null && rd.coverage<0.80) ? `<span style="color:#b01010;font-weight:700">⚠ Timer coverage ${fmtPct(r.coverage)} — below 80% threshold</span>` : '';
   const gapFlag = (rd.gap!==null && Math.abs(rd.gap)>15) ? `<span style="color:#d05800">Gap: ${r.gap>0?'+':''}${fmtS(r.gap)} timer vs bump</span>` : `<span style="color:#0a7a3a">Gap: ${r.gap!==null?(r.gap>0?'+':'')+fmtS(r.gap):'—'} ✓</span>`;
 
-  const quadrantColor = {'Ownership Working':'#0a7a3a','Capability Gap':'#b87a00','Motion, Not Multiplication':'#b01010','Oversight Decay':'#b01010'}[r.quadrant] || '#888';
+  const quadrantColor = {'Ownership Working':'#0a7a3a','Capability Gap':'#b87a00','Motion, Not Multiplication':'#b01010','Oversight Decay':'#b01010'}[rWeekly.quadrant] || '#888';
 
   document.getElementById('detail-content').innerHTML = `
     <div class="detail-header">
@@ -1569,8 +1570,8 @@ function renderDetail(nsn) {
 
     <div class="timer-card" style="border-left:4px solid ${quadrantColor}">
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px">Culture Diagnosis — Multiplying Ownership Model</div>
-      <div style="font-size:14px;font-weight:700;color:${quadrantColor};margin-bottom:4px">${r.quadrant}</div>
-      <div style="font-size:12.5px;line-height:1.6;color:#444;margin-bottom:8px">${r.quadrant_text}</div>
+      <div style="font-size:14px;font-weight:700;color:${quadrantColor};margin-bottom:4px">${rWeekly.quadrant}</div>
+      <div style="font-size:12.5px;line-height:1.6;color:#444;margin-bottom:8px">${rWeekly.quadrant_text}</div>
       <div style="font-size:12px;font-style:italic;color:var(--muted);border-top:1px solid #e5e5e0;padding-top:8px">Would this restaurant still run well if the GM were gone two weeks? That's the real test — this scorecard is the read-out, not the answer.</div>
     </div>
 
@@ -1612,6 +1613,15 @@ window.showPage = function(id, tabEl) {
 
 
 renderDetail(RANKED[0].nsn);
+
+window.downloadDashboard = function() {
+  const blob = new Blob([document.documentElement.outerHTML], {type: 'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'CA_Service_KPI_Dashboard_Aug10-Aug16.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+};
 
 window.toggleGuide = function() {
   const guide = document.getElementById('daily-guide');
