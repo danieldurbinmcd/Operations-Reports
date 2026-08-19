@@ -246,19 +246,27 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
     <div class="w-chip w-clickable" id="kpi-3po" onclick="window.sortByKPI('del_idx')" title="3PO Delivery — conditional up to 20% · Standard 3.5m / 99.5%"><span class="wt">≤20%</span><span class="wn">3PO Delivery</span></div>
   </div>
 
-  <div style="font-size:12px;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:6px">
-    <span style="font-size:14px">👆</span>
-    <span>Click any location row to view its full KPI breakdown, pillar scores, and coaching actions.</span>
+  <div style="margin-bottom:18px;padding:14px 18px;border-radius:10px;background:linear-gradient(135deg,#1a3557,#1a5fa8);display:flex;align-items:center;gap:14px;box-shadow:0 2px 8px #1a355733">
+    <span style="font-size:28px;flex-shrink:0">👆</span>
+    <div>
+      <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:3px">Click any location row for the full breakdown</div>
+      <div style="font-size:12px;color:#a8c4e8;line-height:1.6">Opens the Location Detail page with pillar scores, raw values, timer integrity, coaching actions, and culture diagnosis for that store.</div>
+    </div>
   </div>
 
   <div class="rank-table-wrap">
     <table class="rank-table">
       <thead>
         <tr>
-          <th>#</th>
-          <th>Location</th>
-          <th id="kpi-col-header">Composite</th>
-          <th>Supervisor</th>
+          <th style="width:36px">#</th>
+          <th style="text-align:left">Location</th>
+          <th id="kpi-col-header" style="text-align:center;cursor:pointer" onclick="window.sortByKPI('composite')" title="Sort by Composite">Composite ↺</th>
+          <th style="text-align:left">Supervisor</th>
+          <th style="text-align:center;font-size:10px;cursor:pointer" onclick="window.sortByKPI('k')" title="Sort by DT">DT ↕</th>
+          <th style="text-align:center;font-size:10px;cursor:pointer" onclick="window.sortByKPI('l')" title="Sort by R2P">R2P ↕</th>
+          <th style="text-align:center;font-size:10px;cursor:pointer" onclick="window.sortByKPI('m')" title="Sort by KVS">KVS ↕</th>
+          <th style="text-align:center;font-size:10px;cursor:pointer" onclick="window.sortByKPI('n')" title="Sort by HUSS">HUSS ↕</th>
+          <th style="text-align:center;font-size:10px;cursor:pointer" onclick="window.sortByKPI('del_idx')" title="Sort by 3PO">3PO ↕</th>
         </tr>
       </thead>
       <tbody id="rank-tbody"></tbody>
@@ -1863,7 +1871,12 @@ window.sortByKPI = function(kpi) {
       <td style="font-family:'DM Mono',monospace;font-weight:700;font-size:15px;color:${dispColor};width:36px;text-align:center;padding:10px 12px;border-bottom:1px solid #f0eeea">${i + 1}</td>
       <td style="padding:10px 12px;border-bottom:1px solid #f0eeea"><div style="font-family:'DM Mono',monospace;font-size:11px;color:#888">${r.nsn}</div><div style="font-weight:600">${r.gm}</div><div style="font-size:10px;color:${(()=>{const below=[r.k,r.l,r.m,r.n,...(r.del_wt>0?[r.del_idx]:[])].filter(v=>v!==null&&v<1.00).length;const total=r.del_wt>0?5:4;return below===0?'#0a7a3a':below<=2?'#c07000':'#b01010';})()};margin-top:2px">${(()=>{const below=[r.k,r.l,r.m,r.n,...(r.del_wt>0?[r.del_idx]:[])].filter(v=>v!==null&&v<1.00).length;const total=r.del_wt>0?5:4;return below+'/'+total+' below 100%';})()}</div></td>
       <td style="font-weight:700;color:${dispColor};font-size:15px;text-align:center;padding:10px 12px;border-bottom:1px solid #f0eeea">${displayVal}</td>
-      <td style="padding:10px 12px;border-bottom:1px solid #f0eeea"><span style="display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;background:${r.supColor}22;color:${r.supColor};border:1px solid ${r.supColor}44">${r.sup}</span></td>
+      <td style="padding:10px 12px;border-bottom:1px solid #f0eeea"><span style="display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;background:${r.supColor}22;color:${r.supColor};border:1px solid ${r.supColor}44;cursor:pointer" onclick="window.showSupPage('${r.sup}')">${r.sup}</span></td>
+      <td style="padding:8px 12px;border-bottom:1px solid #f0eeea;text-align:center;font-weight:600;font-size:13px;color:${scoreColor(r.k)}">${fmtScore(r.k)}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #f0eeea;text-align:center;font-weight:600;font-size:13px;color:${scoreColor(r.l)}">${fmtScore(r.l)}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #f0eeea;text-align:center;font-weight:600;font-size:13px;color:${scoreColor(r.m)}">${fmtScore(r.m)}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #f0eeea;text-align:center;font-weight:600;font-size:13px;color:${scoreColor(r.n)}">${fmtScore(r.n)}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #f0eeea;text-align:center;font-size:13px">${r.del_wt>0?'<span style="color:'+scoreColor(r.del_idx)+';font-weight:600">'+fmtScore(r.del_idx)+'</span>':'<span style="color:#ccc">—</span>'}</td>
     `;
     tbody.appendChild(tr);
   });
