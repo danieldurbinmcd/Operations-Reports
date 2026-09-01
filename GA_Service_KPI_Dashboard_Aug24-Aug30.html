@@ -1147,6 +1147,19 @@ function renderSupTables(kpi) {
   // KPI Detail sup table header always shows Avg Rank
   const kpiHdrEl = document.getElementById('sup-kpi-col-hdr');
   if (kpiHdrEl) kpiHdrEl.textContent = 'Avg Rank';
+  // Build prior week supervisor avg_rank from HISTORY
+  const priorSupRanks = {};
+  if (HISTORY && HISTORY.length >= 2) {
+    const priorData = HISTORY[HISTORY.length - 2].data;
+    SERVICE_SUPS.forEach(s => {
+      const locs = RANKED.filter(r => r.sup === s.sup).map(r => r.nsn);
+      const priorRanks = locs.map(nsn => priorData[nsn] ? priorData[nsn].rank : null).filter(v => v !== null);
+      if (priorRanks.length) {
+        priorSupRanks[s.sup] = priorRanks.reduce((a,b)=>a+b,0) / priorRanks.length;
+      }
+    });
+  }
+
   ['sup-rank-tbody','sup-kpi-tbody'].forEach(id => {
     const effectiveKPI = id === 'sup-kpi-tbody' ? 'rank' : kpi;
     const tb = document.getElementById(id);
@@ -1179,7 +1192,14 @@ function renderSupTables(kpi) {
         <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;color:#888;text-align:center;width:28px">${i+1}</td>
         <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea;font-size:${isRankTable?'15':'16'}px;width:${isRankTable?28:26}px">${medal}</td>
         <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea"><span style="display:inline-block;padding:${isRankTable?'2':'3'}px 10px;border-radius:20px;font-size:11px;font-weight:700;background:${s.color}22;color:${s.color};border:1px solid ${s.color}44;cursor:pointer" onclick="window.showSupPage('${s.sup}')">${s.sup}</span></td>
-        <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;font-size:${isRankTable?'15':'16'}px;color:${rc};text-align:center">${s.display_val}</td>
+        <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;font-weight:700;font-size:${isRankTable?'15':'16'}px;color:${rc};text-align:center">${(()=>{
+          if(effectiveKPI!=='rank'&&effectiveKPI!=='composite') return '';
+          const pr=priorSupRanks[s.sup];
+          if(pr===undefined||pr===null) return '';
+          const diff=s.avg_rank-pr;
+          if(Math.abs(diff)<0.05) return '';
+          return diff<0?'<span style="color:#0a7a3a;font-size:'+( isRankTable?'15':'16')+'px;margin-right:3px">▲</span>':'<span style="color:#b01010;font-size:'+( isRankTable?'15':'16')+'px;margin-right:3px">▼</span>';
+        })()}${s.display_val}</td>
         <td style="padding:${isRankTable?'9':'10'}px 14px;border-bottom:1px solid #f0eeea;text-align:center;color:#${isRankTable?'888':'666'};font-size:${isRankTable?'12':'13'}px">${s.count}</td>
         ${isRankTable ? `<td style="padding:9px 14px;border-bottom:1px solid #f0eeea;font-family:'DM Mono',monospace;color:#aaa;font-size:11px">${locs.join(', ')}</td>` : ''}
       `;
