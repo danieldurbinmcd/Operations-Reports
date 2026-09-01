@@ -410,6 +410,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
     <button id="detail-pill-weekend" onclick="setDetailView('weekend')" style="padding:5px 16px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:11px;font-weight:600;cursor:pointer">Fri–Sun</button>
     <span id="detail-view-label" style="font-size:11px;color:var(--muted);font-style:italic">Weekly composite scores</span>
   </div>
+
   <div id="detail-trend-row" style="display:flex;gap:20px;margin:6px 0 10px 0;padding:8px 14px;background:#C7F1F2;border-radius:8px;border:1px solid #a8e4e6;border-left:4px solid var(--accent);font-size:12px;font-weight:600">
     <span style="color:var(--muted);font-size:11px;font-weight:600;align-self:center;text-transform:uppercase;letter-spacing:.06em">Trend Count</span>
     <span id="trend-weekly-cell" style="display:flex;align-items:center;gap:4px"><span style="font-size:10px;color:#888;font-weight:700">WK</span> <span id="trend-weekly-val">—</span></span>
@@ -431,6 +432,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
     <button id="sup-pill-weekday" onclick="setSupView('weekday')" style="padding:5px 16px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:11px;font-weight:600;cursor:pointer">Mon–Thu</button>
     <button id="sup-pill-weekend" onclick="setSupView('weekend')" style="padding:5px 16px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:11px;font-weight:600;cursor:pointer">Fri–Sun</button>
     <span id="sup-view-label" style="font-size:11px;color:var(--muted);font-style:italic">Weekly composite scores</span>
+  </div>
+  <div id="sup-trend-row" style="display:none;flex:none;gap:20px;margin:-10px 0 14px 0;padding:8px 14px;background:#C7F1F2;border-radius:8px;border:1px solid #a8e4e6;border-left:4px solid var(--accent);font-size:12px;font-weight:600">
+    <span style="color:var(--muted);font-size:11px;font-weight:600;align-self:center;text-transform:uppercase;letter-spacing:.06em">Trend Count</span>
+    <span style="display:flex;align-items:center;gap:4px"><span style="font-size:10px;color:#888;font-weight:700">WK</span> <span id="sup-trend-weekly-val">&#8212;</span></span>
+    <span style="display:flex;align-items:center;gap:4px"><span style="font-size:10px;color:#888;font-weight:700">WD</span> <span id="sup-trend-weekday-val">&#8212;</span></span>
+    <span style="display:flex;align-items:center;gap:4px"><span style="font-size:10px;color:#888;font-weight:700">WE</span> <span id="sup-trend-weekend-val">&#8212;</span></span>
   </div>
 
   <div style="margin-bottom:20px">
@@ -1083,6 +1090,8 @@ var HISTORY = [{week:'Aug 17-Aug 23',data:{'10521':{rank:5,composite:0.8505,k:0.
 const SUPS = [{"sup": "Raymond", "color": "#b87a00", "avg_comp": 0.8968, "avg_rank": 12.8, "locs": [1, 2, 5, 8, 29, 32], "count": 6}, {"sup": "Elton", "color": "#c0392b", "avg_comp": 0.8879, "avg_rank": 14.3, "locs": [4, 7, 10, 19, 22, 24], "count": 6}, {"sup": "Sylvia", "color": "#e65100", "avg_comp": 0.8873, "avg_rank": 14.8, "locs": [6, 13, 14, 15, 20, 21], "count": 6}, {"sup": "Frances", "color": "#1a5fa8", "avg_comp": 0.8692, "avg_rank": 18.0, "locs": [18], "count": 1}, {"sup": "Ray", "color": "#0097a7", "avg_comp": 0.8583, "avg_rank": 20.3, "locs": [12, 23, 26], "count": 3}, {"sup": "Michelle", "color": "#1a7a4a", "avg_comp": 0.8518, "avg_rank": 20.0, "locs": [3, 9, 27, 30, 31], "count": 5}, {"sup": "Mike", "color": "#2e7d32", "avg_comp": 0.8477, "avg_rank": 22.0, "locs": [16, 28], "count": 2}, {"sup": "Mona", "color": "#7b3fa8", "avg_comp": 0.8309, "avg_rank": 24.0, "locs": [11, 17, 25, 33, 34], "count": 5}];
 
 const WEEK = "Aug 24 – Aug 30, 2026";
+
+var priorKPI = {};  // module-level, populated by sortByKPI on each render
 
 function scoreColor(v){
   if(v===null||v===undefined) return '#888';
@@ -1829,7 +1838,7 @@ initTrends();
     const c = r.composite;
     const bg = c >= 1.00 ? '#e8f7ee' : c >= 0.80 ? '#fff8e0' : '#ffeaea';
     const delCell = r.del_wt > 0
-      ? `<span style="color:${scoreColor(r.del_idx)}">${fmtScore(r.del_idx)}</span>`
+      ? kpiArrow(r.del_idx, priorKPI[r.nsn] ? priorKPI[r.nsn].del_idx : null)+`<span style="color:${scoreColor(r.del_idx)}">${fmtScore(r.del_idx)}</span>`
       : '<span style="color:#ccc">—</span>';
     const tr = document.createElement('tr');
     tr.style.cursor = 'pointer';
@@ -1840,10 +1849,10 @@ initTrends();
         <div style="font-weight:600;font-size:11px">${r.gm}</div>
         <div style="font-size:10px;color:${[r.k,r.l,r.m,r.n,...(r.del_wt>0?[r.del_idx]:[])].filter(v=>v!==null&&v<1.00).length===0?'#0a7a3a':[r.k,r.l,r.m,r.n,...(r.del_wt>0?[r.del_idx]:[])].filter(v=>v!==null&&v<1.00).length<=2?'#c07000':'#b01010'};margin-top:1px">${[r.k,r.l,r.m,r.n,...(r.del_wt>0?[r.del_idx]:[])].filter(v=>v!==null&&v<1.00).length}/${r.del_wt>0?5:4} below 100%</div>
       </td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:${scoreColor(r.k)};font-weight:600">${fmtScore(r.k)}</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:${scoreColor(r.l)};font-weight:600">${fmtScore(r.l)}</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:${scoreColor(r.m)};font-weight:600">${fmtScore(r.m)}</td>
-      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:${scoreColor(r.n)};font-weight:600">${fmtScore(r.n)}</td>
+      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:${scoreColor(r.k)};font-weight:600">${kpiArrow(r.k, priorKPI[r.nsn] ? priorKPI[r.nsn].k : null)}${fmtScore(r.k)}</td>
+      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:${scoreColor(r.l)};font-weight:600">${kpiArrow(r.l, priorKPI[r.nsn] ? priorKPI[r.nsn].l : null)}${fmtScore(r.l)}</td>
+      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:${scoreColor(r.m)};font-weight:600">${kpiArrow(r.m, priorKPI[r.nsn] ? priorKPI[r.nsn].m : null)}${fmtScore(r.m)}</td>
+      <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:${scoreColor(r.n)};font-weight:600">${kpiArrow(r.n, priorKPI[r.nsn] ? priorKPI[r.nsn].n : null)}${fmtScore(r.n)}</td>
       <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea">${delCell}</td>
       <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;border-left:2px solid #e0dcd8;font-size:12px;color:${r.sales_pct!=null?(r.sales_pct>=0?'#0a7a3a':'#b01010'):'#bbb'};font-weight:${r.sales_pct!=null?600:400}">${r.sales_pct!=null?(r.sales_pct>=0?'+':'')+Math.round(r.sales_pct*1000)/10+'%':'—'}</td>
       <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;font-size:12px;color:${r.gc_pct!=null?(r.gc_pct>=0?'#0a7a3a':'#b01010'):'#bbb'};font-weight:${r.gc_pct!=null?600:400}">${r.gc_pct!=null?(r.gc_pct>=0?'+':'')+Math.round(r.gc_pct*1000)/10+'%':'—'}</td>
@@ -1881,11 +1890,15 @@ window.sortByKPI = function(kpi) {
   if (pillEl) pillEl.classList.add('active-kpi');
 
   // Update header label
-  // Build prior week composite lookup from HISTORY
+  // Build prior week lookup from HISTORY
   const priorComps = {};
+  priorKPI = {};  // reset and repopulate module-level priorKPI
   if (HISTORY && HISTORY.length >= 2) {
     const priorData = HISTORY[HISTORY.length - 2].data;
-    Object.keys(priorData).forEach(nsn => { priorComps[nsn] = priorData[nsn].composite; });
+    Object.keys(priorData).forEach(nsn => {
+      priorComps[nsn] = priorData[nsn].composite;
+      priorKPI[nsn]   = priorData[nsn];
+    });
   }
 
   const labels = {
@@ -1936,11 +1949,11 @@ window.sortByKPI = function(kpi) {
       <td style="padding:10px 12px;border-bottom:1px solid #f0eeea"><div style="font-family:'DM Mono',monospace;font-size:11px;color:#888">${r.nsn}</div><div style="font-weight:600">${r.gm}</div><div style="font-size:10px;color:${(()=>{const below=[r.k,r.l,r.m,r.n,...(r.del_wt>0?[r.del_idx]:[])].filter(v=>v!==null&&v<1.00).length;const total=r.del_wt>0?5:4;return below===0?'#0a7a3a':below<=2?'#c07000':'#b01010';})()};margin-top:2px">${(()=>{const below=[r.k,r.l,r.m,r.n,...(r.del_wt>0?[r.del_idx]:[])].filter(v=>v!==null&&v<1.00).length;const total=r.del_wt>0?5:4;return below+'/'+total+' below 100%';})()}</div></td>
       <td style="font-weight:700;color:${dispColor};font-size:15px;text-align:center;padding:10px 12px;border-bottom:1px solid #f0eeea">${(()=>{const pr=priorComps[r.nsn];if(pr===undefined)return '';const diff=r.composite-pr;if(Math.abs(diff)<0.0005)return '';return diff>0?'<span style="color:#0a7a3a;font-size:12px;margin-right:2px">▲</span>':'<span style="color:#b01010;font-size:12px;margin-right:2px">▼</span>';})()}${displayVal}</td>
       <td style="padding:10px 12px;border-bottom:1px solid #f0eeea"><span style="display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;background:${r.supColor}22;color:${r.supColor};border:1px solid ${r.supColor}44;cursor:pointer" onclick="window.showSupPage('${r.sup}')">${r.sup}</span></td>
-      <td style="padding:8px 12px;border-bottom:1px solid #f0eeea;text-align:center;font-weight:600;font-size:13px;color:${scoreColor(r.k)}">${fmtScore(r.k)}</td>
-      <td style="padding:8px 12px;border-bottom:1px solid #f0eeea;text-align:center;font-weight:600;font-size:13px;color:${scoreColor(r.l)}">${fmtScore(r.l)}</td>
-      <td style="padding:8px 12px;border-bottom:1px solid #f0eeea;text-align:center;font-weight:600;font-size:13px;color:${scoreColor(r.m)}">${fmtScore(r.m)}</td>
-      <td style="padding:8px 12px;border-bottom:1px solid #f0eeea;text-align:center;font-weight:600;font-size:13px;color:${scoreColor(r.n)}">${fmtScore(r.n)}</td>
-      <td style="padding:8px 12px;border-bottom:1px solid #f0eeea;text-align:center;font-size:13px">${r.del_wt>0?'<span style="color:'+scoreColor(r.del_idx)+';font-weight:600">'+fmtScore(r.del_idx)+'</span>':'<span style="color:#ccc">—</span>'}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #f0eeea;text-align:center;font-weight:600;font-size:13px;color:${scoreColor(r.k)}">${kpiArrow(r.k, priorKPI[r.nsn] ? priorKPI[r.nsn].k : null)}${fmtScore(r.k)}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #f0eeea;text-align:center;font-weight:600;font-size:13px;color:${scoreColor(r.l)}">${kpiArrow(r.l, priorKPI[r.nsn] ? priorKPI[r.nsn].l : null)}${fmtScore(r.l)}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #f0eeea;text-align:center;font-weight:600;font-size:13px;color:${scoreColor(r.m)}">${kpiArrow(r.m, priorKPI[r.nsn] ? priorKPI[r.nsn].m : null)}${fmtScore(r.m)}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #f0eeea;text-align:center;font-weight:600;font-size:13px;color:${scoreColor(r.n)}">${kpiArrow(r.n, priorKPI[r.nsn] ? priorKPI[r.nsn].n : null)}${fmtScore(r.n)}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #f0eeea;text-align:center;font-size:13px">${r.del_wt>0?'<span style="color:'+scoreColor(r.del_idx)+';font-weight:600">'+kpiArrow(r.del_idx, priorKPI[r.nsn] ? priorKPI[r.nsn].del_idx : null)+fmtScore(r.del_idx)+'</span>':'<span style="color:#ccc">—</span>'}</td>
       <td style="padding:8px 12px;border-bottom:1px solid #f0eeea;text-align:center;font-size:12px;border-left:2px solid #e0dcd8;color:${r.sales_pct!=null?(r.sales_pct>=0?'#0a7a3a':'#b01010'):'#bbb'};font-weight:${r.sales_pct!=null?600:400}">${r.sales_pct!=null?(r.sales_pct>=0?'+':'')+Math.round(r.sales_pct*1000)/10+'%':'—'}</td>
       <td style="padding:8px 12px;border-bottom:1px solid #f0eeea;text-align:center;font-size:12px;color:${r.gc_pct!=null?(r.gc_pct>=0?'#0a7a3a':'#b01010'):'#bbb'};font-weight:${r.gc_pct!=null?600:400}">${r.gc_pct!=null?(r.gc_pct>=0?'+':'')+Math.round(r.gc_pct*1000)/10+'%':'—'}</td>
       <td style="padding:8px 12px;border-bottom:1px solid #f0eeea;text-align:center;font-size:12px;color:${r.kiosk_pct!=null?'#1a5fa8':'#bbb'};font-weight:${r.kiosk_pct!=null?600:400}">${r.kiosk_pct!=null?Math.round(r.kiosk_pct*1000)/10+'%':'—'}</td>
@@ -1984,14 +1997,17 @@ function renderDetail(nsn) {
   const rd = r || rWeekly;  // use weekly as fallback if daypart has no data
   const detailViewLabel = currentDetailView === 'weekday' ? 'Mon–Thu' : currentDetailView === 'weekend' ? 'Fri–Sun' : 'Weekly';
   const comp = rd.composite;
+  // Prior week KPI data for arrows
+  const priorHistArr = currentDetailView==='weekday' ? HISTORY_WD : currentDetailView==='weekend' ? HISTORY_WE : HISTORY;
+  const priorLocData = (priorHistArr && priorHistArr.length>=2) ? priorHistArr[priorHistArr.length-2].data[nsn] : null;
   const pillars = [
-    {title:'Effective DT Time', score:r.k, raw:`${fmtS(r.eff_dt)} effective / ${fmtS(r.timer_oepe)} timer · ${fmtPct(r.parked_pct)} parked (target ~12%)`, weight:'50%', action:r.action_dt},
-    {title:'R2P Front Counter', score:r.l, raw:`${fmtS(r.r2p)} receipt-to-present`, weight:'20%', action:r.action_r2p},
-    {title:'KVS Time / Item', score:r.m, raw:`${fmtS(r.kvs_item)} per item`, weight:`${((0.30-r.huss_wt)*100).toFixed(1)}%`, action:r.action_kvs},
-    {title:'KVS Healthy Usage', score:r.n, raw:`${fmtPct(r.kvs_healthy)} healthy`, weight:`${(r.huss_wt*100).toFixed(1)}%`, action:r.action_healthy},
+    {title:'Effective DT Time', score:r.k, prior:priorLocData?priorLocData.k:null, raw:`${fmtS(r.eff_dt)} effective / ${fmtS(r.timer_oepe)} timer · ${fmtPct(r.parked_pct)} parked (target ~12%)`, weight:'50%', action:r.action_dt},
+    {title:'R2P Front Counter', score:r.l, prior:priorLocData?priorLocData.l:null, raw:`${fmtS(r.r2p)} receipt-to-present`, weight:'20%', action:r.action_r2p},
+    {title:'KVS Time / Item', score:r.m, prior:priorLocData?priorLocData.m:null, raw:`${fmtS(r.kvs_item)} per item`, weight:`${((0.30-r.huss_wt)*100).toFixed(1)}%`, action:r.action_kvs},
+    {title:'KVS Healthy Usage', score:r.n, prior:priorLocData?priorLocData.n:null, raw:`${fmtPct(r.kvs_healthy)} healthy`, weight:`${(r.huss_wt*100).toFixed(1)}%`, action:r.action_healthy},
   ];
   if(r.del_wt>0) {
-    pillars.push({title:'3PO Delivery', score:r.del_idx, raw:`${fmtMin(r.del_time)} handoff · ${fmtPct(r.del_acc)} accuracy`, weight:`${(r.del_wt*100).toFixed(0)}%`, action:r.action_3po});
+    pillars.push({title:'3PO Delivery', score:r.del_idx, prior:priorLocData?priorLocData.del_idx:null, raw:`${fmtMin(r.del_time)} handoff · ${fmtPct(r.del_acc)} accuracy`, weight:`${(r.del_wt*100).toFixed(0)}%`, action:r.action_3po});
   }
 
   const timerFlag = (rd.coverage!==null && rd.coverage<0.80) ? `<span style="color:#b01010;font-weight:700">⚠ Timer coverage ${fmtPct(r.coverage)} — below 80% threshold</span>` : '';
@@ -2006,7 +2022,7 @@ function renderDetail(nsn) {
           <div class="detail-name">${r.nsn} — ${r.gm}</div>
           <div class="detail-meta"><span style="color:${r.supColor};font-weight:600">${r.sup}</span> &nbsp;·&nbsp; Rank #${r.rank} of ${RANKED.length} &nbsp;·&nbsp; ${WEEK}</div>
           <div style="display:flex;align-items:baseline;gap:8px">
-            <div class="detail-score-big" style="color:${scoreColor(comp)}">${fmtScore(comp)}</div>
+            <div class="detail-score-big" style="color:${scoreColor(comp)}">${kpiArrow(comp, priorLocData ? priorLocData.composite : null, '18px')}${fmtScore(comp)}</div>
             <div style="font-size:13px;color:var(--muted);font-weight:500">of the standard</div>
           </div>
           <span class="detail-tier" style="background:${scoreBg(comp)};color:${scoreColor(comp)};border:1px solid ${scoreColor(comp)}33">${tierLabel(comp)}</span>
@@ -2030,7 +2046,7 @@ function renderDetail(nsn) {
       ${pillars.map(p=>`
         <div class="pillar" style="border-left:4px solid ${scoreColor(p.score)}">
           <div class="pillar-title"><span>${p.title}</span><span style="color:#bbb">${p.weight}</span></div>
-          <div class="pillar-score" style="color:${scoreColor(p.score)}">${fmtScore(p.score)}</div>
+          <div class="pillar-score" style="color:${scoreColor(p.score)}">${kpiArrow(p.score, p.prior)}${fmtScore(p.score)}</div>
           <div class="pillar-raw">${p.raw}</div>
           <div class="pillar-action">${p.action}</div>
         </div>
@@ -2071,7 +2087,7 @@ window.sortKpiScoresTable = function(key) {
     const c = r.composite;
     const bg = c >= 1.00 ? '#e8f7ee' : c >= 0.80 ? '#fff8e0' : '#ffeaea';
     const delCell = r.del_wt > 0
-      ? '<span style="color:'+scoreColor(r.del_idx)+'">'+fmtScore(r.del_idx)+'</span>'
+      ? kpiArrow(r.del_idx, priorKPI[r.nsn] ? priorKPI[r.nsn].del_idx : null) + '<span style="color:'+scoreColor(r.del_idx)+'">'+fmtScore(r.del_idx)+'</span>'
       : '<span style="color:#ccc">—</span>';
     const tr = document.createElement('tr');
     tr.style.cursor = 'pointer';
@@ -2081,10 +2097,10 @@ window.sortKpiScoresTable = function(key) {
         '<div style="font-size:10px;color:#aaa;font-family:\'DM Mono\',monospace">' + r.nsn + '</div>' +
         '<div style="font-weight:600;font-size:11px">' + r.gm + '</div>' +
       '</td>' +
-      '<td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:' + scoreColor(r.k) + ';font-weight:600">' + fmtScore(r.k) + '</td>' +
-      '<td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:' + scoreColor(r.l) + ';font-weight:600">' + fmtScore(r.l) + '</td>' +
-      '<td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:' + scoreColor(r.m) + ';font-weight:600">' + fmtScore(r.m) + '</td>' +
-      '<td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:' + scoreColor(r.n) + ';font-weight:600">' + fmtScore(r.n) + '</td>' +
+      '<td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:' + scoreColor(r.k) + ';font-weight:600">' + kpiArrow(r.k, priorKPI[r.nsn] ? priorKPI[r.nsn].k : null)+fmtScore(r.k) + '</td>' +
+      '<td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:' + scoreColor(r.l) + ';font-weight:600">' + kpiArrow(r.l, priorKPI[r.nsn] ? priorKPI[r.nsn].l : null)+fmtScore(r.l) + '</td>' +
+      '<td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:' + scoreColor(r.m) + ';font-weight:600">' + kpiArrow(r.m, priorKPI[r.nsn] ? priorKPI[r.nsn].m : null)+fmtScore(r.m) + '</td>' +
+      '<td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;color:' + scoreColor(r.n) + ';font-weight:600">' + kpiArrow(r.n, priorKPI[r.nsn] ? priorKPI[r.nsn].n : null)+fmtScore(r.n) + '</td>' +
       '<td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea">' + delCell + '</td>' +
       '<td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;border-left:2px solid #e0dcd8;font-size:12px;color:' + (r.sales_pct!=null?(r.sales_pct>=0?'#0a7a3a':'#b01010'):'#bbb') + ';font-weight:' + (r.sales_pct!=null?600:400) + '">' + (r.sales_pct!=null?(r.sales_pct>=0?'+':'')+Math.round(r.sales_pct*1000)/10+'%':'—') + '</td>' +
       '<td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;font-size:12px;color:' + (r.gc_pct!=null?(r.gc_pct>=0?'#0a7a3a':'#b01010'):'#bbb') + ';font-weight:' + (r.gc_pct!=null?600:400) + '">' + (r.gc_pct!=null?(r.gc_pct>=0?'+':'')+Math.round(r.gc_pct*1000)/10+'%':'—') + '</td>' +
@@ -2099,6 +2115,18 @@ var compareSortKey = 'weekly';
 var compareSortDir = -1;
 var trendKey = 'weekly';  // which period's history to use for trend count
 
+
+
+function kpiArrow(curr, prior, size) {
+  size = size || '11px';
+  if (curr === null || curr === undefined) return '';
+  if (prior === null || prior === undefined) return '<span style="color:#bbb;font-size:' + size + ';margin-right:2px">&#8212;</span>';
+  var diff = curr - prior;
+  if (Math.abs(diff) < 0.001) return '<span style="color:#bbb;font-size:' + size + ';margin-right:2px">&#8212;</span>';
+  return diff > 0
+    ? '<span style="color:#0a7a3a;font-size:' + size + ';margin-right:2px">&#9650;</span>'
+    : '<span style="color:#b01010;font-size:' + size + ';margin-right:2px">&#9660;</span>';
+}
 
 function computeTrend(nsn, histArr) {
   // Count consecutive weeks moving in same direction as most recent change
@@ -2268,6 +2296,32 @@ window.toggleDaypartCompare = function(){
 };
 
 
+
+window.updateSupTrendRow = function(nsn) {
+  var row = document.getElementById('sup-trend-row');
+  if (!row) return;
+  if (!nsn) { row.style.display = 'none'; return; }
+  row.style.display = 'flex';
+  var periods = [
+    {id:'sup-trend-weekly-val',  hist:HISTORY},
+    {id:'sup-trend-weekday-val', hist:HISTORY_WD},
+    {id:'sup-trend-weekend-val', hist:HISTORY_WE},
+  ];
+  periods.forEach(function(p) {
+    var el = document.getElementById(p.id);
+    if (!el) return;
+    var trend = computeTrend(nsn, p.hist);
+    if (!trend || trend.dir === 0) {
+      el.innerHTML = '<span style="color:#bbb">&#8212;</span>';
+    } else {
+      var arr = trend.dir > 0
+        ? '<span style="color:#0a7a3a;font-size:13px">&#9650;</span>'
+        : '<span style="color:#b01010;font-size:13px">&#9660;</span>';
+      el.innerHTML = arr + '<span style="margin-left:2px">' + trend.count + '</span><span style="color:#888;font-size:10px;margin-left:2px">WKS</span>';
+    }
+  });
+};
+
 window.updateDetailTrendRow = function(nsn) {
   var periods = [
     {id:'trend-weekly-val',  hist:HISTORY,    label:'WK'},
@@ -2302,6 +2356,7 @@ window.showPage = function(id, tabEl) {
 
 
 renderDetail(RANKED[0].nsn);
+window.updateDetailTrendRow(RANKED[0].nsn);
 
 window.downloadDashboard = function() {
   const blob = new Blob([document.documentElement.outerHTML], {type: 'text/html'});
@@ -2457,6 +2512,8 @@ function renderSupPage(supName) {
     const chev = document.getElementById('chevron-' + nsn);
     if (body) {
       body.classList.add('open');
+  var _nsn = cardId.replace('body-', '');
+  window.updateSupTrendRow(_nsn);
       refreshCardBody(nsn);
     }
     if (chev) chev.style.transform = 'rotate(180deg)';
@@ -2534,6 +2591,7 @@ window.toggleLocCard = function(cardId) {
   const chev = document.getElementById('chevron-'+nsn);
   const isOpen = body.classList.contains('open');
   body.classList.toggle('open', !isOpen);
+  if (isOpen) { var _r=document.getElementById('sup-trend-row'); if(_r) _r.style.display='none'; }
   chev.style.transform = isOpen ? '' : 'rotate(180deg)';
   if (!isOpen) refreshCardBody(nsn);
 };
@@ -2556,7 +2614,7 @@ window.setDetailView = function(view) {
   const lbl = document.getElementById('detail-view-label');
   if (lbl) lbl.textContent = labels[view] || '';
   const sel = document.getElementById('loc-select');
-  if (sel && sel.value) renderDetail(sel.value);
+  if (sel && sel.value) { renderDetail(sel.value); window.updateDetailTrendRow(sel.value); }
 };
 
 window.showDetail = function(nsn) {
@@ -2654,11 +2712,11 @@ function populateDaypartPage(pageId, data) {
           <div style="font-weight:600;font-size:11px">${r.gm}</div>
           <div style="font-size:10px;color:${below===0?'#0a7a3a':below<=2?'#c07000':'#b01010'}">${below}/4 below 100%</div>
         </td>
-        <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;background:${bg};color:${scoreColor(r.k)};font-weight:600">${fmtScore(r.k)}</td>
-        <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;background:${bg};color:${scoreColor(r.l)};font-weight:600">${fmtScore(r.l)}</td>
-        <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;background:${bg};color:${scoreColor(r.m)};font-weight:600">${fmtScore(r.m)}</td>
-        <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;background:${bg};color:${scoreColor(r.n)};font-weight:600">${fmtScore(r.n)}</td>
-        <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;background:${bg}">${r.del_wt>0?`<span style="color:${scoreColor(r.del_idx)}">${fmtScore(r.del_idx)}</span>`:'<span style="color:#ccc">—</span>'}</td>
+        <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;background:${bg};color:${scoreColor(r.k)};font-weight:600">${kpiArrow(r.k, priorKPI[r.nsn] ? priorKPI[r.nsn].k : null)}${fmtScore(r.k)}</td>
+        <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;background:${bg};color:${scoreColor(r.l)};font-weight:600">${kpiArrow(r.l, priorKPI[r.nsn] ? priorKPI[r.nsn].l : null)}${fmtScore(r.l)}</td>
+        <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;background:${bg};color:${scoreColor(r.m)};font-weight:600">${kpiArrow(r.m, priorKPI[r.nsn] ? priorKPI[r.nsn].m : null)}${fmtScore(r.m)}</td>
+        <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;background:${bg};color:${scoreColor(r.n)};font-weight:600">${kpiArrow(r.n, priorKPI[r.nsn] ? priorKPI[r.nsn].n : null)}${fmtScore(r.n)}</td>
+        <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;background:${bg}">${r.del_wt>0 ? kpiArrow(r.del_idx, priorKPI[r.nsn] ? priorKPI[r.nsn].del_idx : null) + '<span style="color:'+scoreColor(r.del_idx)+'">'+fmtScore(r.del_idx)+'</span>' : '<span style="color:#ccc">—</span>'}</td>
         <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;background:${bg};border-left:3px solid #c8e6c9;font-size:12px;color:${r.sales_pct!=null?(r.sales_pct>=0?'#0a7a3a':'#b01010'):'#bbb'};font-weight:${r.sales_pct!=null?600:400}">${r.sales_pct!=null?(r.sales_pct>=0?'+':'')+Math.round(r.sales_pct*1000)/10+'%':'—'}</td>
         <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;background:${bg};font-size:12px;color:${r.gc_pct!=null?(r.gc_pct>=0?'#0a7a3a':'#b01010'):'#bbb'};font-weight:${r.gc_pct!=null?600:400}">${r.gc_pct!=null?(r.gc_pct>=0?'+':'')+Math.round(r.gc_pct*1000)/10+'%':'—'}</td>
         <td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;background:${bg};font-size:12px;color:${r.kiosk_pct!=null?'#1a5fa8':'#bbb'};font-weight:${r.kiosk_pct!=null?600:400}">${r.kiosk_pct!=null?Math.round(r.kiosk_pct*1000)/10+'%':'—'}</td>
@@ -2697,7 +2755,7 @@ function populateKPIDetailTable(data) {
     const c = r.composite;
     const bg = c >= 1.00 ? (r.rank <= Math.ceil(data.length/3) ? '#e8f7ee' : '#e8f7ee') : c >= 0.80 ? '#fff8e0' : '#ffeaea';
     const delCell = r.del_wt > 0
-      ? '<span style="color:' + scoreColor(r.del_idx) + '">' + fmtScore(r.del_idx) + '</span>'
+      ? '<span style="color:' + scoreColor(r.del_idx) + '">' + kpiArrow(r.del_idx, priorKPI[r.nsn] ? priorKPI[r.nsn].del_idx : null)+fmtScore(r.del_idx) + '</span>'
       : '<span style="color:#ccc">—</span>';
     const below = [r.k,r.l,r.m,r.n,...(r.del_wt>0?[r.del_idx]:[])].filter(v=>v!==null&&v<1.00).length;
     const total = r.del_wt>0?5:4;
@@ -2709,10 +2767,10 @@ function populateKPIDetailTable(data) {
       '<div style="font-weight:600;font-size:11px">' + r.gm + '</div>' +
       '<div style="font-size:10px;color:' + (below===0?'#0a7a3a':below<=2?'#c07000':'#b01010') + ';margin-top:1px">' + below + '/' + total + ' below 100%</div>' +
       '</td>' +
-      '<td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;background:' + bg + ';color:' + scoreColor(r.k) + ';font-weight:600">' + fmtScore(r.k) + '</td>' +
-      '<td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;background:' + bg + ';color:' + scoreColor(r.l) + ';font-weight:600">' + fmtScore(r.l) + '</td>' +
-      '<td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;background:' + bg + ';color:' + scoreColor(r.m) + ';font-weight:600">' + fmtScore(r.m) + '</td>' +
-      '<td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;background:' + bg + ';color:' + scoreColor(r.n) + ';font-weight:600">' + fmtScore(r.n) + '</td>' +
+      '<td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;background:' + bg + ';color:' + scoreColor(r.k) + ';font-weight:600">' + kpiArrow(r.k, priorKPI[r.nsn] ? priorKPI[r.nsn].k : null)+fmtScore(r.k) + '</td>' +
+      '<td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;background:' + bg + ';color:' + scoreColor(r.l) + ';font-weight:600">' + kpiArrow(r.l, priorKPI[r.nsn] ? priorKPI[r.nsn].l : null)+fmtScore(r.l) + '</td>' +
+      '<td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;background:' + bg + ';color:' + scoreColor(r.m) + ';font-weight:600">' + kpiArrow(r.m, priorKPI[r.nsn] ? priorKPI[r.nsn].m : null)+fmtScore(r.m) + '</td>' +
+      '<td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;background:' + bg + ';color:' + scoreColor(r.n) + ';font-weight:600">' + kpiArrow(r.n, priorKPI[r.nsn] ? priorKPI[r.nsn].n : null)+fmtScore(r.n) + '</td>' +
       '<td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;background:' + bg + '">' + delCell + '</td>' +
       '<td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;border-left:2px solid #e0dcd8;font-size:12px;color:' + (r.sales_pct!=null?(r.sales_pct>=0?'#0a7a3a':'#b01010'):'#bbb') + ';font-weight:' + (r.sales_pct!=null?600:400) + '">' + (r.sales_pct!=null?(r.sales_pct>=0?'+':'')+Math.round(r.sales_pct*1000)/10+'%':'—') + '</td>' +
       '<td style="text-align:center;padding:7px 10px;border-bottom:1px solid #f0eeea;font-size:12px;color:' + (r.gc_pct!=null?(r.gc_pct>=0?'#0a7a3a':'#b01010'):'#bbb') + ';font-weight:' + (r.gc_pct!=null?600:400) + '">' + (r.gc_pct!=null?(r.gc_pct>=0?'+':'')+Math.round(r.gc_pct*1000)/10+'%':'—') + '</td>' +
