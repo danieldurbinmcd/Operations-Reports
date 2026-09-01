@@ -178,6 +178,21 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .trend-card-item{display:flex;justify-content:space-between;align-items:center;padding:9px 16px;border-bottom:1px solid var(--border);}
 .trend-card-item:last-child{border-bottom:none;}
 .trend-pill').forEach(function(b){b.classList.remove('trend-pill-active');}
+
+@media print {
+  body.printing-intervention .tab-bar,
+  body.printing-intervention .page:not(#page-intervention),
+  body.printing-intervention #page-intervention #iv-no-store,
+  body.printing-intervention button {
+    display: none !important;
+  }
+  body.printing-intervention #page-intervention {
+    display: block !important;
+  }
+  body.printing-intervention {
+    background: #fff;
+  }
+}
 </style>
 </head>
 <body>
@@ -230,7 +245,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
     </div>
     <div class="s-card">
       <div class="s-lbl">Active Locations</div>
-      <div class="s-val" id="loc-count">37</div>
+      <div class="s-val" id="loc-count">20</div>
       <div class="s-sub">GA Portfolio</div>
     </div>
     
@@ -641,6 +656,174 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   </div>
 
 
+
+
+<!-- ═══ INTERVENTION PAGE ═══ -->
+<div class="page" id="page-intervention">
+  <div id="intervention-header" style="margin-bottom:20px">
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px">Multi-Week Intervention Protocol</div>
+    <div id="iv-store-title" style="font-size:22px;font-weight:700;color:var(--accent)">Select a flagged location</div>
+    <div id="iv-store-meta" style="font-size:13px;color:var(--muted);margin-top:4px"></div>
+  </div>
+
+  <div id="iv-no-store" style="padding:40px;text-align:center;color:var(--muted);font-size:14px">
+    No location selected. Click a ⚠️ flag in the Location Detail or Compare Dayparts view to open the intervention template.
+  </div>
+
+  <div id="iv-content" style="display:none">
+
+    <!-- KPI Summary -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:18px">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:12px;font-weight:700">Trend Flags — Trigger Summary</div>
+      <div id="iv-flags" style="display:flex;gap:12px;flex-wrap:wrap"></div>
+      <div id="iv-kpi-breakdown" style="margin-top:16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px"></div>
+    </div>
+
+    <!-- Opening Frame -->
+    <div style="background:#fff8e0;border:1px solid #e8d070;border-left:4px solid #c8a000;border-radius:8px;padding:16px 20px;margin-bottom:18px">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#7a5a00;margin-bottom:6px">Opening Frame</div>
+      <div style="font-size:13px;color:#5a4000;line-height:1.6">"Find the Problem to Solve the Problem." A restaurant with a KPI stagnant or dropping for three consecutive weeks isn't a coaching miss — it's a signal that whatever's been tried isn't reaching Ownership. Before prescribing another tactic, find the actual problem. The scorecard tells you where; it doesn't tell you why.</div>
+    </div>
+
+    <!-- Pre-Visit Checklist -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:18px">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:14px;font-weight:700">Answer These Before You Visit</div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text);cursor:pointer">
+          <input type="checkbox" style="margin-top:2px;flex-shrink:0">
+          <span>Do we have the right <strong>Direct Reach</strong> — is the Supervisor positioned to carry this and engage the GM in the right process to facilitate movement?</span>
+        </label>
+        <label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text);cursor:pointer">
+          <input type="checkbox" style="margin-top:2px;flex-shrink:0">
+          <span>What are the <strong>Cultural Headwinds</strong> to name? (Fear, Power, Authority, Complacency, Social Norms, Structural Stability)</span>
+        </label>
+        <label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text);cursor:pointer">
+          <input type="checkbox" style="margin-top:2px;flex-shrink:0">
+          <span>Do we have the right <strong>Reinforcement process</strong> — frequent enough to matter, bounded enough not to become dependency?</span>
+        </label>
+        <label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text);cursor:pointer">
+          <input type="checkbox" style="margin-top:2px;flex-shrink:0">
+          <span>What does <strong>follow-up</strong> look like on DO and Supervisor weekly one-on-one meetings?</span>
+        </label>
+        <label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text);cursor:pointer">
+          <input type="checkbox" style="margin-top:2px;flex-shrink:0">
+          <span><strong>Documentation required:</strong> Record of Conversation · Performance Action Plan · Performance Improvement Plan</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Visit Planning -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px">
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px">
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:12px;font-weight:700">The Why — Agree Before You Visit</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:8px">State it in one sentence. The DO and Supervisor must say it the same way.</div>
+        <textarea id="iv-why" placeholder="Write the Why statement here..." style="width:100%;min-height:80px;border:1px solid var(--border);border-radius:6px;padding:10px;font-size:13px;font-family:inherit;resize:vertical;box-sizing:border-box;background:var(--bg)"></textarea>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px">
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:12px;font-weight:700">Ownership Assessment</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Does the GM care enough to engage?</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="radio" name="iv-ownership" value="invested"> <span>✅ Invested — ready to own the problem</span></label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="radio" name="iv-ownership" value="compliant"> <span>⚠️ Compliant — going through the motions</span></label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="radio" name="iv-ownership" value="disengaged"> <span>🔴 Disengaged — signal hasn't reached ignition</span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Problem Type + Cultural Headwinds -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px">
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px">
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:12px;font-weight:700">Problem Type</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Name it out loud with the GM — this itself builds ownership.</div>
+        <label style="display:flex;align-items:flex-start;gap:8px;font-size:13px;cursor:pointer;margin-bottom:10px">
+          <input type="radio" name="iv-problem" value="complicated" style="margin-top:2px">
+          <span><strong>Complicated</strong> — knowable cause, findable fix. Gather facts (schedules, position sheets, DAR). The 80/20 opportunity will surface.</span>
+        </label>
+        <label style="display:flex;align-items:flex-start;gap:8px;font-size:13px;cursor:pointer">
+          <input type="radio" name="iv-problem" value="complex" style="margin-top:2px">
+          <span><strong>Complex</strong> — no clean cause-and-effect. Needs small experiments, emotional intelligence, reward and recognition, inspiration.</span>
+        </label>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px">
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:12px;font-weight:700">Cultural Headwinds</div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox"> Fear</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox"> Power</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox"> Authority</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox"> Complacency</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox"> Social Norms</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox"> Structural Stability</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Commitments -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:18px">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:14px;font-weight:700">Frequency &amp; Reinforcement Commitments</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px">
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox"> Attend RDM meeting for this store</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox"> Standing Teams call — GM + Supervisor together</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox"> Daily MyQSRSoft review with specific feedback</label>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Reinforcement cadence</div>
+          <textarea id="iv-cadence" placeholder="e.g. Daily Teams check-in through week 4, then step to weekly if composite ≥ 0.95..." style="width:100%;min-height:60px;border:1px solid var(--border);border-radius:6px;padding:8px;font-size:12px;font-family:inherit;resize:vertical;box-sizing:border-box;background:var(--bg)"></textarea>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Step-down standard (when to reduce cadence)</div>
+          <textarea id="iv-stepdown" placeholder="e.g. Composite ≥ 1.00 for 2 consecutive weeks..." style="width:100%;min-height:60px;border:1px solid var(--border);border-radius:6px;padding:8px;font-size:12px;font-family:inherit;resize:vertical;box-sizing:border-box;background:var(--bg)"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Plan -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:18px">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px;font-weight:700">Action Plan</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Specific actions the DO and Supervisor will execute with the GM this week. Include the named owner and deadline for each.</div>
+      <div id="iv-action-rows" style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px">
+        <div style="display:grid;grid-template-columns:1fr 140px 120px 28px;gap:8px;align-items:center">
+          <input type="text" placeholder="Action item..." style="border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;background:var(--bg);width:100%;box-sizing:border-box">
+          <input type="text" placeholder="Owner" style="border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;background:var(--bg);width:100%;box-sizing:border-box">
+          <input type="text" placeholder="Due date" style="border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;background:var(--bg);width:100%;box-sizing:border-box">
+          <span style="color:#bbb;font-size:18px;cursor:default">·</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 140px 120px 28px;gap:8px;align-items:center">
+          <input type="text" placeholder="Action item..." style="border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;background:var(--bg);width:100%;box-sizing:border-box">
+          <input type="text" placeholder="Owner" style="border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;background:var(--bg);width:100%;box-sizing:border-box">
+          <input type="text" placeholder="Due date" style="border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;background:var(--bg);width:100%;box-sizing:border-box">
+          <span style="color:#bbb;font-size:18px;cursor:default">·</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 140px 120px 28px;gap:8px;align-items:center">
+          <input type="text" placeholder="Action item..." style="border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;background:var(--bg);width:100%;box-sizing:border-box">
+          <input type="text" placeholder="Owner" style="border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;background:var(--bg);width:100%;box-sizing:border-box">
+          <input type="text" placeholder="Due date" style="border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;background:var(--bg);width:100%;box-sizing:border-box">
+          <span style="color:#bbb;font-size:18px;cursor:default">·</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button onclick="window.addActionRow()" style="background:none;border:1px solid var(--border);border-radius:6px;padding:6px 14px;font-size:12px;cursor:pointer;color:var(--muted);font-family:inherit">+ Add row</button>
+        <div style="font-size:11px;color:#bbb">Action, Owner, Due date</div>
+      </div>
+    </div>
+
+    <!-- Notes -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:24px">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:10px;font-weight:700">Visit Notes / Record of Conversation</div>
+      <textarea id="iv-notes" placeholder="Document key observations, GM responses, and agreed next steps here..." style="width:100%;min-height:120px;border:1px solid var(--border);border-radius:6px;padding:10px;font-size:13px;font-family:inherit;resize:vertical;box-sizing:border-box;background:var(--bg)"></textarea>
+    </div>
+
+    <!-- Print button -->
+    <div style="text-align:center;margin-bottom:40px">
+      <button onclick="window.printIntervention()" style="background:var(--accent);color:#fff;border:none;padding:12px 32px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.04em">Print / Save as PDF</button>
+    </div>
+
+  </div><!-- iv-content -->
+</div><!-- page-intervention -->
 
 
 
@@ -1965,6 +2148,7 @@ window.sortByKPI = function(kpi) {
 };
 
 // Initial render
+var locCountEl=document.getElementById('loc-count'); if(locCountEl) locCountEl.textContent=RANKED.length;
 window.sortByKPI('composite');
 renderSupTables('rank');
 
@@ -2160,7 +2344,17 @@ function mkTrendCell(nsn) {
     var arrow = trend.dir>0
       ? '<span style="color:#0a7a3a;font-size:13px">▲</span>'
       : '<span style="color:#b01010;font-size:13px">▼</span>';
-    td.innerHTML = arrow + '<span style="font-weight:700;font-size:12px;margin-left:2px">' + trend.count + '</span>';
+    var ivFlag = window.computeInterventionFlag ? window.computeInterventionFlag(nsn) : {flagged:false};
+    var warnIcon = (trend.dir === -1 && ivFlag.flagged)
+      ? '<span id="iv-warn-'+nsn+'" title="Multi-week decline — click for intervention protocol" style="cursor:pointer;margin-left:4px;font-size:14px">⚠️</span>'
+      : '';
+    td.innerHTML = arrow + '<span style="font-weight:700;font-size:12px;margin-left:2px">' + trend.count + '</span>' + warnIcon;
+    if (ivFlag.flagged && trend.dir === -1) {
+      var warnEl = td.querySelector('#iv-warn-'+nsn);
+      if (warnEl) {
+        (function(n){ warnEl.addEventListener('click', function(){ window.openIntervention(n); }); })(nsn);
+      }
+    }
   }
   return td;
 }
@@ -2314,7 +2508,11 @@ window.updateSupTrendRow = function(nsn) {
       var arr = trend.dir > 0
         ? '<span style="color:#0a7a3a;font-size:13px">&#9650;</span>'
         : '<span style="color:#b01010;font-size:13px">&#9660;</span>';
-      el.innerHTML = arr + '<span style="margin-left:2px">' + trend.count + '</span><span style="color:#888;font-size:10px;margin-left:2px">WKS</span>';
+      var iv_flag = window.computeInterventionFlag ? window.computeInterventionFlag(nsn) : {flagged:false};
+      var iv_warn = (trend.dir === -1 && iv_flag.flagged)
+        ? '<span onclick="window.openIntervention(\''+nsn+'\')" title="Multi-week decline — click for intervention protocol" style="cursor:pointer;margin-left:4px;font-size:13px">⚠️</span>'
+        : '';
+      el.innerHTML = arr + '<span style="margin-left:2px">' + trend.count + '</span><span style="color:#888;font-size:10px;margin-left:2px">WKS</span>' + iv_warn;
     }
   });
 };
@@ -2339,9 +2537,139 @@ window.updateDetailTrendRow = function(nsn) {
       var arrow=trend.dir>0
         ?'<span style="color:#0a7a3a;font-size:13px">&#9650;</span>'
         :'<span style="color:#b01010;font-size:13px">&#9660;</span>';
-      el.innerHTML=arrow+'<span style="margin-left:2px">'+trend.count+'</span>'+'<span style="color:#888;font-size:10px;margin-left:2px">WKS</span>';
+      var flag = window.computeInterventionFlag ? window.computeInterventionFlag(nsn) : {flagged:false};
+      var warnIcon = (trend.dir === -1 && flag.flagged)
+        ? '<span onclick="window.openIntervention(\''+nsn+'\')" title="Multi-week decline — click for intervention protocol" style="cursor:pointer;margin-left:4px;font-size:13px">⚠️</span>'
+        : '';
+      el.innerHTML=arrow+'<span style="margin-left:2px">'+trend.count+'</span>'+'<span style="color:#888;font-size:10px;margin-left:2px">WKS</span>'+warnIcon;
     }
   });
+};
+
+
+// ── INTERVENTION MODULE ───────────────────────────────────────────────────────
+
+// computeInterventionFlag: returns {flagged, weeks, dayparts} for a given NSN
+// Trigger: composite stagnant or declining (net change ≤ +0.02 while below 1.00)
+// for 3+ consecutive weeks in any daypart
+window.computeInterventionFlag = function(nsn) {
+  var result = { flagged: false, weekly: null, weekday: null, weekend: null };
+  var histMap = {
+    weekly:  HISTORY,
+    weekday: HISTORY_WD,
+    weekend: HISTORY_WE
+  };
+  Object.keys(histMap).forEach(function(period) {
+    var hist = histMap[period];
+    if (!hist || hist.length < 3) return;  // need 3+ weeks
+    var comps = hist.map(function(w) {
+      return w.data && w.data[nsn] ? w.data[nsn].composite : null;
+    }).filter(function(v) { return v !== null && v !== undefined; });
+    if (comps.length < 3) return;
+    // Check trailing 3 weeks: each step must be ≤ +0.02 AND below 1.00
+    var flagWeeks = 0;
+    for (var i = comps.length - 1; i >= 1 && flagWeeks < comps.length; i--) {
+      var curr = comps[i], prev = comps[i-1];
+      if (curr < 1.00 && (curr - prev) <= 0.02) {
+        flagWeeks++;
+      } else break;
+    }
+    if (flagWeeks >= 3) {
+      result.flagged = true;
+      result[period] = flagWeeks;
+    }
+  });
+  return result;
+};
+
+// kpiLabel helpers for intervention KPI cards
+var IV_KPI_LABELS = {
+  k: 'DT', l: 'R2P', m: 'KVS', n: 'Side-2', del_idx: '3PO'
+};
+
+window.openIntervention = function(nsn) {
+  window.showPage('page-intervention');
+
+  var r = RANKED.find(function(x){ return x.nsn === nsn; });
+  if (!r) return;
+
+  // Header
+  document.getElementById('iv-store-title').textContent =
+    '#' + r.rank + ' — ' + r.nsn + ' ' + r.gm;
+  document.getElementById('iv-store-meta').textContent =
+    'Supervisor: ' + r.sup + '  ·  Week: ' + WEEK + '  ·  Composite: ' + (r.composite*100).toFixed(1) + '%';
+
+  document.getElementById('iv-no-store').style.display = 'none';
+  document.getElementById('iv-content').style.display = 'block';
+
+  // Flag summary
+  var flagDiv = document.getElementById('iv-flags');
+  flagDiv.innerHTML = '';
+  var flag = window.computeInterventionFlag(nsn);
+  ['weekly','weekday','weekend'].forEach(function(p) {
+    var weeks = flag[p];
+    var label = p==='weekday'?'Weekday':p==='weekend'?'Weekend':'Weekly';
+    var pill = document.createElement('div');
+    pill.style.cssText = 'padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px;' +
+      (weeks ? 'background:#fff3cd;border:1px solid #e8c400;color:#7a5a00' :
+               'background:#f0f0f0;border:1px solid #ddd;color:#999');
+    pill.innerHTML = (weeks ? '⚠️ ' : '✓ ') + label + (weeks ? ' — ' + weeks + ' wks declining' : ' — OK');
+    flagDiv.appendChild(pill);
+  });
+
+  // KPI breakdown
+  var kpiDiv = document.getElementById('iv-kpi-breakdown');
+  kpiDiv.innerHTML = '';
+  ['k','l','m','n','del_idx'].forEach(function(field) {
+    var val = r[field];
+    if (val === null || val === undefined) return;
+    var isBelow = val < 1.00;
+    var card = document.createElement('div');
+    card.style.cssText = 'padding:10px 14px;border-radius:8px;border:1px solid ' +
+      (isBelow ? '#f0c0c0;background:#fff0f0' : '#c0e0d0;background:#f0fff8') + ';font-size:12px';
+    card.innerHTML = '<div style="color:#888;font-size:10px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">' +
+      IV_KPI_LABELS[field] + ' Index</div>' +
+      '<div style="font-weight:700;font-size:16px;color:' + (isBelow?'#b01010':'#0a7a3a') + '">' +
+      (val*100).toFixed(1) + '%</div>' +
+      '<div style="font-size:10px;color:#888;margin-top:2px">' + (isBelow?'Below standard':'Meets standard') + '</div>';
+    kpiDiv.appendChild(card);
+  });
+
+  // Clear text areas and reset radios/checkboxes for fresh template
+  ['iv-why','iv-cadence','iv-stepdown','iv-notes'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.value='';
+  });
+  // Reset action plan rows to 3 blank rows
+  var ar = document.getElementById('iv-action-rows');
+  if (ar) {
+    var rowHtml = '<div style="display:grid;grid-template-columns:1fr 140px 120px 28px;gap:8px;align-items:center">' +
+      '<input type="text" placeholder="Action item..." style="border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;background:var(--bg);width:100%;box-sizing:border-box">' +
+      '<input type="text" placeholder="Owner" style="border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;background:var(--bg);width:100%;box-sizing:border-box">' +
+      '<input type="text" placeholder="Due date" style="border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;background:var(--bg);width:100%;box-sizing:border-box">' +
+      '<span style="color:#bbb;font-size:18px;cursor:default">·</span></div>';
+    ar.innerHTML = rowHtml + rowHtml + rowHtml;
+  }
+  document.querySelectorAll('#iv-content input[type=radio]').forEach(function(r){ r.checked=false; });
+  document.querySelectorAll('#iv-content input[type=checkbox]').forEach(function(c){ c.checked=false; });
+};
+
+window.addActionRow = function() {
+  var container = document.getElementById('iv-action-rows');
+  if (!container) return;
+  var row = document.createElement('div');
+  row.style.cssText = 'display:grid;grid-template-columns:1fr 140px 120px 28px;gap:8px;align-items:center';
+  row.innerHTML = '<input type="text" placeholder="Action item..." style="border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;background:var(--bg);width:100%;box-sizing:border-box">' +
+    '<input type="text" placeholder="Owner" style="border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;background:var(--bg);width:100%;box-sizing:border-box">' +
+    '<input type="text" placeholder="Due date" style="border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;background:var(--bg);width:100%;box-sizing:border-box">' +
+    '<span onclick="this.parentNode.remove()" style="color:#ccc;font-size:18px;cursor:pointer;text-align:center" title="Remove">×</span>';
+  container.appendChild(row);
+};
+
+window.printIntervention = function() {
+  // Add print class to body — CSS hides everything except intervention page
+  document.body.classList.add('printing-intervention');
+  window.print();
+  document.body.classList.remove('printing-intervention');
 };
 
 window.showPage = function(id, tabEl) {
