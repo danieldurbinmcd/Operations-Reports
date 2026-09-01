@@ -401,7 +401,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 <div class="page" id="page-detail">
   <div class="detail-select-wrap">
     <label style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.07em">Select Location</label>
-    <select class="detail-select" id="loc-select" onchange="renderDetail(this.value)"></select>
+    <select class="detail-select" id="loc-select" onchange="renderDetail(this.value); setTimeout(function(){ window.updateDetailTrendRow(document.getElementById('loc-select').value); }, 50);"></select>
   </div>
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;flex-wrap:wrap">
     <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)">View:</div>
@@ -2286,13 +2286,10 @@ function kpiArrow(curr, prior, size) {
 }
 
 function computeTrend(nsn, histArr) {
-  // Count consecutive weeks moving in same direction as most recent change
-  // histArr is ordered oldest→newest
   if (!histArr || histArr.length < 2) return null;
   var comps = histArr.map(function(w) {
     return w.data && w.data[nsn] ? w.data[nsn].composite : null;
   });
-  // Filter out nulls
   comps = comps.filter(function(v) { return v !== null && v !== undefined; });
   if (comps.length < 2) return null;
   var latest = comps[comps.length-1];
@@ -2483,6 +2480,10 @@ window.updateSupTrendRow = function(nsn) {
 };
 
 window.updateDetailTrendRow = function(nsn) {
+  if(HISTORY_WD.length>=2){
+    var d=HISTORY_WD[1].data;
+    var prev=HISTORY_WD[0].data;
+  }
   var periods = [
     {id:'trend-weekly-val',  hist:HISTORY,    label:'WK'},
     {id:'trend-weekday-val', hist:HISTORY_WD, label:'WD'},
@@ -2496,8 +2497,8 @@ window.updateDetailTrendRow = function(nsn) {
       el.innerHTML='<span style="color:#bbb">—</span>';
     } else {
       var arrow=trend.dir>0
-        ?'<span style="color:#0a7a3a;font-size:13px">▲</span>'
-        :'<span style="color:#b01010;font-size:13px">▼</span>';
+        ?'<span style="color:#0a7a3a;font-size:13px">&#9650;</span>'
+        :'<span style="color:#b01010;font-size:13px">&#9660;</span>';
       el.innerHTML=arrow+'<span style="margin-left:2px">'+trend.count+'</span>'+'<span style="color:#888;font-size:10px;margin-left:2px">WKS</span>';
     }
   });
@@ -2774,7 +2775,7 @@ window.setDetailView = function(view) {
   const lbl = document.getElementById('detail-view-label');
   if (lbl) lbl.textContent = labels[view] || '';
   const sel = document.getElementById('loc-select');
-  if (sel && sel.value) { renderDetail(sel.value); window.updateDetailTrendRow(sel.value); }
+  if (sel && sel.value) { renderDetail(sel.value); setTimeout(function(){ window.updateDetailTrendRow(sel.value); }, 50); }
 };
 
 window.showDetail = function(nsn) {
@@ -2782,7 +2783,7 @@ window.showDetail = function(nsn) {
   document.querySelectorAll('.tab').forEach((t,i)=>{ if(i===2) t.classList.add('active'); });
   document.getElementById('loc-select').value = nsn;
   renderDetail(nsn);
-  window.updateDetailTrendRow(nsn);
+  setTimeout(function(){ window.updateDetailTrendRow(nsn); }, 50);
 }
 
 
