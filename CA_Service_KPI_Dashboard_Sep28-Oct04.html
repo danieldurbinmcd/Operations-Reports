@@ -3629,7 +3629,7 @@ window.computeInterventionFlag = function(nsn) {
   var flagWeeks = 0;
   for (var i = comps.length - 1; i >= 1; i--) {
     var curr = comps[i], prev = comps[i-1];
-    if (curr < 1.00 && (curr - prev) < -0.0005) { flagWeeks++; } else break;
+    if (curr < 1.00 && prev < 1.00 && (curr - prev) < -0.0005) { flagWeeks++; } else break;
   }
   if (flagWeeks >= 2) { result.flagged = true; result.weekly = flagWeeks + 1; }
   return result;
