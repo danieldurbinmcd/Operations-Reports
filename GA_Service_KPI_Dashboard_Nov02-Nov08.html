@@ -1469,7 +1469,7 @@ RANKED.forEach(r => {
   supMap[r.sup].ranks.push(r.rank);
   supMap[r.sup].comps.push(r.composite || 0);
 });
-const SERVICE_SUPS = [{"sup": "Unassigned", "color": "#888888", "avg_comp": 1.0017, "avg_rank": 2.3, "locs": [1, 2, 4], "count": 3}, {"sup": "BJ", "color": "#1a7a4a", "avg_comp": 0.8341, "avg_rank": 6.7, "locs": [3, 7, 10], "count": 3}, {"sup": "Jose", "color": "#2e7d32", "avg_comp": 0.8045, "avg_rank": 9.0, "locs": [5, 13], "count": 2}, {"sup": "Erika", "color": "#0097a7", "avg_comp": 0.7519, "avg_rank": 12.8, "locs": [6, 12, 15, 18], "count": 4}, {"sup": "Denys", "color": "#2e7d32", "avg_comp": 0.7394, "avg_rank": 13.5, "locs": [11, 16], "count": 2}, {"sup": "Sylvia", "color": "#0097a7", "avg_comp": 0.7402, "avg_rank": 14.0, "locs": [8, 14, 20], "count": 3}, {"sup": "Alfredo", "color": "#7b3fa8", "avg_comp": 0.7372, "avg_rank": 15.0, "locs": [9, 17, 19], "count": 3}];
+const SERVICE_SUPS = Object.values(supMap).map(s => ({sup: s.sup, color: s.color, avg_comp: s.comps.reduce((a,b)=>a+b,0)/s.comps.length, avg_rank: s.ranks.reduce((a,b)=>a+b,0)/s.ranks.length, locs: s.ranks.slice().sort((a,b)=>a-b), count: s.ranks.length})).sort((a,b)=>a.avg_rank-b.avg_rank);
 
 document.getElementById('top-sup').textContent = SERVICE_SUPS[0].sup;
 document.getElementById('top-sup-score').textContent = 'avg rank #' + SERVICE_SUPS[0].avg_rank.toFixed(1);
